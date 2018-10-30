@@ -1,0 +1,44 @@
+version: '2'
+services:
+    redis:
+        build: './redis/.'
+        # image: 'redis:latest'
+        ports:
+            - '6379:6379'
+        restart: always
+        #command: ["/apps/start.sh"]
+        volumes:
+            - .:/bitnami
+            - /backup/docker/redis/conf/:/local/etc/redis/conf:z
+            - /backup/docker/redis/data:/data:z
+            # - /var/docker/redis/conf/redis.conf:/usr/local/etc/redis/conf/redis.conf:z
+            # - /var/docker/redis/data:/data:z
+    default:
+        build: ./
+        image: python_celery:latest
+        command: ["wait-for-it",  "redis:6379", "--", "/usr/local/bin/celery", "worker", "-l", "debug", "-Q", "default", "-A", "analyzer", "-n", "worker1@%h", "--autoscale=10,5", "-Ofair"]
+        depends_on:
+            - redis
+        restart: always
+
+    queue_h:
+        image: python_celery:latest
+        command: ["wait-for-it",  "redis:6379", "--", "/usr/local/bin/celery", "worker", "-l", "debug", "-Q", "priority_high", "-A", "analyzer", "-n", "worker2@%h", "--autoscale=10,5", "-Ofair"]
+        depends_on:
+            - redis
+        restart: always
+
+    # worker:
+    #     image: python_celery:latest
+    #     volumes:
+    #         - ./app/:/app:rw
+    #     command: "python analyzer.py"
+    #     restart: always
+    #     links:
+    #         - redis
+    #         - queue_h 
+    #         - default
+    #     depends_on:
+    #         - redis
+    #         - queue_h
+    #         - default
