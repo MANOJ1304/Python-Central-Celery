@@ -13,4 +13,4 @@ CELERY_QUEUES = (
 # coding: utf-8
 """Configuração inicial do Celery"""
 
-app = Celery('analyzer', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
+app_task = Celery('analyzer', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)

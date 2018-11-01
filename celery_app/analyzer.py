@@ -4,7 +4,7 @@ import tasks
 import pkgutil
 from importlib import import_module
 # from tasks.computation.sum import Sum
-from celery_config import app
+from celery_config import app_task
 
 
 def my_import(name):

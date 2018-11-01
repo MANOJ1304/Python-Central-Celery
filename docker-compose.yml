@@ -31,7 +31,7 @@ services:
     # worker:
     #     image: python_celery:latest
     #     volumes:
-    #         - ./app/:/app:rw
+    #         - ./celery_app/:/celery_app:rw
     #     command: "python analyzer.py"
     #     restart: always
     #     links:

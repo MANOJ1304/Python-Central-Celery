@@ -1,4 +1,4 @@
-from celery_config import app
+from celery_config import app_task
 from importlib import import_module
 import pkgutil
 import os

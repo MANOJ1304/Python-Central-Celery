@@ -1,7 +1,7 @@
-from celery_config import app
+from celery_config import app_task
 
 
-class ZZQLowTask(app.Task):
+class ZZQLowTask(app_task.Task):
 
     ignore_result = False
     validation_class = ''
@@ -24,7 +24,7 @@ class ZZQLowTask(app.Task):
         return True
 
 
-class ZZQHighTask(app.Task):
+class ZZQHighTask(app_task.Task):
 
     ignore_result = False
     validation_class = ''
