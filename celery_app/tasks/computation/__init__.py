@@ -26,4 +26,3 @@ for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
     if issubclass(sum_class, BaseTasks):
         print(sum_class)
         setattr(sys.modules[__name__], name, sum_class)
-        
