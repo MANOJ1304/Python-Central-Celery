@@ -22,7 +22,8 @@ for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
 
     sum_class = getattr(imported_module, class_name[0])
     # print(sum_class)
-    app_task.register_task(sum_class())
-    if issubclass(sum_class, BaseTasks):
-        print(sum_class)
-        setattr(sys.modules[__name__], name, sum_class)
+    if hasattr(sum_class, 'name'):
+        app_task.register_task(sum_class())
+        if issubclass(sum_class, BaseTasks):
+            # print(sum_class)
+            setattr(sys.modules[__name__], name, sum_class)

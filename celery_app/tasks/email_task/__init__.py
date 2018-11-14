@@ -25,9 +25,7 @@ for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
 
 #     sum_class = getattr(imported_module, class_name[len(class_name)-1])
     sum_class = getattr(imported_module, class_name[0])
-#     print(class_name)
-#     print("The Analitics init is: {}".format(sum_class))
-#     print(sum_class)
-    app_task.register_task(sum_class())
-    if issubclass(sum_class, BaseTasks):
-        setattr(sys.modules[__name__], name, sum_class)
+    if hasattr(sum_class, 'name'):
+	    app_task.register_task(sum_class())
+	    if issubclass(sum_class, BaseTasks):
+	        setattr(sys.modules[__name__], name, sum_class)

@@ -7,10 +7,10 @@
 
 from tasks.celery_queue_tasks import ZZQHighTask
 import smtplib
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
-from email.mime import multipart
-from email.mime import text
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+# from email.mime import multipart
+# from email.mime import text
 
 
 
@@ -28,8 +28,8 @@ class SendMail(ZZQHighTask):
     def send_mail(self, sender, s_password, recipient, sub, template):
         # print ("\n\n SEND MAIL IN CC")
 
-        msg = multipart.MIMEMultipart('alternative')
-        # msg = MIMEMultipart('alternative')
+        # msg = multipart.MIMEMultipart('alternative')
+        msg = MIMEMultipart('alternative')
         msg['Subject'] = sub
         msg['From'] = sender
         msg['To'] = recipient
@@ -38,8 +38,8 @@ class SendMail(ZZQHighTask):
         html = template
 
         # part1 = MIMEText(text_m, 'plain')
-        # part2 = MIMEText(template, 'html')
-        part2 = text.MIMEText(template, 'html')
+        part2 = MIMEText(template, 'html')
+        # part2 = text.MIMEText(template, 'html')
 
         # msg.attach(part1)
         msg.attach(part2)
