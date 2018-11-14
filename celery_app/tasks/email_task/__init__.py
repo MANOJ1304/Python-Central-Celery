@@ -18,14 +18,14 @@ I just added it there because I'm too lazy to add this line whenever I need to a
 for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
     # print("asd")
     imported_module = import_module('.' + name, package='tasks.email_task')
-#     print("analytics...>>", imported_module)
+    print("analytics...>>", imported_module)
 #     print("dir analytics...>>", dir(imported_module))
     class_name = list(filter(lambda x: x != 'BaseTasks' and not x.startswith('__'),
                              dir(imported_module)))
-
 #     sum_class = getattr(imported_module, class_name[len(class_name)-1])
-    sum_class = getattr(imported_module, class_name[0])
-    if hasattr(sum_class, 'name'):
-	    app_task.register_task(sum_class())
-	    if issubclass(sum_class, BaseTasks):
-	        setattr(sys.modules[__name__], name, sum_class)
+    for c_name in class_name:
+        sum_class = getattr(imported_module, c_name)
+        if hasattr(sum_class, 'autoinclude') and sum_class.autoinclude:
+            app_task.register_task(sum_class())
+            if issubclass(sum_class, BaseTasks):
+                setattr(sys.modules[__name__], name, sum_class)      

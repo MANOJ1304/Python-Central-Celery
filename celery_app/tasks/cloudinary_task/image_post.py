@@ -17,6 +17,7 @@ class PostImageToCloud(ZZQHighTask):
     name = 'Cloudinary image post'
     description = ''' Upload images on Cloudinary.'''
     public = True
+    autoinclude = True
 
     # def __init__(self):
     #     print("\n Object crated")

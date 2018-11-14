@@ -19,6 +19,7 @@ class SendMail(ZZQHighTask):
     name = 'Send Mails'
     description = ''' Sending mails to user.'''
     public = True
+    autoinclude = True
 
     def run(self, *args, **kwargs):
         # print("\nENTER IN RUN METHOD")

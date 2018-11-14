@@ -6,6 +6,7 @@ class Sum(ZZQLowTask):
     name = 'Sum Data'
     description = """ connet to host machine and run the script."""
     public = True
+    autoinclude = True
 
     def run(self, *args, **kwargs):
         self.sum_eg(args[0], args[1])
