@@ -6,8 +6,6 @@ import os
 import sys
 
 """
-Taking class names in alphabetic order.
-
 All this is doing is: 
         from .goldfish import GoldFish as goldfish
 
@@ -17,12 +15,12 @@ I just added it there because I'm too lazy to add this line whenever I need to a
 
 for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
     # print("asd")
-    imported_module = import_module('.' + name, package='tasks.email_task')
-    # print("analytics...>>", imported_module)
-#     print("dir analytics...>>", dir(imported_module))
+    imported_module = import_module('.' + name, package='tasks.scheduler_task')
+
     class_name = list(filter(lambda x: x != 'BaseTasks' and not x.startswith('__'),
                              dir(imported_module)))
-#     sum_class = getattr(imported_module, class_name[len(class_name)-1])
+
+    #     sum_class = getattr(imported_module, class_name[len(class_name)-1])
     for c_name in class_name:
         sum_class = getattr(imported_module, c_name)
         if hasattr(sum_class, 'autoinclude') and sum_class.autoinclude:
