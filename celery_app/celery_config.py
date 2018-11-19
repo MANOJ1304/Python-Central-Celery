@@ -3,8 +3,8 @@ from kombu import Exchange, Queue
 # settings.py
 # CELERY_BROKER_URL = 'redis://192.168.0.116:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://192.168.0.116:6379/0'
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://:HqRmCuM1H2t3@35.234.77.21:6379/0'
+CELERY_RESULT_BACKEND = 'redis://:HqRmCuM1H2t3@35.234.77.21:6379/0'
 CELERY_DEFAULT_QUEUE = 'default'
 CELERY_QUEUES = (
     Queue('default'),
@@ -16,3 +16,4 @@ CELERY_QUEUES = (
 """Configuração inicial do Celery"""
 
 app_task = Celery('analyzer', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
+# redis://:password@hostname:port/db_number
