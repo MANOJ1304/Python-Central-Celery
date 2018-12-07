@@ -9,4 +9,3 @@ tzlocal==1.5.1
 urllib3==1.22
 celery==4.2.0
 cloudinary==1.7.0
-PyYAML==3.11
