@@ -3,8 +3,8 @@ import requests
 
 class DeleteTaskFromScheduler(ZZQHighTask):
     """ testing Task. """
-    name = 'Delete Task in to scheduler'
-    description = ''' Delete task info from scheduler.'''
+    name = 'Delete Task from scheduler'
+    description = ''' Delete task  from scheduler.'''
     public = True
     autoinclude = True
 
