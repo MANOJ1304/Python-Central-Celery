@@ -1,9 +1,5 @@
 """
-    # import sys
-    # if sys.version_info[0] > 2:
-    #     from .tasks import HighTask
-    # else:
-    #     from tasks import HighTask
+requests, socketIO_client_nexus
 """
 
 from time import sleep
@@ -11,6 +7,7 @@ import requests
 from socketIO_client_nexus import SocketIO, LoggingNamespace, BaseNamespace, ConnectionError
 from tasks.celery_queue_tasks import ZZQHighTask
 from tasks.monitoring.utils import UtilData
+from tasks.monitoring.patch_record import DataPatch
 
 
 class DataMonitor(ZZQHighTask):
@@ -22,9 +19,13 @@ class DataMonitor(ZZQHighTask):
 
     def __init__(self):
         self.util_obj = UtilData()
+        self.patch_data = DataPatch()
+        self.config_json = ""
+        self.jwt_token = ""
 
     def run(self, *args, **kwargs):
         # self.start_process(args[0], args[1])
+        self.config_json = args[0]
         self.start_process()
         return True
 
@@ -35,24 +36,9 @@ class DataMonitor(ZZQHighTask):
     class LocationNamespace(BaseNamespace):
         def on_aaa_response(self, *args):
             # TODO:
+            self.patch_data.patch_record(self.jwt_token, args)
             print('on_aaa_response', args)
 
-    # for jwt token
-    def get_auth_code(self):
-        requests_body = {
-            "username": self.util_obj.get_auth_code["username"],
-            "password": self.util_obj.get_auth_code["password"]
-            }
-        r = requests.post(
-            self.util_obj.get_auth_code["api"],
-            json=requests_body
-            )
-        try:
-            auth_token = r.json()['jwt']
-            return auth_token
-        except Exception as e:
-            print("Error occured !! Response auth api => {}".format(e))
-            return None
 
     def on_connect(self, response):
         print('connect %s' % response)
@@ -81,11 +67,37 @@ class DataMonitor(ZZQHighTask):
     def getCMSSummary(self, args):
         print(args)
 
+    def get_auth_code(self):
+        """ for jwt token """
+        try:
+            r = requests.post(
+                self.util_obj.first_url+self.config_json["api_data"]["login_url"],
+                json=self.util_obj.auth_code_credential)
+            return r.json()['jwt']
+        except requests.exceptions.RequestException as e:
+            # print("Waiting for network....: {}.".format(e))
+            print("Waiting for network....")
+            sleep(0.1)
+            self.get_auth_code()
+            return True
+
+        try:
+            print(r.json()['jwt'])
+        except KeyError as e:
+            print("Error occured !! Response auth api => {}".format(e))
+            print(r.json())
+            # TODO:
+            # send mail....
+        except Exception as e:
+            print("Unknown Error occured !! Response auth api => {}".format(e))
+            self.get_auth_code()
+            return True
+
     def start_process(self):
-        jwt_token = self.get_auth_code()
-        print("jwt token is: {}\n".format(jwt_token))
+        self.jwt_token = self.get_auth_code()
+        print("jwt token is: {}\n".format(self.jwt_token))
         params1 = self.util_obj.socket_connection['params1']
-        params1["token"] = jwt_token
+        params1["token"] = self.jwt_token
 
         # socketIO = SocketIO('192.168.0.60', 8080, params=params1)
         socketIO = SocketIO(

@@ -8,12 +8,6 @@ class UtilData():
             }
         }
 
-    get_auth_code = {
-        "username": "olivia_brown@bisley.co.uk",
-        "password": "9bs9kw5a",
-        "api": "http://192.168.0.42/api/v1/accounts/login"
-        }
-
     filterData = {
         'floor_id': '89987c9289354ef2ae6d6fe4a4af709c',
         'filter': 'OP:MON:floorindex:Bisley:Dallington_Street:Ground_Floor',
@@ -24,3 +18,19 @@ class UtilData():
         "name": "location:tracker:send",
         "data": "{\"monitor\":{\"location\":{\"properties\":{\"site_index\":\"ZANAM-MAERUA MALL-Lower Level\"}}}}"
     }
+
+    first_url = "https://api.fattiengage.com/api/v1/"
+    get_record_url = (
+        "serviceProviders/{0}/venueOwners/{1}/venues/{2}/attendees?where="
+        "{{\"cod_pin\": \"{3}\",\"alias_id\": \"{4}\"}}"
+    )
+    patch_record_url = "serviceProviders/{0}/venueOwners/{1}/venues/{2}/attendees/{3}"
+    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+    auth_code_credential = {
+        "username": "dominic_hill@tesmedia.co.uk",
+        "password": "88ki9si2"
+    }
+    # auth_code_credential = {
+    #     "username": "demo_so_user@venueengage.co.za",
+    #     "password": "demo9993"
+    #     }

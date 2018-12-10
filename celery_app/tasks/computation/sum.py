@@ -1,7 +1,7 @@
-from tasks.celery_queue_tasks import ZZQLowTask
+from tasks.celery_queue_tasks import ZZQHighTask
 
 
-class Sum(ZZQLowTask):
+class Sum(ZZQHighTask):
     """ testing Task. """
     name = 'Sum Data'
     description = """ connet to host machine and run the script."""

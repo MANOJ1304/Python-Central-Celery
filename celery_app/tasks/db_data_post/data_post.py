@@ -3,6 +3,7 @@
     Module req.- pony, requests, cx_Oracle
 """
 from math import ceil
+from time import sleep
 import requests
 from pony import orm
 from tasks.celery_queue_tasks import ZZQHighTask
@@ -78,20 +79,42 @@ class DataConnector(ZZQHighTask):
         }
         print(data_schema)
         # print('** **\f'*2)
-        auth_token = self.login_api()
+        auth_token = self.get_auth_code()
         # post_header = self.config_json["api_data"]["post_header"]
         post_header = {"Accept": "application/json", "Content-Type": "application/json"}
         post_header = {"Authorization": "Bearer"+" "+auth_token}
-        r_report = requests.post(
-            self.util_obj.first_url+self.config_json["api_data"]["post_api"],
-            data=data_schema,
-            headers=post_header)
+        try:
+                
+            r_report = requests.post(
+                self.util_obj.first_url+self.config_json["api_data"]["post_api"],
+                data=data_schema,
+                headers=post_header)
 
-        print("post status is: {}".format(r_report.status_code))
-        # print("post reponse is \n", r_report.json())
+            print("post status is: {}".format(r_report.status_code))
+            # print("post reponse is \n", r_report.json())
+        except Exception as e:
+            print("error occurred. {}".format(e))
 
-    def login_api(self):
-        r = requests.post(
-            self.util_obj.first_url+self.config_json["api_data"]["login_url"],
-            json=self.util_obj.api_credential)
-        return r.json()['jwt']
+    def get_auth_code(self):
+        """ for jwt token """
+        try:
+            r = requests.post(
+                self.util_obj.first_url+self.config_json["api_data"]["login_url"],
+                json=self.util_obj.api_credential)
+        except requests.exceptions.RequestException as e:
+            # print("Waiting for network....: {}.".format(e))
+            print("Waiting for network....")
+            sleep(0.1)
+            self.get_auth_code()
+            return True
+        try:
+            print(r.json()['jwt'])
+        except KeyError as e:
+            print("Error occured !! Response auth api => {}".format(e))
+            print(r.json())
+            # TODO:
+            # send mail....
+        except Exception as e:
+            print("Unknown Error occured !! Response auth api => {}".format(e))
+            self.get_auth_code()
+            return True

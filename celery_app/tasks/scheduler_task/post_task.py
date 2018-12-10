@@ -9,7 +9,7 @@ class AddTaskToScheduler(ZZQHighTask):
     autoinclude = True
 
     def run(self, *args, **kwargs):
-        print("\nENTER IN RUN METHOD")
+        # print("\nENTER IN RUN METHOD")
         self.post_task_info(args[0], args[1])
         return True
 
