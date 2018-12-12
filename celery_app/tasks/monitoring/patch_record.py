@@ -68,11 +68,12 @@ class DataPatch(object):
             try:
                 data = {}
                 data['type'] = record['properties']['user_sub_type']
-                data['areas_visited'] = received_api_record['areas_visited']
-                temp_json = {}
-                temp_json['device_id'] = record['device']['device_id']
-                temp_json['device_status'] = record['device']['status']
-                data['areas_visited'].append = temp_json
+                data['areas_visited'] = [{}]
+                data['areas_visited'][0]['device_id'] = record['device']['device_id']
+                data['areas_visited'][0]['device_status'] = record['device']['status']
+                data['areas_visited'][0]['start_dt'] = record['properties']['start_ts']
+                data['areas_visited'][0]['end_dt'] = record['properties']['last_ts']
+                data['areas_visited'][0]['last_seen'] = record['device']['last_seen']
                 patch_data = json.dumps(data)
                 res = requests.patch(patch_url, headers=headers, data=patch_data)
                 print("the patch status is: {}\tthe response is: {}".format(
