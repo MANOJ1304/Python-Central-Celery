@@ -67,6 +67,7 @@ class DataPatch(object):
             headers['Authorization'] = 'Bearer {}'.format(jwt_token)
             try:
                 data = {}
+                data['type'] = record['properties']['user_sub_type']
                 data['areas_visited'] = received_api_record['areas_visited']
                 temp_json = {}
                 temp_json['device_id'] = record['device']['device_id']
