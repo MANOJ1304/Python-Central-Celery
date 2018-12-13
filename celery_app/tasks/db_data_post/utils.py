@@ -7,10 +7,6 @@ class UtilData(object):
     db_service_name = "ESSE3_SCAN"
     first_url = "https://api.fattiengage.com/api/v1/"
     api_credential = {
-        "username": "dominic_hill@tesmedia.co.uk",
-        "password": "88ki9si2"
-    }
-    # api_credential = {
-    #     "username": "demo_so_user@venueengage.co.za",
-    #     "password": "demo9993"
-    #     }
+        "username": "demo_so_user@venueengage.co.za",
+        "password": "demo9993"
+        }

@@ -29,10 +29,6 @@ class UtilData():
     patch_record_url = "serviceProviders/{0}/venueOwners/{1}/venues/{2}/attendees/{3}"
     headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
     auth_code_credential = {
-        "username": "dominic_hill@tesmedia.co.uk",
-        "password": "88ki9si2"
-    }
-    # auth_code_credential = {
-    #     "username": "demo_so_user@venueengage.co.za",
-    #     "password": "demo9993"
-    #     }
+        "username": "demo_so_user@venueengage.co.za",
+        "password": "demo9993"
+        }
