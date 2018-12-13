@@ -36,7 +36,7 @@ class DataMonitor(ZZQHighTask):
     class LocationNamespace(BaseNamespace):
         def on_aaa_response(self, *args):
             # TODO:
-            self.patch_data.patch_record(self.jwt_token, args)
+            self.patch_data.patch_record(self.jwt_token, self.config_json, args)
             print('on_aaa_response', args)
 
 
