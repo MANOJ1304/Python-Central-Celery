@@ -1,12 +1,13 @@
 """ patch all data records. """
 import json
 import requests
-from tasks.monitoring.utils import UtilData
+from data_monitoring.celery_app.tasks.monitoring.utils import UtilData
 
 
 class DataPatch(object):
     def __init__(self):
         self.util_obj = UtilData()
+        self.get_url = None
         # self.api_output = {
         #     "type": "student",
         #     "alias_id": "412312 Student_ID, staff ID",
@@ -31,16 +32,21 @@ class DataPatch(object):
         #     ]
         #     }
 
-    def get_record_id(self, jwt_token, record):
+    def get_record_id(self, jwt_token, config_json, record):
         """ fetch record id from api for patching the record data."""
         try:
-            api_url = self.util_obj.first_url + self.util_obj.get_record_url.format(
-                record['belongs']['owner']['spId'],
-                record['belongs']['owner']['voId'],
-                record['belongs']['owner']['veId'],
-                record['profile']['user_apps']['sdlm']['quiz'],
+            self.get_url = self.util_obj.first_url + config_json['api_data']['attendees_api']
+            api_url = self.get_url + self.util_obj.get_record_url.format(
+                config_json['query']['cod_pin'],
                 record['profile']['user_id']
                 )
+            # api_url = self.util_obj.first_url + self.util_obj.get_record_url.format(
+            #     record['belongs']['owner']['spId'],
+            #     record['belongs']['owner']['voId'],
+            #     record['belongs']['owner']['veId'],
+            #     record['profile']['user_apps']['sdlm']['quiz'],
+            #     record['profile']['user_id']
+            #     )
         except Exception as e:
             print("error occurred. {} ".format(e))
             api_url = None
@@ -52,17 +58,18 @@ class DataPatch(object):
         else:
             return None
 
-    def patch_record(self, jwt_token, record):
+    def patch_record(self, jwt_token, config_json, record):
         """ patch record after getting api id from api."""
-        received_api_record = self.get_record_id(jwt_token, record)
+        received_api_record = self.get_record_id(jwt_token, config_json, record)
         print(received_api_record)
         if received_api_record is not None:
-            patch_url = self.util_obj.first_url + self.util_obj.patch_record_url.format(
-                record['belongs']['owner']['spId'],
-                record['belongs']['owner']['voId'],
-                record['belongs']['owner']['veId'],
-                received_api_record['_id']
-            )
+            # patch_url = self.util_obj.first_url + self.util_obj.patch_record_url.format(
+            #     record['belongs']['owner']['spId'],
+            #     record['belongs']['owner']['voId'],
+            #     record['belongs']['owner']['veId'],
+            #     received_api_record['_id']
+            # )
+            patch_url = self.get_url + '/' + received_api_record['_id']
             headers = self.util_obj.headers
             headers['Authorization'] = 'Bearer {}'.format(jwt_token)
             try:
