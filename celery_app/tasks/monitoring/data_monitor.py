@@ -3,6 +3,7 @@ requests, socketIO_client_nexus
 """
 
 from time import sleep
+from datetime import datetime
 import requests
 from socketIO_client_nexus import SocketIO, LoggingNamespace, BaseNamespace, ConnectionError
 from tasks.celery_queue_tasks import ZZQHighTask
@@ -37,6 +38,12 @@ class DataMonitor(ZZQHighTask):
         def on_aaa_response(self, *args):
             # TODO:
             self.patch_data.patch_record(self.jwt_token, self.config_json, args)
+            end_datetime = datetime.strptime(
+                self.config_json['query']['end_time'],
+                "%Y-%m-%d %H:%M:%S"
+            )
+            if end_datetime > datetime.utcnow():
+                print("exiting process..")
             print('on_aaa_response', args)
 
 
