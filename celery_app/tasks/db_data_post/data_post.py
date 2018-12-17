@@ -76,7 +76,7 @@ from tasks.db_data_post.utils import UtilData
 #         data_schema = {
 #             "alias_id": record["user_id"],
 #             "name": record["name"] + ' ' + record["s_name"],
-#             "code_pin": record["cod_pin"],
+#             "cod_pin": record["cod_pin"],
 #             "status": "scheduled",
 #             "type": "student",
 #         }
