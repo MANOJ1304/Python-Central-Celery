@@ -166,7 +166,7 @@ class DataConnector(ZZQHighTask):
         data_schema = {
             "alias_id": record["UserId"],
             "name": record["Name"] + ' ' + record["sname"],
-            "code_pin": record["CodPin"],
+            "cod_pin": record["CodPin"],
             "status": "scheduled",
             "type": "student",
         }
