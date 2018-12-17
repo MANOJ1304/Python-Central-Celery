@@ -90,6 +90,7 @@ class DataMonitor(ZZQHighTask):
 
         try:
             print(r.json()['jwt'])
+            return r.json()['jwt']
         except KeyError as e:
             print("Error occured !! Response auth api => {}".format(e))
             print(r.json())
