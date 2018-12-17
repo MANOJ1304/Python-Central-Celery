@@ -1,7 +1,7 @@
 """ patch all data records. """
 import json
 import requests
-from data_monitoring.celery_app.tasks.monitoring.utils import UtilData
+from tasks.monitoring.utils import UtilData
 
 
 class DataPatch(object):

@@ -9,8 +9,8 @@ import os
 import sqlite3
 import requests
 from pony import orm
-from data_collector.celery_app.tasks.celery_queue_tasks import ZZQHighTask
-from data_collector.celery_app.tasks.db_data_post.utils import UtilData
+from tasks.celery_queue_tasks import ZZQHighTask
+from tasks.db_data_post.utils import UtilData
 
 # db = orm.Database()
 
