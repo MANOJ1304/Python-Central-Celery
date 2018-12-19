@@ -10,6 +10,8 @@ from tasks.celery_queue_tasks import ZZQHighTask
 from tasks.monitoring.utils import UtilData
 from tasks.monitoring.patch_record import DataPatch
 
+# TODO: Testing
+import json
 
 class DataMonitor(ZZQHighTask):
     """ testing Task. """
@@ -36,15 +38,7 @@ class DataMonitor(ZZQHighTask):
 
     class LocationNamespace(BaseNamespace):
         def on_aaa_response(self, *args):
-            # TODO:
-            self.patch_data.patch_record(self.jwt_token, self.config_json, args)
-            end_datetime = datetime.strptime(
-                self.config_json['query']['end_time'],
-                "%Y-%m-%d %H:%M:%S"
-            )
-            if end_datetime > datetime.utcnow():
-                print("exiting process..")
-            print('on_aaa_response', args)
+            print('inside class on_aaa_response', args)
 
 
     def on_connect(self, response):
@@ -57,7 +51,16 @@ class DataMonitor(ZZQHighTask):
         print('reconnect')
 
     def on_aaa_response(self, *args):
-        print('on_aaa_response', args)
+        # TODO:  testing
+        self.patch_data.patch_record(self.jwt_token, self.config_json, json.dumps(args[0]))
+        # self.patch_data.patch_record(self.jwt_token, self.config_json, args)
+        end_datetime = datetime.strptime(
+            self.config_json['query']['end_time'],
+            "%Y-%m-%d %H:%M:%S"
+        )
+        if end_datetime > datetime.utcnow():
+            print("exiting process..")
+        print('on_aaa_response: {}'.format(args))
 
     def listen_location_data(self, *args):
         print("listen_location_data args are: {}".format(args))

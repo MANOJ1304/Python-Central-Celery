@@ -1,6 +1,7 @@
 """ patch all data records. """
 import json
 import requests
+from datetime import datetime
 from tasks.monitoring.utils import UtilData
 
 
@@ -58,11 +59,14 @@ class DataPatch(object):
         else:
             return None
 
+    def convert_to_datetime(self, data):
+        """ convert api datetime to datetime object."""
+        return data.replace("T", ' ').replace('t', ' ')
+
     def patch_record(self, jwt_token, config_json, record):
         """ patch record after getting api id from api."""
-        received_api_record = self.get_record_id(jwt_token, config_json, record)
-        print(received_api_record)
-        if received_api_record is not None:
+        received_api_record = self.get_record_id(jwt_token, config_json, record)['_items'][0]
+        if received_api_record:
             # patch_url = self.util_obj.first_url + self.util_obj.patch_record_url.format(
             #     record['belongs']['owner']['spId'],
             #     record['belongs']['owner']['voId'],
@@ -78,10 +82,13 @@ class DataPatch(object):
                 data['areas_visited'] = [{}]
                 data['areas_visited'][0]['device_id'] = record['device']['device_id']
                 data['areas_visited'][0]['device_status'] = record['device']['status']
-                data['areas_visited'][0]['start_dt'] = record['properties']['start_ts']
-                data['areas_visited'][0]['end_dt'] = record['properties']['last_ts']
+                data['areas_visited'][0]['start_dt'] = self.convert_to_datetime(
+                    record['properties']['start_ts'])
+                data['areas_visited'][0]['end_dt'] = self.convert_to_datetime(
+                    record['properties']['last_ts'])
                 data['areas_visited'][0]['last_seen'] = record['device']['last_seen']
                 patch_data = json.dumps(data)
+                print("patch data is: {}".format(patch_data))
                 res = requests.patch(patch_url, headers=headers, data=patch_data)
                 print("the patch status is: {}\tthe response is: {}".format(
                     res.status_code, res.json()))
