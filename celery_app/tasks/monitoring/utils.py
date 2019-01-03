@@ -19,7 +19,8 @@ class UtilData():
         "data": "{\"monitor\":{\"location\":{\"properties\":{\"site_index\":\"ZANAM-MAERUA MALL-Lower Level\"}}}}"
     }
 
-    first_url = "https://api.fattiengage.com/api/v1/"
+    # first_url = "https://api.fattiengage.com/api/v1/"
+    first_url = "http://192.168.0.112:5000/api/v1/"
     # get_record_url = (
     #     "serviceProviders/{0}/venueOwners/{1}/venues/{2}/attendees?where="
     #     "{{\"cod_pin\": \"{3}\",\"alias_id\": \"{4}\"}}"

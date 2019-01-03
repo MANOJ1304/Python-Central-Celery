@@ -37,19 +37,27 @@ class DataPatch(object):
         """ fetch record id from api for patching the record data."""
         try:
             self.get_url = self.util_obj.first_url + config_json['api_data']['attendees_api']
-            api_url = self.get_url + self.util_obj.get_record_url.format(
-                config_json['query']['cod_pin'],
-                record['profile']['user_id']
-                )
-            # api_url = self.util_obj.first_url + self.util_obj.get_record_url.format(
-            #     record['belongs']['owner']['spId'],
-            #     record['belongs']['owner']['voId'],
-            #     record['belongs']['owner']['veId'],
-            #     record['profile']['user_apps']['sdlm']['quiz'],
-            #     record['profile']['user_id']
-            #     )
+            if 'user_apps' in record['profile'].keys():
+                print(record['profile']['user_apps']['sdlm']['quiz'])
+                print(config_json['query']['cod_pin'])
+                if str(record['profile']['user_apps']['sdlm']['quiz']) == str(config_json['query']['cod_pin']):
+                    api_url = self.get_url + self.util_obj.get_record_url.format(
+                        config_json['query']['cod_pin'],
+                        record['profile']['user_id']
+                        )
+                    print ("GET URL",api_url)
+                    # api_url = self.util_obj.first_url + self.util_obj.get_record_url.format(
+                    #     record['belongs']['owner']['spId'],
+                    #     record['belongs']['owner']['voId'],
+                    #     record['belongs']['owner']['veId'],
+                    #     record['profile']['user_apps']['sdlm']['quiz'],
+                    #     record['profile']['user_id']
+                    #     )
+                else:api_url = None
+            else:api_url = None
+
         except Exception as e:
-            print("error occurred. {} ".format(e))
+            # print("error occurred. {} ".format(e))
             api_url = None
         headers = self.util_obj.headers
         headers['Authorization'] = 'Bearer {}'.format(jwt_token)
@@ -57,7 +65,7 @@ class DataPatch(object):
             res = requests.get(api_url, headers=headers)
             return res.json()
         else:
-            return None
+            return {'_items':[{}]}
 
     def convert_to_datetime(self, data):
         """ convert api datetime to datetime object."""
@@ -88,7 +96,7 @@ class DataPatch(object):
                     record['properties']['last_ts'])
                 data['areas_visited'][0]['last_seen'] = record['device']['last_seen']
                 patch_data = json.dumps(data)
-                print("patch data is: {}".format(patch_data))
+                # print("patch data is: {}".format(patch_data))
                 res = requests.patch(patch_url, headers=headers, data=patch_data)
                 print("the patch status is: {}\tthe response is: {}".format(
                     res.status_code, res.json()))

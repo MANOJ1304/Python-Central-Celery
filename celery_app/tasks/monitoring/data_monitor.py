@@ -9,9 +9,8 @@ from socketIO_client_nexus import SocketIO, LoggingNamespace, BaseNamespace, Con
 from tasks.celery_queue_tasks import ZZQHighTask
 from tasks.monitoring.utils import UtilData
 from tasks.monitoring.patch_record import DataPatch
-
-# TODO: Testing
 import json
+
 
 class DataMonitor(ZZQHighTask):
     """ testing Task. """
@@ -38,6 +37,16 @@ class DataMonitor(ZZQHighTask):
 
     class LocationNamespace(BaseNamespace):
         def on_aaa_response(self, *args):
+            # TODO:
+            # print('start_process ..... ')
+            # self.patch_data.patch_record(self.jwt_token, self.config_json, args)
+            # print('end_process ..... ')
+            # end_datetime = datetime.strptime(
+            #     self.config_json['query']['end_time'],
+            #     "%Y-%m-%d %H:%M:%S"
+            # )
+            # if end_datetime > datetime.utcnow():
+            #     print("exiting process..")
             print('inside class on_aaa_response', args)
 
 
@@ -51,19 +60,21 @@ class DataMonitor(ZZQHighTask):
         print('reconnect')
 
     def on_aaa_response(self, *args):
-        # TODO:  testing
-        self.patch_data.patch_record(self.jwt_token, self.config_json, json.dumps(args[0]))
-        # self.patch_data.patch_record(self.jwt_token, self.config_json, args)
+        # print('on_aaa_response', args)
+        # print('start_process ..... ',args)
+        self.patch_data.patch_record(self.jwt_token, self.config_json, json.loads(args[0]))
+        # print('end_process ..... ')
         end_datetime = datetime.strptime(
             self.config_json['query']['end_time'],
             "%Y-%m-%d %H:%M:%S"
         )
-        if end_datetime > datetime.utcnow():
-            print("exiting process..")
-        print('on_aaa_response: {}'.format(args))
+        # if end_datetime > datetime.utcnow():
+        #     print("exiting process..")
+        #     exit()
+        # print('on_aaa_response', args)
 
     def listen_location_data(self, *args):
-        print("listen_location_data args are: {}".format(args))
+        # print("listen_location_data args are: {}".format(args))
         while True:
             chat_namespace.emit(
                 self.util_obj.chat_message['name'],
@@ -92,7 +103,7 @@ class DataMonitor(ZZQHighTask):
             return True
 
         try:
-            print(r.json()['jwt'])
+            # print(r.json()['jwt'])
             return r.json()['jwt']
         except KeyError as e:
             print("Error occured !! Response auth api => {}".format(e))
@@ -106,7 +117,7 @@ class DataMonitor(ZZQHighTask):
 
     def start_process(self):
         self.jwt_token = self.get_auth_code()
-        print("jwt token is: {}\n".format(self.jwt_token))
+        # print("jwt token is: {}\n".format(self.jwt_token))
         params1 = self.util_obj.socket_connection['params1']
         params1["token"] = self.jwt_token
 
