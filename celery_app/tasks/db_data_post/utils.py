@@ -6,7 +6,7 @@ class UtilData(object):
     db_password = "cans1938"
     db_service_name = "ESSE3_SCAN"
     # first_url = "https://api.fattiengage.com/api/v1/"
-    first_url = "http://192.168.0.112:5000/api/v1/"
+    first_url = "http://restapp:9000/api/v1/"
     api_credential = {
         "username": "demo_so_user@venueengage.co.za",
         "password": "demo9993"

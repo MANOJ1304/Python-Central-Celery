@@ -1,15 +1,15 @@
-# redis:
-
-#     host: '35.242.209.197'
-
-#     password: 'NmMtoaZ74Yyq'
-
-#     port: '6379'
-
 redis:
 
-    host: '192.168.0.116'
+    host: '35.242.209.197'
 
-    password: 'qqq'
+    password: 'NmMtoaZ74Yyq'
 
     port: '6379'
+
+# redis:
+
+#     host: '192.168.0.116'
+
+#     password: 'qqq'
+
+#     port: '6379'

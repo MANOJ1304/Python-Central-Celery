@@ -1,6 +1,8 @@
 class UtilData():
     socket_connection = {
-        "ip": "192.168.0.60",
+        # "ip": "192.168.0.60",
+        # "port": 8080,
+        "ip": "35.246.245.172",
         "port": 8080,
         "params1": {
             'token': "",
@@ -20,7 +22,7 @@ class UtilData():
     }
 
     # first_url = "https://api.fattiengage.com/api/v1/"
-    first_url = "http://192.168.0.112:5000/api/v1/"
+    first_url = "http://restapp:9000/api/v1/"
     # get_record_url = (
     #     "serviceProviders/{0}/venueOwners/{1}/venues/{2}/attendees?where="
     #     "{{\"cod_pin\": \"{3}\",\"alias_id\": \"{4}\"}}"
