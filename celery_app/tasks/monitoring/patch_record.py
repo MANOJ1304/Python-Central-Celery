@@ -38,14 +38,14 @@ class DataPatch(object):
         try:
             self.get_url = self.util_obj.first_url + config_json['api_data']['attendees_api']
             if 'user_apps' in record['profile'].keys():
-                print(record['profile']['user_apps']['sdlm']['quiz'])
-                print(config_json['query']['cod_pin'])
+                # print(record['profile']['user_apps']['sdlm']['quiz'])
+                # print(config_json['query']['cod_pin'])
                 if str(record['profile']['user_apps']['sdlm']['quiz']) == str(config_json['query']['cod_pin']):
                     api_url = self.get_url + self.util_obj.get_record_url.format(
                         config_json['query']['cod_pin'],
                         record['profile']['user_id']
                         )
-                    print ("GET URL",api_url)
+                    # print ("GET URL",api_url)
                     # api_url = self.util_obj.first_url + self.util_obj.get_record_url.format(
                     #     record['belongs']['owner']['spId'],
                     #     record['belongs']['owner']['voId'],

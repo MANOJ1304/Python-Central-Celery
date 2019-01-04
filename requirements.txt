@@ -4,34 +4,9 @@ python-dateutil==2.7.2
 PyYAML==3.12
 tzlocal==1.5.1
 cloudinary==1.7.0
-# db_data_post
-amqp==2.3.2
-billiard==3.5.0.5
 celery==4.2.1
-certifi==2018.11.29
-Click==7.0
-idna==2.7
-kombu==4.2.2
 pony==0.7.6
 pytz==2018.7
 redis==3.0.1
 requests==2.20.1
-urllib3==1.24.1
-vine==1.1.4
-# monitoring
-six==1.12.0
 socketIO-client-nexus==0.7.6
-websocket-client==0.54.0
-
-
-# chardet==3.0.4
-# hiredis==0.2.0
-# python-dateutil==2.7.2
-# pytz==2018.3
-# PyYAML==3.12
-# redis==2.10.6
-# requests==2.18.4
-# tzlocal==1.5.1
-# urllib3==1.22
-# celery==4.2.0
-# cloudinary==1.7.0
