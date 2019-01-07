@@ -5,11 +5,3 @@ redis:
     password: 'NmMtoaZ74Yyq'
 
     port: '6379'
-
-# redis:
-
-#     host: '192.168.0.116'
-
-#     password: 'qqq'
-
-#     port: '6379'
