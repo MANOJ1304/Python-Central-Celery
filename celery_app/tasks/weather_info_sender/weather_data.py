@@ -29,7 +29,6 @@ class WeatherData(ZZQLowTask):
     def run(self, *args, **kwargs):
         """ start celery process from here. """
         # self.start_process(args[0], args[1])
-        print("hello,,,,,,weather....")
         self.config_json = args[0]
         self.start_process()
         return True
