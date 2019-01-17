@@ -66,9 +66,9 @@ class DataConnector(ZZQHighTask):
     def post_data(self, record):
         """ post data in api."""
         data_schema = {
-            "alias_id": record["user_id"],
-            "name": record["name"] + ' ' + record["s_name"],
-            "cod_pin": record["cod_pin"],
+            "alias_id": record["UserId"],
+            "name": record["Name"] + ' ' + record["sname"],
+            "cod_pin": record["CodPin"],
             "status": "scheduled",
             "type": "student",
         }
