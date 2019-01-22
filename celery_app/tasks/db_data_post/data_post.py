@@ -48,7 +48,7 @@ class DataConnector(ZZQHighTask):
         self.db.generate_mapping(create_tables=False)
 
         with orm.db_session:
-            query_cod_pin = self.config_json["query"]["CodPin"]
+            query_cod_pin = self.config_json["query"]["cod_pin"]
             orm.select(u for u in self.UB_ril_presenze if u.cod_pin == query_cod_pin).show()
             batch_records = orm.select(
                 u for u in self.UB_ril_presenze if u.cod_pin == query_cod_pin).count()
