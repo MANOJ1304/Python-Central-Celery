@@ -1,0 +1,9 @@
+
+REDIS_KEYS :
+    AREA : 'OP:CONF:AREA:'
+    DEVICES : 'OP:DV:'
+    PARAMETERS : 'OP:CONF:PAR:'
+    SENSOR : 'OP:CONF:SENSOR:'
+redis:
+    host : 'localhost'
+    port : 6379
