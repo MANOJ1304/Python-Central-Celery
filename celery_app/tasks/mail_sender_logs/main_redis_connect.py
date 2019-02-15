@@ -61,16 +61,24 @@ class FetchRedisRecords(ZZQLowTask):
                     html_info = make_html_file(received_err_data)
                     for email_record in email_list:
                         send_mail(
-                            html_info['newsletter_html'],
-                            self.config_json['smtp']['outgoing_server'],
-                            self.config_json['smtp']['port'],
                             self.config_json['smtp']['credentials']['username'],
                             self.config_json['smtp']['credentials']['password'],
                             email_record,
                             html_info['subject'],
-                            self.config_json['smtp']['auth_required'],
-                            self.config_json['smtp']['reply_to']
-                        )
+                            html_info['newsletter_html']
+                            )
+
+                        # send_mail(
+                        #     html_info['newsletter_html'],
+                        #     self.config_json['smtp']['outgoing_server'],
+                        #     self.config_json['smtp']['port'],
+                        #     self.config_json['smtp']['credentials']['username'],
+                        #     self.config_json['smtp']['credentials']['password'],
+                        #     email_record,
+                        #     html_info['subject'],
+                        #     self.config_json['smtp']['auth_required'],
+                        #     self.config_json['smtp']['reply_to']
+                        # )
                 except Exception as e:
                     print("error occurred : {} and msg data is: {}".format(e, message['data']))
                 cnt += 1
