@@ -2,9 +2,9 @@
 import json
 import time
 import redis
-from tasks.celery_queue_tasks import ZZQLowTask
-from tasks.mail_sender_logs.mail_sender import send_mail
-from tasks.mail_sender_logs.html_file import make_html_file
+from mail_alert.celery_app.tasks.celery_queue_tasks import ZZQLowTask
+from mail_alert.celery_app.tasks.mail_sender_logs.mail_sender import send_mail
+from mail_alert.celery_app.tasks.mail_sender_logs.html_file import make_html_file
 
 
 class FetchRedisRecords(ZZQLowTask):
@@ -37,8 +37,8 @@ class FetchRedisRecords(ZZQLowTask):
         """get redis receipnist mail."""
         print("key exists -->> ", self.redis_obj.exists(
             self.config_json["redis_connect"]["email_receipnist_key"]))
-        mail_list = self.redis_obj.lrange(
-            self.config_json["redis_connect"]["email_receipnist_key"], 0, -1)
+        mail_list = self.redis_obj.smembers(
+            self.config_json["redis_connect"]["email_receipnist_key"])
         mail_list = [x.decode('utf-8') for x in mail_list]
         # print(mail_list)
         # print("r type is: ", r.type(redis_key))
@@ -53,7 +53,8 @@ class FetchRedisRecords(ZZQLowTask):
         cnt = 1
         while True:
             message = pubsub.get_message()
-            if message and message['data'] is not None:
+            if message and message['data'] is not None and not isinstance(message['data'], int):
+                print("testing message-->", message["data"])
                 try:
                     received_err_data = json.loads(message['data'].decode('utf-8'))
                     print("cnt_->>  %d %s," % (cnt, received_err_data))
@@ -71,6 +72,6 @@ class FetchRedisRecords(ZZQLowTask):
                             self.config_json['smtp']['reply_to']
                         )
                 except Exception as e:
-                    print("error is : {} and msg data is: {}".format(e, message['data']))
+                    print("error occurred : {} and msg data is: {}".format(e, message['data']))
                 cnt += 1
                 time.sleep(0.001)
