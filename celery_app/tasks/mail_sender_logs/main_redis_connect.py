@@ -2,9 +2,9 @@
 import json
 import time
 import redis
-from mail_alert.celery_app.tasks.celery_queue_tasks import ZZQLowTask
-from mail_alert.celery_app.tasks.mail_sender_logs.mail_sender import send_mail
-from mail_alert.celery_app.tasks.mail_sender_logs.html_file import make_html_file
+from tasks.celery_queue_tasks import ZZQLowTask
+from tasks.mail_sender_logs.mail_sender import send_mail
+from tasks.mail_sender_logs.html_file import make_html_file
 
 
 class FetchRedisRecords(ZZQLowTask):
