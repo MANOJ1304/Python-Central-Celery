@@ -11,3 +11,4 @@ redis==3.0.1
 requests==2.20.1
 socketIO-client-nexus==0.7.6
 cx-Oracle==7.0.0
+Jinja2==2.10
