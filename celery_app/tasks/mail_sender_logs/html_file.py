@@ -29,38 +29,43 @@ def make_html_file(data):
                             padding: 5px;
                             text-align: center;
                         }
+
+                        .custom_color {
+                            background-color: #cccccc;
+                        }
                     </style>
                 </head>
 
                 <body>
                     <h2>{{item.alarm_message}}</h2>
                     <table style="width:100%">
-                        <tr style="background-color:cccccc">
+                        <tr class="custom_color">
                             <th>alarm_message</th>
-                            <td class="c2">{{item.alarm_message or \'N/A\'}}</td>
+                            <td>{{item.alarm_message or \'N/A\'}}</td>
                         </tr>
                         <tr>
                             <th>alarm_name</th>
-                            <td class="c2">{{item.alarm_name or \'N/A\'}}</td>
+                            <td>{{item.alarm_name or \'N/A\'}}</td>
                         </tr>
-                        <tr style="background-color:cccccc">
+                        <tr class="custom_color">
                             <th>alarm_threshold</th>
-                            <td class="c2">{{item.alarm_threshold or \'N/A\'}}</td>
+                            <td>{{item.alarm_threshold or \'N/A\'}}</td>
                         </tr>
                         <tr>
                             <th>cluster_id</th>
-                            <td class="c2">{{item.cluster_id or \'N/A\'}}</td>
+                            <td>{{item.cluster_id or \'N/A\'}}</td>
                         </tr>
-                        <tr style="background-color:cccccc">
+                        <tr class="custom_color">
                             <th>timestamp</th>
-                            <td class="c2">{{item.timestamp or \'N/A\'}}</td>
+                            <td>{{item.timestamp or \'N/A\'}}</td>
                         </tr>
                         <tr>
                             <th>veId</th>
-                            <td class="c2">{{item.veId or \'N/A\'}}</td>
+                            <td>{{item.veId or \'N/A\'}}</td>
                         </tr>
                     </table>
                 </body>
+            </html>
                 '''
     )
     a = t.render(item=data)
