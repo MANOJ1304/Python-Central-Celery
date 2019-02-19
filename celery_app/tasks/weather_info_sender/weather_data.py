@@ -83,7 +83,6 @@ class WeatherData(ZZQLowTask):
                         r.status_code))
             else:
                 print("The login api is not working.")
-                exit(1)
 
             headers = post_header
             headers['Authorization'] = 'Bearer ' + auth_token
@@ -99,7 +98,6 @@ class WeatherData(ZZQLowTask):
                     city_name_list
                     ))
                 print("get city name url: {}".format(get_city_names))
-                exit()
 
             for city in city_name_list['cities']:
                 if len(city.strip()):
@@ -150,6 +148,8 @@ class WeatherData(ZZQLowTask):
                     weather_api = posturl + weather_posturl
                     r = requests.post(
                         weather_api, headers=headers, json=response_data, verify=False)
+                    print("data.... {}".format(response_data))
+                    print(" \n\n\t\t=>   ",r.json())
                     if r.status_code == 201:
                         print(
                             "The weather of {} data posted successfully on api.{}".format(
@@ -158,4 +158,3 @@ class WeatherData(ZZQLowTask):
                     else:
                         print("The weather data unable to get posted! Try again. {}".format(
                             r.status_code))
-                        exit()

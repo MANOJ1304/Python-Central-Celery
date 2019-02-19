@@ -23,16 +23,17 @@ class DataConnector(ZZQHighTask):
         self.util_obj = UtilData()
         self.config_json = ""
         orm.set_sql_debug(False)
-        # initialize db connction
-        self.db.bind(
-            provider='oracle',
-            user=self.util_obj.db_user_name,
-            password=self.util_obj.db_password,
-            dsn=self.util_obj.db_service_name)
-        self.db.generate_mapping(create_tables=False)
+
 
     def run(self, *args, **kwargs):
+        """ initialize db connction"""
         self.config_json = args[0]
+        self.db.bind(
+            provider='oracle',
+            user=self.config_json["oracle_info"]["db_user_name"],
+            password=self.config_json["oracle_info"]["db_password"],
+            dsn=self.config_json["oracle_info"]["db_service_name"])
+        self.db.generate_mapping(create_tables=False)
         self.start_process()
         return True
 
@@ -95,7 +96,7 @@ class DataConnector(ZZQHighTask):
         try:
             r = requests.post(
                 self.util_obj.first_url+self.config_json["api_data"]["login_url"],
-                json=self.util_obj.api_credential)
+                json=self.config_json.api_credential)
         except requests.exceptions.RequestException as e:
             # print("Waiting for network....: {}.".format(e))
             print("Waiting for network....")
