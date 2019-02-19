@@ -96,7 +96,7 @@ class DataConnector(ZZQHighTask):
         try:
             r = requests.post(
                 self.util_obj.first_url+self.config_json["api_data"]["login_url"],
-                json=self.config_json.api_credential)
+                json=self.config_json["api_credential"])
         except requests.exceptions.RequestException as e:
             # print("Waiting for network....: {}.".format(e))
             print("Waiting for network....")
