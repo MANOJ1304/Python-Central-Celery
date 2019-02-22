@@ -48,10 +48,10 @@ class FetchRedisRecords(ZZQLowTask):
         """ connect redis instance and subscribe data."""
         self.connect_redis()
         pubsub = self.redis_obj.pubsub()
-        email_list = self.redis_email_list()
         pubsub.subscribe(self.config_json["redis_connect"]["redis_key"])
         cnt = 1
         while True:
+            email_list = self.redis_email_list()
             message = pubsub.get_message()
             if message and message['data'] is not None and not isinstance(message['data'], int):
                 print("testing message-->", message["data"])

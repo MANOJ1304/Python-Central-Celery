@@ -8,30 +8,24 @@ from email.mime.text import MIMEText
 
 def send_mail(sender, s_password, recipient, sub, template):
     # print ("\n\n SEND MAIL IN CC")
-
     # msg = multipart.MIMEMultipart('alternative')
     msg = MIMEMultipart('alternative')
     msg['Subject'] = sub
     msg['From'] = sender
-    msg['To'] = recipient
+    # msg['To'] = recipient[0]
+    msg['Bcc'] = ", ".join(recipient)
 
-    # text_m = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
-    html = template
-
-    # part1 = MIMEText(text_m, 'plain')
     part2 = MIMEText(template, 'html')
-    # part2 = text.MIMEText(template, 'html')
-
     # msg.attach(part1)
     msg.attach(part2)
 
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
     s.login(sender, s_password)
-    s.sendmail(sender, recipient, msg.as_string())
+    s.send_message(msg)
+    # s.sendmail(sender, recipient[0], msg.as_string())
     print("\n\t\t\t-->mail sent on mail {}<<\n".format(recipient))
     s.quit()
-
 
 # import smtplib
 # from email.mime.multipart import MIMEMultipart
