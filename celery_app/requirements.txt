@@ -13,3 +13,5 @@ socketIO-client-nexus==0.7.6
 cx-Oracle==7.0.0
 Jinja2==2.10
 click==7.0
+tqdm==4.31.1
+PyMySQL==0.9.3
