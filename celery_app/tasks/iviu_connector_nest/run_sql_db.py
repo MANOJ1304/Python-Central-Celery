@@ -13,7 +13,6 @@ from tasks.iviu_connector_nest.net_connection import CheckNet
 from celery.task.control import revoke
 
 
-
 config_file = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     'yml_config.yaml')

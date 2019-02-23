@@ -35,8 +35,8 @@ class FetchRedisRecords(ZZQLowTask):
 
     def redis_email_list(self):
         """get redis receipnist mail."""
-        print("key exists -->> ", self.redis_obj.exists(
-            self.config_json["redis_connect"]["email_receipnist_key"]))
+        # print("key exists -->> ", self.redis_obj.exists(
+        #     self.config_json["redis_connect"]["email_receipnist_key"]))
         mail_list = self.redis_obj.smembers(
             self.config_json["redis_connect"]["email_receipnist_key"])
         mail_list = [x.decode('utf-8') for x in mail_list]
