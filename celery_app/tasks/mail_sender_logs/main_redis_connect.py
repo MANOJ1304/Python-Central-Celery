@@ -56,33 +56,32 @@ class FetchRedisRecords(ZZQLowTask):
             if message and message['data'] is not None and not isinstance(message['data'], int):
                 print("testing message-->", message["data"])
                 try:
-                    received_err_data = json.loads(message['data'].decode('utf-8'))
-                except ValueError as e:
-                    received_err_data = json.loads(
-                        message['data'].decode('utf-8').replace('\'', '\"'))
-                try:
+                    try:
+                        received_err_data = json.loads(message['data'].decode('utf-8'))
+                    except ValueError as e:
+                        received_err_data = json.loads(
+                            message['data'].decode('utf-8').replace('\'', '\"'))
                     print("cnt_->>  %d %s," % (cnt, received_err_data))
                     html_info = make_html_file(received_err_data)
-                    for email_record in email_list:
-                        send_mail(
-                            self.config_json['smtp']['credentials']['username'],
-                            self.config_json['smtp']['credentials']['password'],
-                            email_record,
-                            html_info['subject'],
-                            html_info['newsletter_html']
-                            )
-
-                        # send_mail(
-                        #     html_info['newsletter_html'],
-                        #     self.config_json['smtp']['outgoing_server'],
-                        #     self.config_json['smtp']['port'],
-                        #     self.config_json['smtp']['credentials']['username'],
-                        #     self.config_json['smtp']['credentials']['password'],
-                        #     email_record,
-                        #     html_info['subject'],
-                        #     self.config_json['smtp']['auth_required'],
-                        #     self.config_json['smtp']['reply_to']
-                        # )
+                    send_mail(
+                        self.config_json['smtp']['credentials']['username'],
+                        self.config_json['smtp']['credentials']['password'],
+                        email_list,
+                        html_info['subject'],
+                        html_info['newsletter_html']
+                        )
+                    # for email_record in email_list:
+                    #     send_mail(
+                    #         html_info['newsletter_html'],
+                    #         self.config_json['smtp']['outgoing_server'],
+                    #         self.config_json['smtp']['port'],
+                    #         self.config_json['smtp']['credentials']['username'],
+                    #         self.config_json['smtp']['credentials']['password'],
+                    #         email_record,
+                    #         html_info['subject'],
+                    #         self.config_json['smtp']['auth_required'],
+                    #         self.config_json['smtp']['reply_to']
+                    #     )
                 except Exception as e:
                     print("error occurred : {} and msg data is: {}".format(e, message['data']))
                 cnt += 1
