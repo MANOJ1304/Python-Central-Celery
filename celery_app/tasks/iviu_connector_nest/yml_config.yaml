@@ -99,24 +99,24 @@ other:
     #     "time_zone": "gmt"
     #     }
     # pathDict : {
-        'mobtyp': 'device/properties/status',
-        'dty': 'device/properties/type',
-        'mfp':'device/properties/oui',
-        'mfg':'device/properties/manufacturer',
-        'fs':'device/properties/new_flag',
-        'utcft':'device/properties/fs_timestamp',
-        'cnt':'device/properties/samples_recieved',
-        'inv':'device/properties/sample_rate',
-        'mob':'device_id',
-        'pos':'properties/sensor[0]/fix',
-        'pwr':'properties/sensor[0]/rssi',
-        'tag':'device_id',
-        'tt':'timestamp',
-        'cnf':'location/properties/accuracy_level',
-        'tol':'location/properties/accuracy',
-        'x':'location/properties/x',
-        'y':'location/properties/y',
-        'z':'location/properties/z'
+        # 'mobtyp': 'device/properties/status',
+        # 'dty': 'device/properties/type',
+        # 'mfp':'device/properties/oui',
+        # 'mfg':'device/properties/manufacturer',
+        # 'fs':'device/properties/new_flag',
+        # 'utcft':'device/properties/fs_timestamp',
+        # 'cnt':'device/properties/samples_recieved',
+        # 'inv':'device/properties/sample_rate',
+        # 'mob':'device_id',
+        # 'pos':'properties/sensor[0]/fix',
+        # 'pwr':'properties/sensor[0]/rssi',
+        # 'tag':'device_id',
+        # 'tt':'timestamp',
+        # 'cnf':'location/properties/accuracy_level',
+        # 'tol':'location/properties/accuracy',
+        # 'x':'location/properties/x',
+        # 'y':'location/properties/y',
+        # 'z':'location/properties/z'
     # }
 
 mail:
@@ -124,6 +124,3 @@ mail:
     username : 'dev@intelipower.co.za'
     password : 'DevelopMent@22'
     emails : ['veereshp@intelipower.co.za','','']
-
-
-
