@@ -15,7 +15,7 @@ redis:
     host : '35.246.247.166'
     port : 6379
     password : '6WefBSBW3'
-    redis_channel_events : 'OP:QUEUE:events'
+    redis_channel_events : 'OP:QUEUE:bloodhound'
 other:
     connection : https://www.gmail.com
     limit : 10
