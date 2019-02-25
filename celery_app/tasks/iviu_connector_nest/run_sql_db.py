@@ -107,10 +107,10 @@ class IviuConnect(ZZQHighTask):
     def formatToConnector(self,iviu,table_name):
         # for i in cfg['other']['pathDict'].items():
         #     dpath.util.set(base,i[1],iviu[i[0]])
-        test = dict(self.temp_iviu)
-        test['data'] = iviu
-        test['table'] = table_name
-        self.post_to_redis(redis_channel,json.dumps(iviu, default = self.myconverter))
+        iviu_format = dict(self.temp_iviu)
+        iviu_format['data'] = iviu
+        iviu_format['table'] = table_name
+        self.post_to_redis(redis_channel,json.dumps(iviu_format, default = self.myconverter))
 
     def handle_er(self,net,tableName,tt):
         data_err = { "alarm_message": "iviu_connector_error",
