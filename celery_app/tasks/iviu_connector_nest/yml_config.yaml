@@ -123,4 +123,7 @@ mail:
     smtp : 'smtp.gmail.com'
     username : 'dev@intelipower.co.za'
     password : 'DevelopMent@22'
-    emails : ['veereshp@intelipower.co.za','','']
+    emails : ['veereshp@intelipower.co.za']
+
+
+
