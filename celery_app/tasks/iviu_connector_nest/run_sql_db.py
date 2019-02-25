@@ -46,15 +46,15 @@ class IviuConnect(ZZQHighTask):
 
     try:
         if net.check_connection(cfg['other']['connection']):
-            conn = redis.StrictRedis(
+            # conn = redis.StrictRedis(
+            #     host=cfg['redis']['host'],
+            #     port=cfg['redis']['port'],
+            #     socket_keepalive=True)
+
+            redis_conn = redis.StrictRedis(
                 host=cfg['redis']['host'],
                 port=cfg['redis']['port'],
-                socket_keepalive=True)
-
-            conn_err = redis.StrictRedis(
-                host=cfg['redis']['host_er'],
-                port=cfg['redis']['port_er'],
-                password=cfg['redis']['password_er'],
+                password=cfg['redis']['password'],
                 socket_keepalive=True)
     except (redis.ConnectionError,redis.TimeoutError) as identifier:
         pass
@@ -95,7 +95,7 @@ class IviuConnect(ZZQHighTask):
 
     def post_to_redis(self,channel,post_data):
         try:
-            self.conn.publish(channel,post_data)
+            self.redis_conn.lpush(channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
             exit('Failed to connect, terminating.')
@@ -104,7 +104,7 @@ class IviuConnect(ZZQHighTask):
         if isinstance(o, datetime):
             return o.__str__()
 
-    def formatToConnector(self,base, iviu,table_name):
+    def formatToConnector(self,iviu,table_name):
         # for i in cfg['other']['pathDict'].items():
         #     dpath.util.set(base,i[1],iviu[i[0]])
         test = dict(self.temp_iviu)
@@ -115,14 +115,14 @@ class IviuConnect(ZZQHighTask):
     def handle_er(self,net,tableName,tt):
         data_err = { "alarm_message": "iviu_connector_error",
         "alarm_name": tableName,
-        "alarm_threshold": 60,
+        "alarm_threshold": "60",
         "cluster_id": "None",
         "timestamp": tt,
         "veId": ""
         }
         # data = [{"from":"iviu_connector"},{"Table_name": tableName},{"Timestamp": tt}]
         while(net.check_connection(cfg['other']['connection'])):
-            self.conn_err.publish("OP:ERR",json.dumps(data_err))
+            self.redis_conn.publish("OP:ERR",data_err.__str__())
             break
         else:
             # print('Internet connected')
@@ -154,11 +154,11 @@ class IviuConnect(ZZQHighTask):
                 query = self.IviuEntity.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    print("Timestamp:{}{}".format(f.tt, tableName) )
+                    # print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
-                    self.formatToConnector(cfg['other']['data_format'],f.to_dict(),tableName)
+                    self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
-                rowcount += 1
+
             except Exception as ex:
                 iviu_process = False
                 self.handle_er(net,tableName,tt)
