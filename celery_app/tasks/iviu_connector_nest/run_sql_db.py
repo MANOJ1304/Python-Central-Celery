@@ -122,7 +122,7 @@ class IviuConnect(ZZQHighTask):
         }
         # data = [{"from":"iviu_connector"},{"Table_name": tableName},{"Timestamp": tt}]
         while(net.check_connection(cfg['other']['connection'])):
-            self.redis_conn.publish("OP:ERR",data_err.__str__())
+            self.redis_conn.publish("OP:ERR",json.dumps(data_err))
             break
         else:
             # print('Internet connected')
