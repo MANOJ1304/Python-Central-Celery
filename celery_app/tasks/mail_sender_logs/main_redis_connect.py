@@ -57,6 +57,10 @@ class FetchRedisRecords(ZZQLowTask):
                 print("testing message-->", message["data"])
                 try:
                     received_err_data = json.loads(message['data'].decode('utf-8'))
+                except ValueError as e:
+                    received_err_data = json.loads(
+                        message['data'].decode('utf-8').replace('\'', '\"'))
+                try:
                     print("cnt_->>  %d %s," % (cnt, received_err_data))
                     html_info = make_html_file(received_err_data)
                     for email_record in email_list:
