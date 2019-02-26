@@ -107,7 +107,7 @@ class IviuConnect(ZZQHighTask):
         try:
             redis_conf = cfg['redis']
             for i in list(redis_conf):
-                self.redis_connections[i].publish(channel,post_data)
+                self.redis_connections[i].lpush(channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
             exit('Failed to connect, terminating.')
