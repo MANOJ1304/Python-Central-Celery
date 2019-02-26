@@ -19,7 +19,7 @@ config_file = os.path.join(
 
 with open(config_file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile)
-redis_channel = cfg['redis']['redis_channel_events']
+redis_channel = cfg['redis_channel_events']
 
 
 class IviuConnect(ZZQHighTask):
@@ -43,18 +43,28 @@ class IviuConnect(ZZQHighTask):
             "commit":True,
             "data": ""
         }
-
+    redis_connections = {}
     try:
         if net.check_connection(cfg['other']['connection']):
-            # conn = redis.StrictRedis(
-            #     host=cfg['redis']['host'],
-            #     port=cfg['redis']['port'],
-            #     socket_keepalive=True)
+            redis_conf = cfg['redis']
+            for i in list(redis_conf):
+                if hasattr(redis_conf[i], 'password')==False:
+                    redis_connections[i] = redis.StrictRedis(
+                            host=redis_conf[i]['host'],
+                            port=redis_conf[i]['port'],
+                            socket_keepalive=True)
+                    print('redis_connections --- {}'.format(redis_connections))
+                else :
+                    redis_connections[i] = redis.StrictRedis(
+                            host=redis_conf[i]['host'],
+                            port=redis_conf[i]['port'],
+                            password = redis_conf[i]['password'],
+                            socket_keepalive=True)
 
             redis_conn = redis.StrictRedis(
-                host=cfg['redis']['host'],
-                port=cfg['redis']['port'],
-                password=cfg['redis']['password'],
+                host=cfg['err']['host'],
+                port=cfg['err']['port'],
+                password=cfg['err']['password'],
                 socket_keepalive=True)
     except (redis.ConnectionError,redis.TimeoutError) as identifier:
         pass
@@ -95,7 +105,9 @@ class IviuConnect(ZZQHighTask):
 
     def post_to_redis(self,channel,post_data):
         try:
-            self.redis_conn.lpush(channel,post_data)
+            redis_conf = cfg['redis']
+            for i in list(redis_conf):
+                self.redis_connections[i].publish(channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
             exit('Failed to connect, terminating.')
@@ -154,7 +166,7 @@ class IviuConnect(ZZQHighTask):
                 query = self.IviuEntity.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    # print("Timestamp:{}{}".format(f.tt, tableName) )
+                    print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
@@ -162,10 +174,10 @@ class IviuConnect(ZZQHighTask):
             except Exception as ex:
                 iviu_process = False
                 self.handle_er(net,tableName,tt)
-                # print("exception in tread create table ",ex)
+                print("exception in tread create table ",ex)
         else:
             self.db.rollback()
             # revoke(self.task_id, terminate=True)
-            # print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
+            print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
             time.sleep(0.001)
         self.db.rollback()

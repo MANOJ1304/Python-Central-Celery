@@ -8,8 +8,8 @@ redis:
 
 # redis:
 
-#     host: '192.168.0.116'
+#     host: '192.168.0.73'
 
-#     password: 'qqq'
+# #     password: 'qqq'
 
 #     port: '6379'
