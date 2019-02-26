@@ -63,6 +63,8 @@ class FetchRedisRecords(ZZQLowTask):
                             message['data'].decode('utf-8').replace('\'', '\"'))
                     print("cnt_->>  %d %s," % (cnt, received_err_data))
                     html_info = make_html_file(received_err_data)
+                    first_name_sub = self.config_json["redis_connect"]["redis_name"]
+                    html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
                     send_mail(
                         self.config_json['smtp']['credentials']['username'],
                         self.config_json['smtp']['credentials']['password'],
