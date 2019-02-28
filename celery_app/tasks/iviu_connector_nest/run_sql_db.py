@@ -136,23 +136,23 @@ class IviuConnect(ZZQHighTask):
         # data = [{"from":"iviu_connector"},{"Table_name": tableName},{"Timestamp": tt}]
         while(net.check_connection(cfg['other']['connection'])):
             self.redis_conn.publish("OP:ERR",json.dumps(data_err))
+            self.redis_conn.set("OP:BACKUP:"+tableName,tt)
             break
         else:
             # print('Internet connected')
             self.db.rollback()
 
     @db_session()
-    def thread_each_table(self, i):
+    def thread_each_table(self, i, tt=""):
         # print("Attributes ---{}".format(dir(self.app.request)))
         tableName = ""
-        tt = ""
         # print('table_name', i)
         if "iviuentity*" not in i[0]:
             if "." not in i[0]:
                 tableName = i
             else:
                 tableName = i.split('.')[1]
-        rowcount = 1
+        # rowcount = 1
         offset = 0
         limit = cfg['other']['limit']
         net = CheckNet()
@@ -167,11 +167,11 @@ class IviuConnect(ZZQHighTask):
                 query = self.IviuEntity.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    # print("Timestamp:{}{}".format(f.tt, tableName) )
+                    print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
-
+                # rowcount += 1
             except Exception as ex:
                 iviu_process = False
                 self.handle_er(net,tableName,tt)

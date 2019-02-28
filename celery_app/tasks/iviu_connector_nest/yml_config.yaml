@@ -14,7 +14,7 @@ celery:
 redis:
     # loc:
     #     host: '192.168.0.73'
-    #     port: '6379'
+    #     port: 6379
     dev:
         host: '35.246.247.166'
         port: 6379
@@ -30,7 +30,7 @@ err:
     password : '6WefBSBW3'
 other:
     connection : https://www.gmail.com
-    limit : 10
+    limit : 100
 
     # data_format : {
     #     "belongs": {
