@@ -12,6 +12,9 @@ celery:
     CELERY_BROKER_URL : 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND : 'redis://localhost:6379/0'
 redis:
+    # loc:
+    #     host: '192.168.0.73'
+    #     port: '6379'
     dev:
         host: '35.246.247.166'
         port: 6379

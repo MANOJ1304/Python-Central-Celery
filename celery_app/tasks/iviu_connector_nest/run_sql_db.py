@@ -48,18 +48,19 @@ class IviuConnect(ZZQHighTask):
         if net.check_connection(cfg['other']['connection']):
             redis_conf = cfg['redis']
             for i in list(redis_conf):
-                if hasattr(redis_conf[i], 'password')==False:
+                if 'password' not in redis_conf[i]:
                     redis_connections[i] = redis.StrictRedis(
                             host=redis_conf[i]['host'],
                             port=redis_conf[i]['port'],
                             socket_keepalive=True)
-                    print('redis_connections --- {}'.format(redis_connections))
+                    # print('redis_connections1 --- {}'.format(redis_connections))
                 else :
                     redis_connections[i] = redis.StrictRedis(
                             host=redis_conf[i]['host'],
                             port=redis_conf[i]['port'],
                             password = redis_conf[i]['password'],
                             socket_keepalive=True)
+                    # print('redis_connections2 --- {}'.format(redis_connections))
 
             redis_conn = redis.StrictRedis(
                 host=cfg['err']['host'],
@@ -166,7 +167,7 @@ class IviuConnect(ZZQHighTask):
                 query = self.IviuEntity.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    print("Timestamp:{}{}".format(f.tt, tableName) )
+                    # print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
@@ -174,10 +175,10 @@ class IviuConnect(ZZQHighTask):
             except Exception as ex:
                 iviu_process = False
                 self.handle_er(net,tableName,tt)
-                print("exception in tread create table ",ex)
+                # print("exception in tread create table ",ex)
         else:
             self.db.rollback()
             # revoke(self.task_id, terminate=True)
-            print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
+            # print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
             time.sleep(0.001)
         self.db.rollback()
