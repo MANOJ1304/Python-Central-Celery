@@ -1,141 +1,141 @@
-mysql:
-    host: '138.197.125.48'
-    user: 'iviu'
-    passwd: '+z$ReBT4hwp'
-    db: 'iViu_data'
 # mysql:
-#     host: '35.242.216.249'
-#     user: 'root'
-#     passwd: 'hello@22'
+#     host: '138.197.125.48'
+#     user: 'iviu'
+#     passwd: '+z$ReBT4hwp'
 #     db: 'iViu_data'
-celery:
-    CELERY_BROKER_URL : 'redis://localhost:6379/0'
-    CELERY_RESULT_BACKEND : 'redis://localhost:6379/0'
-redis:
-    # loc:
-    #     host: '192.168.0.73'
-    #     port: 6379
-    dev:
-        host: '35.246.247.166'
-        port: 6379
-        password: '6WefBSBW3'
-    # uat:
-    #     host: '192.168.0.53'
-    #     port: 6379
-        # password:
-redis_channel_events : 'OP:QUEUE:bloodhound'
-err:
-    host : '35.246.247.166'
-    port : 6379
-    password : '6WefBSBW3'
-other:
-    connection : https://www.gmail.com
-    limit : 100
+# # mysql:
+# #     host: '35.242.216.249'
+# #     user: 'root'
+# #     passwd: 'hello@22'
+# #     db: 'iViu_data'
+# celery:
+#     CELERY_BROKER_URL : 'redis://localhost:6379/0'
+#     CELERY_RESULT_BACKEND : 'redis://localhost:6379/0'
+# redis:
+#     # loc:
+#     #     host: '192.168.0.73'
+#     #     port: 6379
+#     dev:
+#         host: '35.246.247.166'
+#         port: 6379
+#         password: '6WefBSBW3'
+#     # uat:
+#     #     host: '192.168.0.53'
+#     #     port: 6379
+#         # password:
+# redis_channel_events : 'OP:QUEUE:bloodhound'
+# err:
+#     host : '35.246.247.166'
+#     port : 6379
+#     password : '6WefBSBW3'
+# other:
+#     connection : https://www.gmail.com
+#     limit : 100
 
-    # data_format : {
-    #     "belongs": {
-    #         "owner": {
-    #         "soId": "17553600dce64a8cae7ec1117b1e62fa",
-    #         "spId": "1099992c811d4cd3b16e9c939f64c400",
-    #         "veId": "4919b7ff81ed40efab60104cfca145ba",
-    #         "vgId": "",
-    #         "voId": "ba3005199eec4e7ba808edd58c3a6e3e"
-    #         }
-    #     },
-    #     "device": {
-    #         "properties": {
-    #         "manufacturer": "iviu",
-    #         "oui": "aa:bb:cc",
-    #         "partcode": "",
-    #         "protocol": "iviu",
-    #         "source": "wifi",
-    #         "status": "probing",
-    #         "type": "station",
-    #         "new_flag": "x",
-    #         "fs_timestamp": "",
-    #         "samples_recieved": 5,
-    #         "sample_rate": 0.004
-    #         }
-    #     },
-    #     "device_id": "00:16:eb:35:d6:8f",
-    #     "engine_ref": "loceng02",
-    #     "locaton": {
-    #         "geometry": {
-    #         "coordinates": [
-    #             0,
-    #             0,
-    #             0
-    #         ],
-    #         "type": "point"
-    #         },
-    #         "properties": {
-    #         "accuracy_level": "near",
-    #         "accuracy": 0.25,
-    #         "bn": "Dallington_Street",
-    #         "filter_level": 0,
-    #         "fix_type": "Fingerprint:FP_SUCCESS",
-    #         "fn": "Ground_Floor",
-    #         "fp_result": "FP_SUCCESS",
-    #         "site_index": "Bisley:Dallington_Street:Ground_Floor",
-    #         "sn": "Bisley",
-    #         "x": 21,
-    #         "y": 30,
-    #         "z": 0,
-    #         "zn": ""
-    #         },
-    #         "type": "feature"
-    #     },
-    #     "message_type": "xyz_location_fix",
-    #     "properties": {
-    #         "band": "2.4",
-    #         "rssi_filter_type": 3,
-    #         "sensor": [
-    #         {
-    #             "estimate": false,
-    #             "fix": 1,
-    #             "hist_rssi": -53,
-    #             "id": "00:0c:e6:3f:0f:66",
-    #             "kall_rssi": -53,
-    #             "orig_rssi": -53,
-    #             "position": [
-    #             37.4064,
-    #             32.7771
-    #             ],
-    #             "rssi": -53
-    #         }
-    #         ]
-    #     },
-    #     "redis_device_id": "MAC<00:16:eb:35:d6:8f>",
-    #     "timestamp": 1525608677079,
-    #     "transit_time": "secs",
-    #     "time_zone": "gmt"
-    #     }
-    # pathDict : {
-        # 'mobtyp': 'device/properties/status',
-        # 'dty': 'device/properties/type',
-        # 'mfp':'device/properties/oui',
-        # 'mfg':'device/properties/manufacturer',
-        # 'fs':'device/properties/new_flag',
-        # 'utcft':'device/properties/fs_timestamp',
-        # 'cnt':'device/properties/samples_recieved',
-        # 'inv':'device/properties/sample_rate',
-        # 'mob':'device_id',
-        # 'pos':'properties/sensor[0]/fix',
-        # 'pwr':'properties/sensor[0]/rssi',
-        # 'tag':'device_id',
-        # 'tt':'timestamp',
-        # 'cnf':'location/properties/accuracy_level',
-        # 'tol':'location/properties/accuracy',
-        # 'x':'location/properties/x',
-        # 'y':'location/properties/y',
-        # 'z':'location/properties/z'
-    # }
+#     # data_format : {
+#     #     "belongs": {
+#     #         "owner": {
+#     #         "soId": "17553600dce64a8cae7ec1117b1e62fa",
+#     #         "spId": "1099992c811d4cd3b16e9c939f64c400",
+#     #         "veId": "4919b7ff81ed40efab60104cfca145ba",
+#     #         "vgId": "",
+#     #         "voId": "ba3005199eec4e7ba808edd58c3a6e3e"
+#     #         }
+#     #     },
+#     #     "device": {
+#     #         "properties": {
+#     #         "manufacturer": "iviu",
+#     #         "oui": "aa:bb:cc",
+#     #         "partcode": "",
+#     #         "protocol": "iviu",
+#     #         "source": "wifi",
+#     #         "status": "probing",
+#     #         "type": "station",
+#     #         "new_flag": "x",
+#     #         "fs_timestamp": "",
+#     #         "samples_recieved": 5,
+#     #         "sample_rate": 0.004
+#     #         }
+#     #     },
+#     #     "device_id": "00:16:eb:35:d6:8f",
+#     #     "engine_ref": "loceng02",
+#     #     "locaton": {
+#     #         "geometry": {
+#     #         "coordinates": [
+#     #             0,
+#     #             0,
+#     #             0
+#     #         ],
+#     #         "type": "point"
+#     #         },
+#     #         "properties": {
+#     #         "accuracy_level": "near",
+#     #         "accuracy": 0.25,
+#     #         "bn": "Dallington_Street",
+#     #         "filter_level": 0,
+#     #         "fix_type": "Fingerprint:FP_SUCCESS",
+#     #         "fn": "Ground_Floor",
+#     #         "fp_result": "FP_SUCCESS",
+#     #         "site_index": "Bisley:Dallington_Street:Ground_Floor",
+#     #         "sn": "Bisley",
+#     #         "x": 21,
+#     #         "y": 30,
+#     #         "z": 0,
+#     #         "zn": ""
+#     #         },
+#     #         "type": "feature"
+#     #     },
+#     #     "message_type": "xyz_location_fix",
+#     #     "properties": {
+#     #         "band": "2.4",
+#     #         "rssi_filter_type": 3,
+#     #         "sensor": [
+#     #         {
+#     #             "estimate": false,
+#     #             "fix": 1,
+#     #             "hist_rssi": -53,
+#     #             "id": "00:0c:e6:3f:0f:66",
+#     #             "kall_rssi": -53,
+#     #             "orig_rssi": -53,
+#     #             "position": [
+#     #             37.4064,
+#     #             32.7771
+#     #             ],
+#     #             "rssi": -53
+#     #         }
+#     #         ]
+#     #     },
+#     #     "redis_device_id": "MAC<00:16:eb:35:d6:8f>",
+#     #     "timestamp": 1525608677079,
+#     #     "transit_time": "secs",
+#     #     "time_zone": "gmt"
+#     #     }
+#     # pathDict : {
+#         # 'mobtyp': 'device/properties/status',
+#         # 'dty': 'device/properties/type',
+#         # 'mfp':'device/properties/oui',
+#         # 'mfg':'device/properties/manufacturer',
+#         # 'fs':'device/properties/new_flag',
+#         # 'utcft':'device/properties/fs_timestamp',
+#         # 'cnt':'device/properties/samples_recieved',
+#         # 'inv':'device/properties/sample_rate',
+#         # 'mob':'device_id',
+#         # 'pos':'properties/sensor[0]/fix',
+#         # 'pwr':'properties/sensor[0]/rssi',
+#         # 'tag':'device_id',
+#         # 'tt':'timestamp',
+#         # 'cnf':'location/properties/accuracy_level',
+#         # 'tol':'location/properties/accuracy',
+#         # 'x':'location/properties/x',
+#         # 'y':'location/properties/y',
+#         # 'z':'location/properties/z'
+#     # }
 
-mail:
-    smtp : 'smtp.gmail.com'
-    username : 'dev@intelipower.co.za'
-    password : 'DevelopMent@22'
-    emails : ['veereshp@intelipower.co.za']
+# mail:
+#     smtp : 'smtp.gmail.com'
+#     username : 'dev@intelipower.co.za'
+#     password : 'DevelopMent@22'
+#     emails : ['veereshp@intelipower.co.za']
 
 
 
