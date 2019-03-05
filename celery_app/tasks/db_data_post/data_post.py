@@ -7,11 +7,11 @@ from time import sleep
 from math import ceil
 import requests
 from pony import orm
-from tasks.celery_queue_tasks import ZZQHighTask
+from tasks.celery_queue_tasks import ZZQLowTask
 from tasks.db_data_post.utils import UtilData
 
 
-class DataConnector(ZZQHighTask):
+class DataConnector(ZZQLowTask):
     """connect to db and post on api."""
     name = 'Data connector'
     description = """ connet to host machine and run the script."""
