@@ -28,11 +28,23 @@ class DataConnector(ZZQHighTask):
     def run(self, *args, **kwargs):
         """ initialize db connction"""
         self.config_json = args[0]
+
+
+        # # __ connected to oracle db.
+        # self.db.bind(
+        #     provider='oracle',
+        #     user=self.config_json["oracle_info"]["db_user_name"],
+        #     password=self.config_json["oracle_info"]["db_password"],
+        #     dsn=self.config_json["oracle_info"]["db_service_name"])
+
+        # # __ connected to mysql db.
         self.db.bind(
-            provider='oracle',
-            user=self.config_json["oracle_info"]["db_user_name"],
-            password=self.config_json["oracle_info"]["db_password"],
-            dsn=self.config_json["oracle_info"]["db_service_name"])
+            provider='mysql',
+            host=self.config_json["sql_info"]["db_host"],
+            user=self.config_json["sql_info"]["db_user_name"],
+            passwd=self.config_json["sql_info"]["db_password"],
+            db=self.config_json["sql_info"]["db"])
+
         self.db.generate_mapping(create_tables=False)
         self.start_process()
         return True
