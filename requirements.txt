@@ -7,7 +7,7 @@ cloudinary==1.7.0
 celery==4.2.1
 pony==0.7.6
 pytz==2018.7
-redis==3.0.1
+redis==3.0.2
 requests==2.20.1
 socketIO-client-nexus==0.7.6
 cx-Oracle==7.0.0
