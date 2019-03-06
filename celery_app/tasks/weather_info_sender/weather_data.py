@@ -137,6 +137,7 @@ class WeatherData(ZZQLowTask):
                     #     response_data['forecast']['forecastday'][0]['hour'][nest_data]['time_utc'] = self.time_to_utc(datetime.datetime.strptime(response_data['forecast']['forecastday'][0]['hour'][nest_data]['time'], "%Y-%m-%d %H:%M:%S"), response_data['location']['tz_id']).strftime("%Y-%m-%d %H:%M:%S")
 
                     del response_data['forecast']['forecastday'][0]['day']['uv']
+                    del response_data['current']['uv']
 
                     # for cnt in range(len(response_data['forecast']['forecastday'][0]['hour'])):
                     #     del response_data[

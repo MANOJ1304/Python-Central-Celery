@@ -24,6 +24,7 @@
 #     for c_name in class_name:
 #         sum_class = getattr(imported_module, c_name)
 #         if hasattr(sum_class, 'autoinclude') and sum_class.autoinclude:
+#             # print("___++++=\ntesting............sum_class: ", sum_class)
 #             app_task.register_task(sum_class())
 #             if issubclass(sum_class, BaseTasks):
 #                 setattr(sys.modules[__name__], name, sum_class)
