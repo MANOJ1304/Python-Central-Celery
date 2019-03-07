@@ -143,7 +143,6 @@ class IviuConnect(ZZQHighTask):
 
         if table_name == "p00390_TES":
             table_name = "p00390"
-
         iviu_format['table'] = table_name
         self.post_to_redis(redis_channel,json.dumps(iviu_format, default = self.myconverter))
 
@@ -188,7 +187,7 @@ class IviuConnect(ZZQHighTask):
                 iviu_list = list(query)
                 record_id = []
                 for f in iviu_list:
-                    # print("Timestamp:{}{}".format(f.tt, tableName) )
+                    print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     record_id.append(f.id.__str__())
                     self.formatToConnector(f.to_dict(),tableName)
