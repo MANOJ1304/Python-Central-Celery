@@ -48,33 +48,38 @@ class IviuConnect(ZZQHighTask):
         self.redis_connections = {}
         self.net = CheckNet()
         self.start()
-        self.thread_each_table(args[0])
+        # print("tt in run method",args[2])
+        if len(args) == 3:
+            self.thread_each_table(args[0],args[2])
+        else:
+            self.thread_each_table(args[0], "")
+
 
 
     def start(self):
         """main entry point for db connection."""
         try:
             if self.net.check_connection(cfg['other']['connection']):
-                redis_conf = cfg['redis']
+                redis_conf = self.config_json['redis_connection']
                 for i in list(redis_conf):
                     if 'password' not in redis_conf[i]:
                         self.redis_connections[i] = redis.StrictRedis(
                                 host=redis_conf[i]['host'],
                                 port=redis_conf[i]['port'],
                                 socket_keepalive=True)
-                        print('redis_connections1 --- {}'.format(self.redis_connections))
+                        # print('redis_connections1 --- {}'.format(self.redis_connections))
                     else :
                         self.redis_connections[i] = redis.StrictRedis(
                                 host=redis_conf[i]['host'],
                                 port=redis_conf[i]['port'],
                                 password = redis_conf[i]['password'],
                                 socket_keepalive=True)
-                        print('redis_connections2 --- {}'.format(self.redis_connections))
+                        # print('redis_connections2 --- {}'.format(self.redis_connections))
 
                 self.redis_conn = redis.StrictRedis(
-                    host=cfg['err']['host'],
-                    port=cfg['err']['port'],
-                    password=cfg['err']['password'],
+                    host=self.config_json['redis_err']['host'],
+                    port=self.config_json['redis_err']['port'],
+                    password=self.config_json['redis_err']['password'],
                     socket_keepalive=True)
         except (redis.ConnectionError,redis.TimeoutError) as identifier:
             pass
@@ -119,7 +124,7 @@ class IviuConnect(ZZQHighTask):
 
     def post_to_redis(self, channel, post_data):
         try:
-            redis_conf = cfg['redis']
+            redis_conf = self.config_json['redis_connection']
             for i in list(redis_conf):
                 self.redis_connections[i].lpush(channel,post_data)
         except Exception as ex:
@@ -156,9 +161,10 @@ class IviuConnect(ZZQHighTask):
             self.db.rollback()
 
     @db_session()
-    def thread_each_table(self, i, config_json="", tt=""):
+    def thread_each_table(self, i, tt=""):
         # print("Attributes ---{}".format(dir(self.app.request)))
         tableName = i
+        print("tt in thread_each_table method",tt)
         # print('table_name', i)
         # rowcount = 1
         offset = 0
