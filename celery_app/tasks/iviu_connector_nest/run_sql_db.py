@@ -140,6 +140,10 @@ class IviuConnect(ZZQHighTask):
         #     dpath.util.set(base,i[1],iviu[i])
         iviu_format = dict(self.temp_iviu)
         iviu_format['data'] = iviu
+
+        if table_name == "p00390_TES":
+            table_name = "p00390"
+
         iviu_format['table'] = table_name
         self.post_to_redis(redis_channel,json.dumps(iviu_format, default = self.myconverter))
 
