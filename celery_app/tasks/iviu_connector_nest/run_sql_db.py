@@ -126,6 +126,7 @@ class IviuConnect(ZZQHighTask):
         try:
             redis_conf = self.config_json['redis_connection']
             for i in list(redis_conf):
+                print("Redis post --- {}".format(self.redis_connections[i]))
                 self.redis_connections[i].lpush(channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
@@ -187,7 +188,7 @@ class IviuConnect(ZZQHighTask):
                 iviu_list = list(query)
                 record_id = []
                 for f in iviu_list:
-                    # print("Timestamp:{}{}".format(f.tt, tableName) )
+                    print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     record_id.append(f.id.__str__())
                     self.formatToConnector(f.to_dict(),tableName)
