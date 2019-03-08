@@ -85,7 +85,6 @@ class IviuConnect(ZZQHighTask):
             pass
             # print("cant connect to db 1", identifier)
 
-        # db.bind('mysql', host=cfg['mysql']['host'], user=cfg['mysql']['user'], password=cfg['mysql']['passwd'], db=cfg['mysql']['db'])
         self.db.bind(
             "mysql",
             host=self.config_json["mysql"]["host"],
@@ -126,7 +125,6 @@ class IviuConnect(ZZQHighTask):
         try:
             redis_conf = self.config_json['redis_connection']
             for i in list(redis_conf):
-                print("Redis post --- {}".format(self.redis_connections[i]))
                 self.redis_connections[i].lpush(channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
@@ -145,6 +143,7 @@ class IviuConnect(ZZQHighTask):
         if table_name == "p00390_TES":
             table_name = "p00390"
         iviu_format['table'] = table_name
+
         self.post_to_redis(redis_channel,json.dumps(iviu_format, default = self.myconverter))
 
     def handle_er(self,net,tableName,tt):
