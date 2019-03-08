@@ -167,7 +167,7 @@ class IviuConnect(ZZQHighTask):
     def thread_each_table(self, i, tt=""):
         # print("Attributes ---{}".format(dir(self.app.request)))
         tableName = i
-        print("tt in thread_each_table method",tt)
+        # print("tt in thread_each_table method",tt)
         # print('table_name', i)
         # rowcount = 1
         offset = 0
@@ -187,7 +187,7 @@ class IviuConnect(ZZQHighTask):
                 iviu_list = list(query)
                 record_id = []
                 for f in iviu_list:
-                    print("Timestamp:{}{}".format(f.tt, tableName) )
+                    # print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     record_id.append(f.id.__str__())
                     self.formatToConnector(f.to_dict(),tableName)
