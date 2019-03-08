@@ -187,7 +187,7 @@ class IviuConnect(ZZQHighTask):
                 iviu_list = list(query)
                 record_id = []
                 for f in iviu_list:
-                    print("Timestamp:{}{}".format(f.tt, tableName) )
+                    # print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
                     record_id.append(f.id.__str__())
                     self.formatToConnector(f.to_dict(),tableName)
