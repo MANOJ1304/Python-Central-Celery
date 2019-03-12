@@ -33,6 +33,17 @@ class FetchRedisRecords(ZZQLowTask):
             )
         # return self.redis_obj
 
+    def insert_redis_email_list(self):
+        """insert mail address if not present into redis."""
+        mail_list_seq = [
+            "sushil.jaiswar@tes.media",
+            "manmohan.singh@tes.media",
+            "roger.blain@tes.media",
+            # "it.staff@tes.media"
+            ]
+        data = self.redis_obj.sadd("OP:Email:Receptionist", *mail_list_seq)
+        return data
+
     def redis_email_list(self):
         """get redis receipnist mail."""
         # print("key exists -->> ", self.redis_obj.exists(
@@ -40,6 +51,9 @@ class FetchRedisRecords(ZZQLowTask):
         mail_list = self.redis_obj.smembers(
             self.config_json["redis_connect"]["email_receipnist_key"])
         mail_list = [x.decode('utf-8') for x in mail_list]
+        if not mail_list:
+            print('mail list not found on redis.')
+            mail_list = self.insert_redis_email_list()
         # print(mail_list)
         # print("r type is: ", r.type(redis_key))
         return mail_list
