@@ -1,33 +1,9 @@
-# mysql:
-#     host: '35.198.69.180'
-#     user: 'iviu_replicator'
-#     passwd: 'nY5ZJa5SjYcN7ZpM'
-#     db: 'repl_data'
-# mysql:
-#     host: '35.242.216.249'
-#     user: 'root'
-#     passwd: 'hello@22'
-#     db: 'iViu_data'
 celery:
     CELERY_BROKER_URL : 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND : 'redis://localhost:6379/0'
-# redis:
-    # loc:
-    #     host: 'localhost'
-    #     port: 6379
-    # dev:
-    #     host: '35.246.247.166'
-    #     port: 6379
-    #     password: '6WefBSBW3'
-    # uat:
-    #     host: '192.168.0.53'
-    #     port: 6379
-        # password:
+
 redis_channel_events : 'OP:QUEUE:bloodhound'
-# err:
-#     host : '35.246.247.166'
-#     port : 6379
-#     password : '6WefBSBW3'
+
 other:
     connection : https://www.gmail.com
     limit : 100
