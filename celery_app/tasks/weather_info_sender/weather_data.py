@@ -6,8 +6,8 @@ import warnings
 import logging
 import logging.config
 import requests
-import pytz
 from tasks.celery_queue_tasks import ZZQLowTask
+from tasks.weather_info_sender.utils import UtilData
 
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")
@@ -23,6 +23,7 @@ class WeatherData(ZZQLowTask):
     def __init__(self):
         """ initialise process start from here. """
         self.run_day = 'today'
+        self.util_obj = UtilData()
         self.cnt = 0
         self.config_json = ''
 
@@ -53,13 +54,6 @@ class WeatherData(ZZQLowTask):
     #         logging.config.dictConfig(config)
     #     else:
     #         logging.basicConfig(level=default_level)
-
-    def time_to_utc(self, input_date, post_tzone):
-        """ convert time to utc."""
-        local = pytz.timezone(post_tzone)
-        local_dt = local.localize(input_date, is_dst=None)
-        utc_dt = local_dt.astimezone(pytz.utc)
-        return utc_dt
 
     def start_process(self):
         """ main process start from here."""
@@ -111,51 +105,21 @@ class WeatherData(ZZQLowTask):
                     weather_url = forecast_posturl.format(forecast_key, city, tommorrow_date)
                     response = requests.get(weather_url)
                     response_data = response.json()
-
-                    response_data['location']['localtime'] = response_data[
-                        'location']['localtime'].strip()+':00'
-
-                    response_data['location']['localtime_utc'] = self.time_to_utc(
-                        datetime.datetime.strptime(
-                            response_data['location']['localtime'],
-                            "%Y-%m-%d %H:%M:%S"
-                            ),
-                        response_data['location']['tz_id']).strftime("%Y-%m-%d %H:%M:%S")
-
-                    response_data['current']['last_updated'] = response_data[
-                        'current']['last_updated'].strip()+':00'
-
-                    response_data['current']['last_updated_utc'] = self.time_to_utc(
-                        datetime.datetime.strptime(
-                            response_data['current']['last_updated'],
-                            "%Y-%m-%d %H:%M:%S"
-                            ),
-                        response_data['location']['tz_id']).strftime("%Y-%m-%d %H:%M:%S")
-
-                    # for nest_data in range(len(response_data['forecast']['forecastday'][0]['hour'])):
-                    #     response_data['forecast']['forecastday'][0]['hour'][nest_data]['time'] = response_data['forecast']['forecastday'][0]['hour'][nest_data]['time'].strip()+':00'
-                    #     response_data['forecast']['forecastday'][0]['hour'][nest_data]['time_utc'] = self.time_to_utc(datetime.datetime.strptime(response_data['forecast']['forecastday'][0]['hour'][nest_data]['time'], "%Y-%m-%d %H:%M:%S"), response_data['location']['tz_id']).strftime("%Y-%m-%d %H:%M:%S")
-
-                    del response_data['forecast']['forecastday'][0]['day']['uv']
-                    del response_data['current']['uv']
-
-                    # for cnt in range(len(response_data['forecast']['forecastday'][0]['hour'])):
-                    #     del response_data[
-                    #         'forecast']['forecastday'][0]['hour'][cnt]['chance_of_rain']
-
-                    #     del response_data[
-                    #         'forecast']['forecastday'][0]['hour'][cnt]['chance_of_snow']
-
+                    response_data = self.util_obj.modify_weather_data(response_data)
                     weather_api = posturl + weather_posturl
                     r = requests.post(
                         weather_api, headers=headers, json=response_data, verify=False)
-                    print("data.... {}".format(response_data))
-                    print(" \n\n\t\t=>   ",r.json())
+                    # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
+                    print(" \n\n\t\t=>   {}".format(r.json()))
                     if r.status_code == 201:
                         print(
-                            "The weather of {} data posted successfully on api.{}".format(
-                                city, self.cnt))
+                            "Success, weather data post of city: \'{}\', status: {} cnt: {}".format(
+                                city, r.status_code, self.cnt))
                         self.cnt += 1
                     else:
-                        print("The weather data unable to get posted! Try again. {}".format(
-                            r.status_code))
+                        print(
+                            "The weather data unable to get"
+                            "posted! Try again. json: {} {}").format(
+                                r.json(),
+                                r.status_code
+                        )

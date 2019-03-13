@@ -99,6 +99,10 @@ class FetchRedisRecords(ZZQLowTask):
                     #         self.config_json['smtp']['reply_to']
                     #     )
                 except Exception as e:
-                    print("error occurred : {} and msg data is: {}".format(e, message['data']))
+                    print("Error occurred: {} \t on data: {}\tand msg data is: {}".format(
+                        e,
+                        self.config_json["redis_connect"]["redis_name"],
+                        message['data'])
+                    )
                 cnt += 1
                 time.sleep(0.001)
