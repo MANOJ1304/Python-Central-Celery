@@ -9,7 +9,7 @@ import redis
 import yaml
 import pymysql.cursors
 from celery import Celery
-from tasks.celery_queue_tasks import ZZQHighTask
+from tasks.celery_queue_tasks import ZZQIVIU
 from tasks.iviu_connector_nest.net_connection import CheckNet
 from celery.task.control import revoke
 
@@ -21,7 +21,8 @@ with open(config_file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile)
 redis_channel = cfg['redis_channel_events']
 
-class IviuConnect(ZZQHighTask):
+
+class IviuConnect(ZZQIVIU):
     """ testing Task. """
     name = 'Iviu Connector'
     description = """ It gets data from the host and  will send data to redis subscriber."""
