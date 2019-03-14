@@ -37,7 +37,7 @@ class FetchRedisRecords(ZZQLowTask):
         """insert mail address if not present into redis."""
         mail_list_seq = [
             "sushil.jaiswar@tes.media",
-            "manmohan.singh@tes.media",
+            # "manmohan.singh@tes.media",
             "roger.blain@tes.media",
             # "it.staff@tes.media"
             ]
