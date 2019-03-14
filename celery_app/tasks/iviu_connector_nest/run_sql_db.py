@@ -90,7 +90,7 @@ class IviuConnect(ZZQHighTask):
         self.db.generate_mapping(create_tables=True)
         set_sql_debug(False)
 
-    class IviuEntity(db.Entity):
+    class IviuEntity_Zadd(db.Entity):
         # _table_ = 'p00169'
         id = PrimaryKey(int)
         dpt = Required(int)
@@ -115,16 +115,16 @@ class IviuConnect(ZZQHighTask):
         fs = Required(int)
         utcft = Required(datetime)
         it = Required(datetime)
-        # unix_tt = Optional(int)
+        unix_tt = Optional(int)
 
     def post_to_redis(self,tt,table_name, post_data):
         try:
             redis_conf = self.config_json['redis_connection']
             for i in list(redis_conf):
                 # print("getting tt and tablename",redis_channel,self.redis_connections[i],type(post_data))
-                # channel = redis_channel+table_name
-                # self.redis_connections[i].zadd(channel,{post_data: tt})
-                self.redis_connections[i].lpush(redis_channel,post_data)
+                channel = redis_channel+table_name
+                self.redis_connections[i].zadd(channel,{post_data: tt})
+                # self.redis_connections[i].lpush(redis_channel,post_data)
         except Exception as ex:
             # print ('Error:', ex)
             exit('Failed to connect, terminating.')
@@ -144,10 +144,12 @@ class IviuConnect(ZZQHighTask):
 
         #Assign unix time
         # iviu['tt'] = iviu['unix_tt']
+
         iviu_format['data'] = iviu
         # print("hash value of each row {}------".format(iviu_format))
 
-        self.post_to_redis(iviu['tt'],table_name,json.dumps(iviu_format, default = self.myconverter))
+        self.post_to_redis(iviu['unix_tt'],table_name,json.dumps(iviu_format, default = self.myconverter))
+
 
     def handle_er(self,net,tableName,tt):
         data_err = { "alarm_message": "iviu_connector_error",
@@ -182,24 +184,18 @@ class IviuConnect(ZZQHighTask):
             whereClause = ""
             if len(tt) != 0:
                 whereClause = " WHERE tt > '" + tt + "' AND inv !='0.0'"
-            sqlQuery = "SELECT * FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
-            # sqlQuery = "SELECT *,CAST( (UNIX_TIMESTAMP(tt) * 1000) AS UNSIGNED) as unix_tt FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
+            # sqlQuery = "SELECT * FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
+            sqlQuery = "SELECT *,CAST( (UNIX_TIMESTAMP(tt) * 1000) AS UNSIGNED) as unix_tt FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
 
             query=None
             try:
-                query = self.IviuEntity.select_by_sql(sqlQuery)
+                query = self.IviuEntity_Zadd.select_by_sql(sqlQuery)
                 iviu_list = list(query)
-                # record_id = []
                 for f in iviu_list:
                     # print("Timestamp:{}{}".format(f.tt, tableName) )
                     tt = f.tt.__str__()
-                    # record_id.append(f.id.__str__())
                     self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
-                # for row_id in record_id:
-                    # print("row_id",row_id)
-                    # self.IviuEntity.select(lambda iv: iv.id == row_id).delete(bulk=True)
-                # record_id = []
                 # rowcount += 1
                 self.db.rollback()
             except Exception as ex:

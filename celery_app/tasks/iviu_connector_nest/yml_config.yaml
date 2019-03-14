@@ -2,7 +2,7 @@ celery:
     CELERY_BROKER_URL : 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND : 'redis://localhost:6379/0'
 
-redis_channel_events : 'OP:QUEUE:bloodhound'
+redis_channel_events : 'OP:QUEUE:iviu:'
 
 other:
     connection : https://www.gmail.com
