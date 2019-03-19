@@ -3,18 +3,17 @@ import yaml
 
 
 class MailSender():
-    def __init__(self, config):
-        # with open(config_file, 'r') as ymlfile:
-        #     self.cfg = yaml.load(ymlfile)
-        # print('Mail config', config)
-        self.config = config
-        self.username = self.config['username']
-        self.password = self.config['password']
-        self.emails = self.config['emails']
+    def __init__(self):
+        with open("yml_config.yaml", 'r') as ymlfile:
+            self.cfg = yaml.load(ymlfile)
+
+        self.username = self.cfg['mail']['username']
+        self.password = self.cfg['mail']['password']
+        self.emails = self.cfg['mail']['emails']
 
 
     def send_mails(self, body_text):
-        server = smtplib.SMTP(self.config['smtp'], 587)
+        server = smtplib.SMTP(self.cfg['other']['smtp'], 587)
         server.starttls()
         server.login(self.username, self.password)
 

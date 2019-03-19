@@ -11,7 +11,9 @@ import pymysql.cursors
 from celery import Celery
 from tasks.celery_queue_tasks import ZZQIVIU
 from tasks.iviu_connector_nest.net_connection import CheckNet
+from tasks.iviu_connector_nest.send_mail import MailSender
 from celery.task.control import revoke
+from billiard.exceptions import WorkerLostError
 
 config_file = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -51,6 +53,8 @@ class IviuConnect(ZZQIVIU):
         self.redis_conn = None
         self.redis_connections = {}
         self.net = CheckNet()
+        self.retry_count = 0
+        self.err_flag = False
         self.start()
         # print("tt in run method",args[2])
         if len(args) == 3:
@@ -60,6 +64,7 @@ class IviuConnect(ZZQIVIU):
 
 
     def start(self):
+        self.logger.info('Started iviu connector')
         """main entry point for db connection."""
         try:
             if self.net.check_connection(cfg['other']['connection']):
@@ -68,18 +73,27 @@ class IviuConnect(ZZQIVIU):
                     self.redis_connections[i] = redis.StrictRedis(
                             host=redis_conf[i]['host'],
                             port=redis_conf[i]['port'],
-                            password = redis_conf[i]['password'] if "password" in redis_conf[i] else "",
-                            socket_keepalive=True)
+                            password = redis_conf[i]['password'] if "password" in redis_conf[i] else "")
+                            # socket_keepalive=True)
                     # print('redis_connections2 --- {}'.format(self.redis_connections))
 
                 self.redis_conn = redis.StrictRedis(
                     host=self.config_json['redis_err']['host'],
                     port=self.config_json['redis_err']['port'],
-                    password=self.config_json['redis_err']['password'] if "password" in self.config_json['redis_err'] else "",
-                    socket_keepalive=True)
-        except (redis.ConnectionError,redis.TimeoutError) as identifier:
-            pass
-            # print("cant connect to db 1", identifier)
+                    password=self.config_json['redis_err']['password'] if "password" in self.config_json['redis_err'] else "")
+                    # socket_keepalive=True)
+        except (redis.ConnectionError,redis.TimeoutError , WorkerLostError,Exception) as identifier:
+            if self.retry_count <= 2:
+                self.retry_count += 1
+                time.sleep(1)
+                self.start()
+            # print("retry_count value:",self.retry_count,identifier)
+            self.err_flag = False
+            while(net.check_connection(cfg['redis']['connection'])):
+                obj = MailSender()
+                obj.send_mails("Connection lost to redis due to:"+identifier)
+            # exit('Failed to connect, terminating.')
+                # print("cant connect to db 1", identifier)
 
         self.db.bind(
             "mysql",
@@ -120,15 +134,17 @@ class IviuConnect(ZZQIVIU):
 
     def post_to_redis(self,tt,table_name, post_data):
         try:
-            redis_conf = self.config_json['redis_connection']
-            for i in list(redis_conf):
-                # print("getting tt and tablename",redis_channel,self.redis_connections[i],type(post_data))
+            # redis_conf = self.config_json['redis_connection']
+            self.err_flag = False
+            # print('Reconnected redis---{}'.format(self.err_flag))
+            for i in list(self.redis_connections):
                 channel = redis_channel+table_name
+                # print("getting tt and tablename",channel)
                 self.redis_connections[i].zadd(channel,{post_data: tt})
                 # self.redis_connections[i].lpush(redis_channel,post_data)
         except Exception as ex:
+            self.err_flag = True
             # print ('Error:', ex)
-            exit('Failed to connect, terminating.')
 
     def myconverter(self,o):
         if isinstance(o, datetime):
@@ -153,6 +169,7 @@ class IviuConnect(ZZQIVIU):
 
 
     def handle_er(self,net,tableName,tt):
+        self.logger.info('Exception while processing handle_er function in run_sql_db --{}'.format(tableName))
         data_err = { "alarm_message": "iviu_connector_error",
         "alarm_name": tableName,
         "alarm_threshold": "60",
@@ -164,28 +181,24 @@ class IviuConnect(ZZQIVIU):
         while(net.check_connection(cfg['other']['connection'])):
             self.redis_conn.publish("OP:ERR",json.dumps(data_err))
             self.redis_conn.set("OP:BACKUP:"+tableName,tt)
-            break
         else:
             # print('Internet connected')
             self.db.rollback()
 
     @db_session()
     def thread_each_table(self, i, tt=""):
-        # print("Attributes ---{}".format(dir(self.app.request)))
-        self.logger.info('Start reading database')
+        self.logger.info('Started task for table--{}'.format(i))
         tableName = i
-        # print("tt in thread_each_table method",tt)
-        # print('table_name', i)
         # rowcount = 1
         offset = 0
         limit = cfg['other']['limit']
         net = CheckNet()
         iviu_process = True
+
         while(iviu_process):
             whereClause = ""
             if len(tt) != 0:
                 whereClause = " WHERE tt > '" + tt + "' AND inv !='0.0'"
-            # sqlQuery = "SELECT * FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
             sqlQuery = "SELECT *,CAST( (UNIX_TIMESTAMP(tt) * 1000) AS UNSIGNED) as unix_tt FROM " + self.config_json['mysql']['db'] + "." + tableName + whereClause + " order by tt ASC LIMIT " + str(limit)
 
             query=None
@@ -193,9 +206,16 @@ class IviuConnect(ZZQIVIU):
                 query = self.IviuEntity_Zadd.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    # print("Timestamp:{}{}".format(f.tt, tableName) )
-                    tt = f.tt.__str__()
-                    self.formatToConnector(f.to_dict(),tableName)
+                    if not self.err_flag:
+                        tt = f.tt.__str__()
+                        # print("pushing")
+                        if f in iviu_list[1:2] :
+                            # print("Timestamp:{}{}".format(f.tt, tableName) )
+                        self.formatToConnector(f.to_dict(),tableName)
+                    else:
+                        if f in iviu_list[1:2] :
+                            # print("Timestamp:{}{}".format(f.tt, tableName) )
+                        self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
                 # rowcount += 1
                 self.db.rollback()
@@ -210,4 +230,3 @@ class IviuConnect(ZZQIVIU):
             # print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
             self.logger.error('{} table raised an error'.format(tableName))
             time.sleep(0.001)
-        self.db.rollback()
