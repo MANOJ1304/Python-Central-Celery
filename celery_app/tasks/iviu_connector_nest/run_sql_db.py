@@ -209,12 +209,12 @@ class IviuConnect(ZZQIVIU):
                     if not self.err_flag:
                         tt = f.tt.__str__()
                         # print("pushing")
-                        if f in iviu_list[1:2] :
-                            # print("Timestamp:{}{}".format(f.tt, tableName) )
+                        # if f in iviu_list[1:2] :
+                        #     print("Timestamp:{}{}".format(f.tt, tableName) )
                         self.formatToConnector(f.to_dict(),tableName)
                     else:
-                        if f in iviu_list[1:2] :
-                            # print("Timestamp:{}{}".format(f.tt, tableName) )
+                        # if f in iviu_list[1:2] :
+                        #     print("Timestamp:{}{}".format(f.tt, tableName) )
                         self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
                 # rowcount += 1
