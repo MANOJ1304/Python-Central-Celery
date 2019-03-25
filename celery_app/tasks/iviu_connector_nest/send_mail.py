@@ -1,10 +1,13 @@
 import smtplib
 import yaml
-
+import os
+config_file = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'yml_config.yaml')
 
 class MailSender():
     def __init__(self):
-        with open("yml_config.yaml", 'r') as ymlfile:
+        with open(config_file, 'r') as ymlfile:
             self.cfg = yaml.load(ymlfile)
 
         self.username = self.cfg['mail']['username']
@@ -13,7 +16,7 @@ class MailSender():
 
 
     def send_mails(self, body_text):
-        server = smtplib.SMTP(self.cfg['other']['smtp'], 587)
+        server = smtplib.SMTP(self.cfg['mail']['smtp'], 587)
         server.starttls()
         server.login(self.username, self.password)
 

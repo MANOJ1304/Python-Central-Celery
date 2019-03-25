@@ -23,7 +23,6 @@ with open(config_file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile)
 redis_channel = cfg['redis_channel_events']
 
-
 class IviuConnect(ZZQIVIU):
     """ testing Task. """
     name = 'Iviu Connector'
@@ -187,6 +186,8 @@ class IviuConnect(ZZQIVIU):
                 # print("Sending mail about redis connection lost 2")
                 self.redis_conn.publish("OP:ERR",json.dumps(data_err))
                 self.redis_conn.set("OP:BACKUP:"+tableName,tt)
+                obj = MailSender()
+                obj.send_mails("Connection lost to redis due to:"+tableName)
                 self.email_flag =False
         else:
             # print('Internet connected')
@@ -237,3 +238,4 @@ class IviuConnect(ZZQIVIU):
             # print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
             self.logger.error('{} table raised an error'.format(tableName))
             time.sleep(0.001)
+        self.db.rollback()
