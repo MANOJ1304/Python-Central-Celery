@@ -55,6 +55,7 @@ class IviuConnect(ZZQIVIU):
         self.net = CheckNet()
         self.retry_count = 0
         self.err_flag = False
+        self.email_flag =True
         self.start()
         # print("tt in run method",args[2])
         if len(args) == 3:
@@ -89,9 +90,12 @@ class IviuConnect(ZZQIVIU):
                 self.start()
             # print("retry_count value:",self.retry_count,identifier)
             self.err_flag = False
-            while(net.check_connection(cfg['redis']['connection'])):
-                obj = MailSender()
-                obj.send_mails("Connection lost to redis due to:"+identifier)
+            while(net.check_connection(cfg['other']['connection'])):
+                if self.email_flag:
+                    # print("Sending mail about redis connection lost")
+                    obj = MailSender()
+                    obj.send_mails("Connection lost to redis due to:"+identifier)
+                    self.email_flag =False
             # exit('Failed to connect, terminating.')
                 # print("cant connect to db 1", identifier)
 
@@ -179,8 +183,11 @@ class IviuConnect(ZZQIVIU):
         }
         # data = [{"from":"iviu_connector"},{"Table_name": tableName},{"Timestamp": tt}]
         while(net.check_connection(cfg['other']['connection'])):
-            self.redis_conn.publish("OP:ERR",json.dumps(data_err))
-            self.redis_conn.set("OP:BACKUP:"+tableName,tt)
+            if self.email_flag:
+                # print("Sending mail about redis connection lost 2")
+                self.redis_conn.publish("OP:ERR",json.dumps(data_err))
+                self.redis_conn.set("OP:BACKUP:"+tableName,tt)
+                self.email_flag =False
         else:
             # print('Internet connected')
             self.db.rollback()
