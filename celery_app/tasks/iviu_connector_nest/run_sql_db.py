@@ -188,6 +188,7 @@ class IviuConnect(ZZQIVIU):
                 self.redis_conn.set("OP:BACKUP:"+tableName,tt)
                 obj = MailSender()
                 obj.send_mails("Connection lost to redis due to:"+tableName)
+                # print("Sending mail about redis connection lost 2:1")
                 self.email_flag =False
         else:
             # print('Internet connected')
@@ -214,28 +215,28 @@ class IviuConnect(ZZQIVIU):
                 query = self.IviuEntity_Zadd.select_by_sql(sqlQuery)
                 iviu_list = list(query)
                 for f in iviu_list:
-                    if not self.err_flag:
-                        tt = f.tt.__str__()
+                    if self.err_flag:
                         # print("pushing")
                         # if f in iviu_list[1:2] :
                         #     print("Timestamp:{}{}".format(f.tt, tableName) )
                         self.formatToConnector(f.to_dict(),tableName)
                     else:
+                        tt = f.tt.__str__()
                         # if f in iviu_list[1:2] :
-                        #     print("Timestamp:{}{}".format(f.tt, tableName) )
+                        #     print("Timestamp in error :{}{}".format(f.tt, tableName) )
                         self.formatToConnector(f.to_dict(),tableName)
                     offset += limit
                 # rowcount += 1
-                self.db.rollback()
+                self.db.commit()
             except Exception as ex:
                 iviu_process = False
                 self.handle_er(net,tableName,tt)
-                # print("exception in tread create table ",ex)
-                self.logger.error('{} table -- {} raised an error'.format(tableName,ex))
+                # print("exception in tread create table ")
+                self.logger.error('{} table -- {} raised an error'.format(tableName))
         else:
-            self.db.rollback()
+            self.db.commit()
             # revoke(self.task_id, terminate=True)
             # print("process stopped for table -- {}, task id -- {}".format(tableName, self.task_id))
             self.logger.error('{} table raised an error'.format(tableName))
             time.sleep(0.001)
-        self.db.rollback()
+        # self.db.rollback()
