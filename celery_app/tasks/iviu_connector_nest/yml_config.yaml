@@ -109,6 +109,6 @@ other:
 
 mail:
     smtp : 'smtp.gmail.com'
-    username : 'dev@intelipower.co.za'
-    password : 'DevelopMent@22'
+    username : 'veertest50@gmail.com'
+    password : 'tesmedia'
     emails : ['veereshp@intelipower.co.za']

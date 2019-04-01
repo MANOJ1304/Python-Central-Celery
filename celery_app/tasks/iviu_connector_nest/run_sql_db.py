@@ -158,7 +158,7 @@ class IviuConnect(ZZQIVIU):
         #     dpath.util.set(base,i[1],iviu[i])
         iviu_format = dict(self.temp_iviu)
 
-        if table_name == "p00390_TES":
+        if table_name == "p00390_old":
             table_name = "p00390"
         iviu_format['table'] = table_name
 
