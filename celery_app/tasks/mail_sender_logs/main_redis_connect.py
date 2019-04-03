@@ -1,4 +1,5 @@
 """redis connection and send mail. """
+import os
 import json
 import time
 import redis
@@ -33,31 +34,6 @@ class FetchRedisRecords(ZZQLowTask):
             )
         # return self.redis_obj
 
-    def insert_redis_email_list(self):
-        """insert mail address if not present into redis."""
-        mail_list_seq = [
-            "sushil.jaiswar@tes.media",
-            # "manmohan.singh@tes.media",
-            "roger.blain@tes.media",
-            # "it.staff@tes.media"
-            ]
-        data = self.redis_obj.sadd("OP:Email:Receptionist", *mail_list_seq)
-        return data
-
-    def redis_email_list(self):
-        """get redis receipnist mail."""
-        # print("key exists -->> ", self.redis_obj.exists(
-        #     self.config_json["redis_connect"]["email_receipnist_key"]))
-        mail_list = self.redis_obj.smembers(
-            self.config_json["redis_connect"]["email_receipnist_key"])
-        mail_list = [x.decode('utf-8') for x in mail_list]
-        if not mail_list:
-            print('mail list not found on redis.')
-            mail_list = self.insert_redis_email_list()
-        # print(mail_list)
-        # print("r type is: ", r.type(redis_key))
-        return mail_list
-
     def sub_redis_data(self):
         """ connect redis instance and subscribe data."""
         self.connect_redis()
@@ -65,7 +41,16 @@ class FetchRedisRecords(ZZQLowTask):
         pubsub.subscribe(self.config_json["redis_connect"]["redis_key"])
         cnt = 1
         while True:
-            email_list = self.redis_email_list()
+            email_list = os.getenv("mail_alert_list")
+            if email_list is None:
+                print("Alert! email list not found. entering default emails.")
+                os.environ["mail_alert_list"] = (
+                    "[\"sushil.jaiswar@tes.media\""
+                    ",\"roger.blain@tes.media\"]"
+                )
+                email_list = os.getenv("mail_alert_list")
+                print('...new email_list...', email_list)
+
             message = pubsub.get_message()
             if message and message['data'] is not None and not isinstance(message['data'], int):
                 print("testing message-->", message["data"])
@@ -82,7 +67,7 @@ class FetchRedisRecords(ZZQLowTask):
                     send_mail(
                         self.config_json['smtp']['credentials']['username'],
                         self.config_json['smtp']['credentials']['password'],
-                        email_list,
+                        json.loads(email_list),
                         html_info['subject'],
                         html_info['newsletter_html']
                         )
