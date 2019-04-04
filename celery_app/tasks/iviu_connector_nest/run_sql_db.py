@@ -144,6 +144,7 @@ class IviuConnect(ZZQIVIU):
                 channel = redis_channel+table_name
                 # print("getting tt and tablename",channel)
                 self.redis_connections[i].zadd(channel,{post_data: tt})
+                self.redis_connections[i].publish("OP:IVIU:PROCESS",post_data)
                 # self.redis_connections[i].lpush(redis_channel,post_data)
         except Exception as ex:
             self.err_flag = True
