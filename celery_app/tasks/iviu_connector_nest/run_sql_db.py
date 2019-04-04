@@ -233,7 +233,7 @@ class IviuConnect(ZZQIVIU):
                 iviu_process = False
                 self.handle_er(net,tableName,tt)
                 # print("exception in tread create table ")
-                self.logger.error('{} table -- {} raised an error'.format(tableName))
+                self.logger.error('{} table --  raised an error'.format(tableName))
         else:
             self.db.commit()
             # revoke(self.task_id, terminate=True)
