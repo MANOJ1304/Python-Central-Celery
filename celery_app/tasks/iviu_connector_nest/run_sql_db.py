@@ -145,6 +145,9 @@ class IviuConnect(ZZQIVIU):
                 # print("getting tt and tablename",channel)
                 self.redis_connections[i].zadd(channel,{post_data: tt})
                 self.redis_connections[i].publish("OP:IVIU:PROCESS",post_data)
+                if table_name == "p00160":
+                    self.redis_connections[i].zadd("op:queue:iviu:p00163",{post_data: tt})
+                    
                 # self.redis_connections[i].lpush(redis_channel,post_data)
         except Exception as ex:
             self.err_flag = True
