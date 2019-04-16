@@ -1,4 +1,9 @@
+""" common medhods will remain here."""
+from slackclient import SlackClient
+
+
 class UtilData():
+    """common usage class. """
     socket_connection = {
         # "ip": "192.168.0.60",
         # "port": 8080,
@@ -35,3 +40,16 @@ class UtilData():
         "username": "demo_so_user@venueengage.co.za",
         "password": "demo9993"
         }
+
+    def slack_alert(self, slack_token, channel_name, msg):
+        """
+            get alert message on slack.
+            usage: slack_alert(<slack token>, <slack channel name>" , <slack message>")
+        """
+        sc = SlackClient(slack_token)
+        data = sc.api_call(
+            "chat.postMessage",
+            channel=channel_name,
+            text=msg
+            )
+        return data['ok']

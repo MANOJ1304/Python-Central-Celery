@@ -4,12 +4,14 @@ requests, socketIO_client_nexus
 
 from time import sleep
 from datetime import datetime
+import threading
+import json
 import requests
-from socketIO_client_nexus import SocketIO, LoggingNamespace, BaseNamespace, ConnectionError
+from celery.task.control import revoke
+from socketIO_client_nexus import SocketIO, BaseNamespace  #, LoggingNamespace, ConnectionError
 from tasks.celery_queue_tasks import ZZQHighTask
 from tasks.monitoring.utils import UtilData
 from tasks.monitoring.patch_record import DataPatch
-import json
 
 
 class DataMonitor(ZZQHighTask):
@@ -26,67 +28,72 @@ class DataMonitor(ZZQHighTask):
         self.jwt_token = ""
 
     def run(self, *args, **kwargs):
+        self.task_id = self.request.id
         # self.start_process(args[0], args[1])
         self.config_json = args[0]
-        self.start_process()
+        # creating threads
+        t1 = threading.Thread(target=self.start_process)
+        t2 = threading.Thread(target=self.run_counter)
+        # setting daemon
+        t1.setDaemon(True)
+        t2.setDaemon(True)
+        # start threads
+        t1.start()
+        t2.start()
+        # wait until threads finish their job
+        t1.join()
+        t2.join()
         return True
 
-    class MainNamespace(BaseNamespace):
-        def on_aaa(self, *args):
-            print('aaa')
-
     class LocationNamespace(BaseNamespace):
+        """ location name space. """
         def on_aaa_response(self, *args):
-            # TODO:
-            # print('start_process ..... ')
-            # self.patch_data.patch_record(self.jwt_token, self.config_json, args)
-            # print('end_process ..... ')
-            # end_datetime = datetime.strptime(
-            #     self.config_json['query']['end_time'],
-            #     "%Y-%m-%d %H:%M:%S"
-            # )
-            # if end_datetime > datetime.utcnow():
-            #     print("exiting process..")
+            """ location name space get server response. """
             print('inside class on_aaa_response', args)
 
-
     def on_connect(self, response):
+        """ connected to server. """
         print('connect %s' % response)
 
     def on_disconnect(self):
+        """ disconnected from server.  """
         print('disconnect')
 
     def on_reconnect(self):
+        """ reconnected to server. """
         print('reconnect')
 
-    def on_aaa_response(self, *args):
-        # print('on_aaa_response', args)
-        # print('start_process ..... ',args)
-        self.patch_data.patch_record(self.jwt_token, self.config_json, json.loads(args[0]))
-        # print('end_process ..... ')
-        end_datetime = datetime.strptime(
-            self.config_json['query']['end_time'],
-            "%Y-%m-%d %H:%M:%S"
-        )
-        # if end_datetime > datetime.utcnow():
-        #     print("exiting process..")
-        #     exit()
-        # print('on_aaa_response', args)
-
-    def listen_location_data(self, *args):
-        # print("listen_location_data args are: {}".format(args))
-        while True:
-            chat_namespace.emit(
-                self.util_obj.chat_message['name'],
-                self.util_obj.chat_message['data']
-                )
-            sleep(1)
-
     def get_server_version(self, args):
-        print(args)
+        """ get server version info. """
+        print("get_server_version: ", args)
 
-    def getCMSSummary(self, args):
-        print(args)
+    def run_counter(self):
+        """ wait till given time and than kill the task."""
+        while True:
+            sleep(1)
+            end_datetime = datetime.strptime(
+                self.config_json['query']['end_time'],
+                "%Y-%m-%d %H:%M:%S"
+            )
+            # printing counter process of the scehema... ...
+            print("run counter: end time: {}\tcurrent utc time: {}\tand condn: {}".format(
+                end_datetime, datetime.utcnow(), datetime.utcnow() > end_datetime)
+            )
+            if datetime.utcnow() > end_datetime:
+                print("killing celery process..")
+                revoke(self.task_id, terminate=True)
+
+    def on_aaa_response(self, *args):
+        """ received response from server.  """
+        # print('start_process ..... ', args)
+        self.patch_data.patch_record(self.jwt_token, self.config_json, json.loads(args[0]))
+        quiz_id = self.config_json["query"]["cod_pin"]
+        # TODO: slack working.
+        self.util_obj.slack_alert(
+            self.config_json["slack_info"]["token"],
+            self.config_json["slack_info"]["channel_name"],
+            self.config_json["slack_info"]["msg"].format(quiz_id),
+            )
 
     def get_auth_code(self):
         """ for jwt token """
@@ -101,21 +108,20 @@ class DataMonitor(ZZQHighTask):
             sleep(0.1)
             self.get_auth_code()
             return True
-
         try:
             # print(r.json()['jwt'])
             return r.json()['jwt']
         except KeyError as e:
             print("Error occured !! Response auth api => {}".format(e))
             print(r.json())
-            # TODO:
-            # send mail....
+            # TODO: send mail....
         except Exception as e:
             print("Unknown Error occured !! Response auth api => {}".format(e))
             self.get_auth_code()
             return True
 
     def start_process(self):
+        """main process start from here. """
         self.jwt_token = self.get_auth_code()
         # print("jwt token is: {}\n".format(self.jwt_token))
         params1 = self.util_obj.socket_connection['params1']
