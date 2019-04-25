@@ -48,7 +48,6 @@ class FetchRedisRecords(ZZQLowTask):
             )
             email_list = os.getenv("mail_alert_list")
             print('...new email_list...', email_list)
-        email_list = json.loads(email_list)
         print("email list: {} \t.. {}".format(email_list, type(email_list)))
         while True:
             message = pubsub.get_message()
