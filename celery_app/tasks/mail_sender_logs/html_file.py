@@ -1,6 +1,7 @@
 """make html file."""
 import json
 from jinja2 import Template
+from tasks.mail_sender_logs.api_get import ApiRequest
 
 
 def make_html_file(data):
@@ -44,6 +45,10 @@ def make_html_file(data):
                             <td>{{item.alarm_message or \'N/A\'}}</td>
                         </tr>
                         <tr>
+                            <th>venue name</th>
+                            <td>{{item.ve_name or \'N/A\'}}</td>
+                        </tr>
+                        <tr>
                             <th>alarm_name</th>
                             <td>{{item.alarm_name or \'N/A\'}}</td>
                         </tr>
@@ -68,6 +73,9 @@ def make_html_file(data):
             </html>
                 '''
     )
+    api_obj = ApiRequest()
+    ve_name = api_obj.get_venue_info(data['veId'])
+    data['ve_name'] = ve_name
     a = t.render(item=data)
     config_file = {}
     config_file['newsletter_html'] = a

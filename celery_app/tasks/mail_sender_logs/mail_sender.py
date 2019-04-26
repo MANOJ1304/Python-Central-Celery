@@ -12,7 +12,7 @@ def send_mail(sender, s_password, recipient, sub, template):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = sub
     msg['From'] = sender
-    # msg['To'] = recipient[0]
+    msg['To'] = recipient[0]
     msg['Bcc'] = ", ".join(recipient)
 
     part2 = MIMEText(template, 'html')
@@ -24,7 +24,7 @@ def send_mail(sender, s_password, recipient, sub, template):
     s.login(sender, s_password)
     s.send_message(msg)
     # s.sendmail(sender, recipient[0], msg.as_string())
-    print("\n\t\t\t-->mail sent on mail {}<<\n".format(recipient))
+    print("\n\t\t\t\33[32m-->mail sent on mail {}<<\33[0m\n".format(recipient))
     s.quit()
 
 # import smtplib
