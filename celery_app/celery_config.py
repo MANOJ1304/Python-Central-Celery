@@ -14,6 +14,12 @@ with open(os.getcwd()+'/configs/config.yaml') as yamlfile:
 # CELERY_BROKER_URL = 'redis://localhost:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
+
+# # #_ UAT
+# CELERY_RESULT_BACKEND = "redis://:HqRmCuM1H2t3@35.234.77.21:6379/0"
+# CELERY_BROKER_URL = "redis://:HqRmCuM1H2t3@35.234.77.21:6379/0"
+
+
 CELERY_BROKER_URL = 'redis://:{}@{}:{}/0'.format(
     cfg['redis']['password'],
     cfg['redis']['host'],

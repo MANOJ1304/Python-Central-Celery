@@ -85,56 +85,55 @@ class FetchRedisRecords(ZZQLowTask):
             if message and message['data'] is not None and not isinstance(message['data'], int):
                 print("testing message-->", message["data"])
                 try:
-                    try:
-                        received_err_data = json.loads(message['data'].decode('utf-8'))
-                    except ValueError as e:
-                        received_err_data = json.loads(
-                            message['data'].decode('utf-8').replace('\'', '\"'))
-                    print("cnt_->>  %d %s," % (cnt, received_err_data))
-                    html_info = make_html_file(received_err_data)
-                    first_name_sub = self.config_json["redis_connect"]["redis_name"]
-                    # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
+                    received_err_data = json.loads(message['data'].decode('utf-8'))
+                except ValueError as e:
+                    received_err_data = json.loads(
+                        message['data'].decode('utf-8').replace('\'', '\"'))
+                print("cnt_->>  %d %s," % (cnt, received_err_data))
+                html_info = make_html_file(received_err_data)
+                first_name_sub = self.config_json["redis_connect"]["redis_name"]
+                # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
+                logger.info(
+                    "current time: {}\t--diff time: {}\t//\\>last seen time: {}\tcon:{}".format(
+                        time.asctime(),
+                        time.time()-self.last_seen_cnt,
+                        self.last_seen_cnt,
+                        (time.time()-self.last_seen_cnt) > 60*15
+                    )
+                )
+                # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
+                self.main_html['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
+                self.main_html['newsletter_html'] += html_info['newsletter_html']
+
+            # #_ checking new msg attached and there is n
+            time_diff = int(time.time()-self.last_seen_cnt)
+            if time_diff > 60*15 and self.main_html.get('subject') is not None:
+                try:
+                    logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
                     logger.info(
                         "current time: {}\t--diff time: {}\t//\\>last seen time: {}\tcon:{}".format(
                             time.asctime(),
-                            time.time()-self.last_seen_cnt,
+                            time_diff,
                             self.last_seen_cnt,
-                            (time.time()-self.last_seen_cnt) > 60*15
+                            time_diff > 60*15
                         )
                     )
-                    # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
-                    self.main_html['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
-                    self.main_html['newsletter_html'] += html_info['newsletter_html']
-
-                    # #_ checking new msg attached and there is n
-                    # if int(time.time()-self.last_seen_cnt) > 20 and self.main_html.get('subject') is not None:
-                    # if int(time.time()-self.last_seen_cnt) > 20:
-                    if int(time.time()-self.last_seen_cnt) > 60*15:
-                        logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
-                        logger.info(
-                            "current time: {}\t--diff time: {}\t//\\>last seen time: {}\tcon:{}".format(
-                                time.asctime(),
-                                time.time()-self.last_seen_cnt,
-                                self.last_seen_cnt,
-                                (time.time()-self.last_seen_cnt) > 60*15
-                            )
+                    send_mail(
+                        self.config_json['smtp']['credentials']['username'],
+                        self.config_json['smtp']['credentials']['password'],
+                        json.loads(email_list),
+                        self.main_html['subject'],
+                        self.main_html['newsletter_html']
                         )
-                        send_mail(
-                            self.config_json['smtp']['credentials']['username'],
-                            self.config_json['smtp']['credentials']['password'],
-                            json.loads(email_list),
-                            self.main_html['subject'],
-                            self.main_html['newsletter_html']
-                            )
-                        logger.info("reassigning last_seen_cnt and main_html to default values.")
-                        # resetting time to current time
-                        self.last_seen_cnt = time.time()
-                        self.main_html = {'newsletter_html': ''}
+                    logger.info("reassigning last_seen_cnt and main_html to default values.")
+                    # resetting time to current time
+                    self.last_seen_cnt = time.time()
+                    self.main_html = {'newsletter_html': ''}
+                    cnt += 1
+                    time.sleep(0.001)
                 except Exception as e:
                     print("Error occurred: {} \t on data: {}\tand msg data is: {}".format(
                         e,
                         self.config_json["redis_connect"]["redis_name"],
                         message['data']
                         ))
-                cnt += 1
-                time.sleep(0.001)
