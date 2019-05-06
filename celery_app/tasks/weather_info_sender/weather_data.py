@@ -1,6 +1,7 @@
 """start weather data post."""
 import json
 import os
+import time
 import datetime
 import warnings
 import logging
@@ -102,9 +103,16 @@ class WeatherData(ZZQLowTask):
                         tommorrow_date = datetime.datetime.strftime(
                             datetime.date.today(), '%Y-%m-%d')
 
-                    weather_url = forecast_posturl.format(forecast_key, city, tommorrow_date)
-                    response = requests.get(weather_url)
-                    response_data = response.json()
+                    try:
+                        weather_url = forecast_posturl.format(forecast_key, city, tommorrow_date)
+                        response = requests.get(weather_url)
+                        response_data = response.json()
+                    except Exception as e:
+                        print(
+                            "\33[31m Error occurred during getting weather"
+                            " info: {} \n weather url: {} \n api response: {}\n city: {} \33[0m"
+                        ).format(e, weather_url, response, city)
+
                     response_data = self.util_obj.modify_weather_data(response_data)
                     weather_api = posturl + weather_posturl
                     r = requests.post(
@@ -118,8 +126,6 @@ class WeatherData(ZZQLowTask):
                         self.cnt += 1
                     else:
                         print(
-                            "The weather data unable to get"
-                            "posted! Try again. json: {} {}").format(
-                                r.json(),
-                                r.status_code
-                        )
+                            "\33[31m The weather data unable to get"
+                            "posted! Try again. json: {} {} \33[0m").format(r.json(), r.status_code)
+                time.sleep(2)
