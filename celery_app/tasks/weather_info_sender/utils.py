@@ -1,6 +1,10 @@
-""" common medhods will remain here."""
+""" common medhods will remain here.
+    we are adding weather key and values data manually because weather data they are using
+    added new keys.so it gives error to the weathre api while posting.
+"""
 import datetime
 import pytz
+from copy import deepcopy
 
 
 class UtilData(object):
@@ -12,6 +16,49 @@ class UtilData(object):
         local_dt = local.localize(input_date, is_dst=None)
         utc_dt = local_dt.astimezone(pytz.utc)
         return utc_dt
+
+    def hourly_weather_data(self, api_hour_data):
+        """ get hourly weather data. """
+        temp_data = []
+        for hour_info in api_hour_data:
+            h_json = {
+                "condition": {}
+            }
+            h_json['time_epoch'] = hour_info['time_epoch']
+            h_json['time'] = hour_info['time']+":00"
+            h_json['temp_c'] = hour_info['temp_c']
+            h_json['temp_f'] = hour_info['temp_f']
+            h_json['is_day'] = hour_info['is_day']
+            h_json['condition']['text'] = hour_info['condition']['text']
+            h_json['condition']['icon'] = hour_info['condition']['icon']
+            h_json['condition']['code']= hour_info['condition']['code']
+            h_json['wind_mph'] = hour_info['wind_mph']
+            h_json['wind_kph'] = hour_info['wind_kph']
+            h_json["wind_degree"] = hour_info["wind_degree"]
+            h_json["wind_dir"] = hour_info["wind_dir"]
+            h_json["pressure_mb"] = hour_info["pressure_mb"]
+            h_json["pressure_in"] = hour_info["pressure_in"]
+            h_json["precip_mm"] = hour_info["precip_mm"]
+            h_json["precip_in"] = hour_info["precip_in"]
+            h_json["humidity"] = hour_info["humidity"]
+            h_json["cloud"] = hour_info["cloud"]
+            h_json["feelslike_c"] = hour_info["feelslike_c"]
+            h_json["feelslike_f"] = hour_info["feelslike_f"]
+            h_json["windchill_c"] = hour_info["windchill_c"]
+            h_json["windchill_f"] = hour_info["windchill_f"]
+            h_json["heatindex_c"] = hour_info["heatindex_c"]
+            h_json["heatindex_f"] = hour_info["heatindex_f"]
+            h_json["dewpoint_c"] = hour_info["dewpoint_c"]
+            h_json["dewpoint_f"] = hour_info["dewpoint_f"]
+            h_json["will_it_rain"] = hour_info["will_it_rain"]
+            h_json["will_it_snow"] = hour_info["will_it_snow"]
+            h_json["vis_km"] = hour_info["vis_km"]
+            h_json["vis_miles"] = hour_info["vis_miles"]
+            h_json["gust_mph"] = hour_info["gust_mph"]
+            h_json["gust_kph"] = hour_info["gust_kph"]
+
+            temp_data.append(deepcopy(h_json))
+        return temp_data
 
     def modify_weather_data(self, api_weather_data):
         """ modify weather response data."""
@@ -30,7 +77,8 @@ class UtilData(object):
                                 "code": 1003
                             }
                         },
-                        "astro": {}
+                        "astro": {},
+                        "hour": []
                     }
                 ]
             }
@@ -127,4 +175,6 @@ class UtilData(object):
         weather_schema['forecast']["forecastday"][0]['astro'][
             'moonset'] = api_weather_data['forecast']["forecastday"][0]['astro']['moonset']
 
+        hour_data = api_weather_data['forecast']["forecastday"][0]['hour']
+        weather_schema['forecast']["forecastday"][0]['hour'] = self.hourly_weather_data(hour_data)
         return weather_schema

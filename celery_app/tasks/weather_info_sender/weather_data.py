@@ -118,7 +118,8 @@ class WeatherData(ZZQLowTask):
                     r = requests.post(
                         weather_api, headers=headers, json=response_data, verify=False)
                     # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
-                    print(" \n\n\t\t=>   {}".format(r.json()))
+                    # print(" weather response data\n\t\t=>   {}".format(r.json()))
+
                     if r.status_code == 201:
                         print(
                             "Success, weather data post of city: \'{}\', status: {} cnt: {}".format(
