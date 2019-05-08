@@ -74,21 +74,23 @@ class FetchRedisRecords(ZZQLowTask):
         email_list = os.getenv("mail_alert_list")
         if email_list is None:
             logger.critical("Alert! email list not found. entering default emails.")
-            os.environ["mail_alert_list"] = (
-                "[\"devops@tes.media\", \"manmohan.singh@tes.media\", \"sushil.jaiswar@tes.media\"]"
-                # "[\"devops@tes.media\"]"
-            )
-            email_list = os.getenv("mail_alert_list")
+
+            email_list = self.config_json["mail_sender_list"]
         logger.info("email list: {} \t.. {}".format(email_list, type(email_list)))
         while True:
             message = pubsub.get_message()
             if message and message['data'] is not None and not isinstance(message['data'], int):
-                print("testing message-->", message["data"])
+                print("received subscribed message--> {}".format(message["data"]))
                 try:
                     received_err_data = json.loads(message['data'].decode('utf-8'))
                 except ValueError as e:
-                    received_err_data = json.loads(
-                        message['data'].decode('utf-8').replace('\'', '\"'))
+                    try:
+                        received_err_data = json.loads(
+                            message['data'].decode('utf-8').replace('\'', '\"'))
+                    except Exception as er:
+                        logger.error("Unknown Error occurred for message:{}\n\t error is {}".format(
+                            message["data"], er))
+                        continue
                 print("cnt_->>  %d %s," % (cnt, received_err_data))
                 html_info = make_html_file(received_err_data)
                 first_name_sub = self.config_json["redis_connect"]["redis_name"]
@@ -107,6 +109,7 @@ class FetchRedisRecords(ZZQLowTask):
 
             # #_ checking new msg attached and there is n
             time_diff = int(time.time()-self.last_seen_cnt)
+
             if time_diff > 60*15 and self.main_html.get('subject') is not None:
                 try:
                     logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
@@ -118,10 +121,11 @@ class FetchRedisRecords(ZZQLowTask):
                             time_diff > 60*15
                         )
                     )
+                    # json.loads(email_list),
                     send_mail(
                         self.config_json['smtp']['credentials']['username'],
                         self.config_json['smtp']['credentials']['password'],
-                        json.loads(email_list),
+                        email_list,
                         self.main_html['subject'],
                         self.main_html['newsletter_html']
                         )
