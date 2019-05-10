@@ -31,7 +31,7 @@ class UtilData(object):
             h_json['is_day'] = hour_info['is_day']
             h_json['condition']['text'] = hour_info['condition']['text']
             h_json['condition']['icon'] = hour_info['condition']['icon']
-            h_json['condition']['code']= hour_info['condition']['code']
+            h_json['condition']['code'] = hour_info['condition']['code']
             h_json['wind_mph'] = hour_info['wind_mph']
             h_json['wind_kph'] = hour_info['wind_kph']
             h_json["wind_degree"] = hour_info["wind_degree"]
@@ -177,4 +177,5 @@ class UtilData(object):
 
         hour_data = api_weather_data['forecast']["forecastday"][0]['hour']
         weather_schema['forecast']["forecastday"][0]['hour'] = self.hourly_weather_data(hour_data)
+        weather_schema['weather_date'] = api_weather_data["forecast"]["forecastday"][0]["date"]
         return weather_schema

@@ -17,7 +17,7 @@ I just added it there because I'm too lazy to add this line whenever I need to a
 
 for (_, name, _) in pkgutil.iter_modules([os.path.dirname(__file__)]):
     # print("asd")
-    imported_module = import_module('.' + name, package='tasks.mail_sender_logs')
+    imported_module = import_module('.' + name, package='tasks.mail_alert_celery')
     # print("analytics...>>", imported_module)
 #     print("dir analytics...>>", dir(imported_module))
     class_name = list(filter(lambda x: x != 'BaseTasks' and not x.startswith('__'),

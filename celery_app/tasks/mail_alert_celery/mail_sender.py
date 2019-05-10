@@ -16,6 +16,7 @@ def send_mail(sender, s_password, recipient, sub, template):
     msg['Bcc'] = ", ".join(recipient)
 
     part2 = MIMEText(template, 'html')
+
     # msg.attach(part1)
     msg.attach(part2)
 

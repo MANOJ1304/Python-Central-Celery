@@ -1,7 +1,6 @@
 """start weather data post."""
-import json
-import os
-import time
+# import json
+# import os
 import datetime
 import warnings
 import logging
@@ -83,50 +82,62 @@ class WeatherData(ZZQLowTask):
             headers['Authorization'] = 'Bearer ' + auth_token
             get_city_names = posturl + weather_city_name_posturl[data_cnt]
             r = requests.get(get_city_names, headers=headers, verify=False)
-            city_name_list = r.json()
-            print("\n\n\t\t->>city name is: {}".format(city_name_list))
             try:
-                city_name_list['cities']
+                city_name_list = r.json()['cities']
             except Exception as e:
                 print("Error occured while getting cities name: {} \tand resp.: {}".format(
-                    e,
-                    city_name_list
-                    ))
+                    e, city_name_list))
+                # TODO: send alert!
                 print("get city name url: {}".format(get_city_names))
 
-            for city in city_name_list['cities']:
-                if len(city.strip()):
+            city_name_list = {i.lower() for i in city_name_list}
+            print("\n\n\t\t->>city name is: {}".format(city_name_list))
+
+            post_ar = []
+            for city in city_name_list:
+                if city.strip():
                     if self.run_day == 'tommorrow':
-                        tommorrow_date = datetime.datetime.strftime(
+                        weather_post_date = datetime.datetime.strftime(
                             datetime.date.today()+datetime.timedelta(days=1), '%Y-%m-%d')
                     elif self.run_day == 'today':
-                        tommorrow_date = datetime.datetime.strftime(
+                        weather_post_date = datetime.datetime.strftime(
                             datetime.date.today(), '%Y-%m-%d')
 
                     try:
-                        weather_url = forecast_posturl.format(forecast_key, city, tommorrow_date)
+                        weather_url = forecast_posturl.format(forecast_key, city, weather_post_date)
                         response = requests.get(weather_url)
                         response_data = response.json()
                     except Exception as e:
                         print(
-                            "\33[31m Error occurred during getting weather"
-                            " info: {} \n weather url: {} \n api response: {}\n city: {} \33[0m"
-                        ).format(e, weather_url, response, city)
+                            """\33[31m Error occurred during getting weather info: {}
+                            weather url: {} \n api response: {}\n city: {}
+                            \33[0m """.format(e, weather_url, response, city))
+                        # TODO: send alert!
 
                     response_data = self.util_obj.modify_weather_data(response_data)
-                    weather_api = posturl + weather_posturl
-                    r = requests.post(
-                        weather_api, headers=headers, json=response_data, verify=False)
-                    # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
-                    # print(" weather response data\n\t\t=>   {}".format(r.json()))
+                    post_ar.append(response_data)
 
-                    if r.status_code == 201:
-                        print(
-                            "Success, weather data post of city: \'{}\', status: {} cnt: {}".format(
-                                city, r.status_code, self.cnt))
-                        self.cnt += 1
-                    else:
-                        print(
-                            "\33[31m The weather data unable to get"
-                            "posted! Try again. json: {} {} \33[0m").format(r.json(), r.status_code)
-                time.sleep(2)
+            weather_api = posturl + weather_posturl
+            try:
+                r = requests.post(
+                    weather_api, headers=headers, json=post_ar, verify=False)
+                # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
+                # print(" weather response data\n\t\t=>   {}".format(r.json()))
+            except Exception as e:
+                print(
+                    """\33[31m Error occurred while posting weather info: {}
+                        \n weather url: {}
+                        \n api response: {}
+                    \n city: {} \33[0m """.format(e, weather_api, post_ar, city_name_list))
+                # TODO: send alert!
+
+            if r.status_code == 201:
+                print(""" \33[32m Success, weather data \33[34m city=> {}, status: {}
+                        cnt: {} \33[34m date: {}\33[0m""".format(
+                            city_name_list, r.status_code, self.cnt, weather_post_date))
+                self.cnt += 1
+            else:
+                print("""\33[31m The weather data unable to get posted!
+                    Try again. json: {} {} \33[0m """.format(
+                        r.json(), r.status_code))
+                # TODO: send alert!

@@ -7,8 +7,8 @@ import time
 import yaml
 import redis
 from tasks.celery_queue_tasks import ZZQLowTask
-from tasks.mail_sender_logs.mail_sender import send_mail
-from tasks.mail_sender_logs.html_file import make_html_file
+from tasks.mail_alert_celery.mail_sender import send_mail
+from tasks.mail_alert_celery.html_file import make_html_file
 logger = logging.getLogger(__name__)
 
 
@@ -77,6 +77,7 @@ class FetchRedisRecords(ZZQLowTask):
 
             email_list = self.config_json["mail_sender_list"]
         logger.info("email list: {} \t.. {}".format(email_list, type(email_list)))
+        mail_msg_cnt = 0
         while True:
             message = pubsub.get_message()
             if message and message['data'] is not None and not isinstance(message['data'], int):
@@ -106,11 +107,13 @@ class FetchRedisRecords(ZZQLowTask):
                 # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
                 self.main_html['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
                 self.main_html['newsletter_html'] += html_info['newsletter_html']
-
+                mail_msg_cnt += 1
             # #_ checking new msg attached and there is n
             time_diff = int(time.time()-self.last_seen_cnt)
-
             if time_diff > 60*15 and self.main_html.get('subject') is not None:
+                mail_body = """\n<h2><font color=\"red\">
+                    Total alrets received: {}</font></h2>\n""".format(mail_msg_cnt) +\
+                    self.main_html['newsletter_html']
                 try:
                     logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
                     logger.info(
@@ -127,8 +130,9 @@ class FetchRedisRecords(ZZQLowTask):
                         self.config_json['smtp']['credentials']['password'],
                         email_list,
                         self.main_html['subject'],
-                        self.main_html['newsletter_html']
+                        mail_body
                         )
+                    mail_msg_cnt = 0
                     logger.info("reassigning last_seen_cnt and main_html to default values.")
                     # resetting time to current time
                     self.last_seen_cnt = time.time()

@@ -1,7 +1,7 @@
 """make html file."""
 import json
 from jinja2 import Template
-from tasks.mail_sender_logs.api_get import ApiRequest
+from tasks.mail_alert_celery.api_get import ApiRequest
 
 
 def make_html_file(data):
