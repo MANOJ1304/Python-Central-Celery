@@ -1,6 +1,6 @@
 """start weather data post."""
 # import json
-# import os
+import os
 import datetime
 import warnings
 import logging
@@ -55,6 +55,9 @@ class WeatherData(ZZQLowTask):
     #     else:
     #         logging.basicConfig(level=default_level)
 
+    def slack_alert(self, title, data):
+        os.system("slack-notification random \"{}\"  \"{}\"".format(title, data))
+
     def start_process(self):
         """ main process start from here."""
         # self.setup_logging()
@@ -76,7 +79,10 @@ class WeatherData(ZZQLowTask):
                     'The login status is successfull  and status code is --> {}'.format(
                         r.status_code))
             else:
-                print("The login api is not working.")
+                msg = "The login api is not working."
+                print("\33[31m"+msg+"\33[0m")
+                self.slack_alert("Error, Login api", msg)
+                break
 
             headers = post_header
             headers['Authorization'] = 'Bearer ' + auth_token
@@ -85,10 +91,12 @@ class WeatherData(ZZQLowTask):
             try:
                 city_name_list = r.json()['cities']
             except Exception as e:
-                print("Error occured while getting cities name: {} \tand resp.: {}".format(
-                    e, city_name_list))
-                # TODO: send alert!
-                print("get city name url: {}".format(get_city_names))
+                msg = (
+                    "city name url: {}\t "
+                    "Error is: {} \tand response.: {}").format(get_city_names, e, r.json())
+                print("\33[31m"+msg+"\33[0m")
+                self.slack_alert("Error, getting city names", msg)
+                break
 
             city_name_list = {i.lower() for i in city_name_list}
             print("\n\n\t\t->>city name is: {}".format(city_name_list))
@@ -108,11 +116,13 @@ class WeatherData(ZZQLowTask):
                         response = requests.get(weather_url)
                         response_data = response.json()
                     except Exception as e:
-                        print(
-                            """\33[31m Error occurred during getting weather info: {}
-                            weather url: {} \n api response: {}\n city: {}
-                            \33[0m """.format(e, weather_url, response, city))
-                        # TODO: send alert!
+                        msg = (
+                            "Error is: {} \t"
+                            "weather url: {} \t "
+                            "city: {} ").format(e, weather_url, city)
+                        print("\33[31m"+msg+"\33[0m")
+                        self.slack_alert("Error, getting forecast api info", msg)
+                        break
 
                     response_data = self.util_obj.modify_weather_data(response_data)
                     post_ar.append(response_data)
@@ -120,24 +130,33 @@ class WeatherData(ZZQLowTask):
             weather_api = posturl + weather_posturl
             try:
                 r = requests.post(
-                    weather_api, headers=headers, json=post_ar, verify=False)
+                    weather_api, headers=headers, json=post_ar)
                 # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
                 # print(" weather response data\n\t\t=>   {}".format(r.json()))
             except Exception as e:
-                print(
-                    """\33[31m Error occurred while posting weather info: {}
-                        \n weather url: {}
-                        \n api response: {}
-                    \n city: {} \33[0m """.format(e, weather_api, post_ar, city_name_list))
-                # TODO: send alert!
+                msg = (
+                    "Error info: {} \t"
+                    "weather url: {} \t"
+                    "api response: {} \t"
+                    "city: {}").format(e, weather_api, r.json(), city_name_list)
+                print("\33[31m"+msg+"\33[0m")
+                self.slack_alert("Error, posting weather info", msg)
+                break
 
             if r.status_code == 201:
                 print(""" \33[32m Success, weather data \33[34m city=> {}, status: {}
                         cnt: {} \33[34m date: {}\33[0m""".format(
                             city_name_list, r.status_code, self.cnt, weather_post_date))
+                msg = (
+                    "Success, weather data city=> {} \t status: {} \t"
+                    "cnt: {} \t date: {}").format(
+                            city_name_list, r.status_code, self.cnt, weather_post_date)
+                self.slack_alert("Success, weather data post successfully", msg)
                 self.cnt += 1
             else:
-                print("""\33[31m The weather data unable to get posted!
-                    Try again. json: {} {} \33[0m """.format(
-                        r.json(), r.status_code))
-                # TODO: send alert!
+                msg = (
+                    "The weather data unable to get posted! "
+                    "Try again. json is: {} \t status code: {}").format(
+                        r.json(), r.status_code)
+                print("\33[31m"+msg+"\33[0m")
+                self.slack_alert("Error, weather data unable to get posted", msg)

@@ -112,7 +112,7 @@ class FetchRedisRecords(ZZQLowTask):
             time_diff = int(time.time()-self.last_seen_cnt)
             if time_diff > 60*15 and self.main_html.get('subject') is not None:
                 mail_body = """\n<h2><font color=\"red\">
-                    Total alrets received: {}</font></h2>\n""".format(mail_msg_cnt) +\
+                    Total alerts received: {}</font></h2>\n""".format(mail_msg_cnt) +\
                     self.main_html['newsletter_html']
                 try:
                     logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
