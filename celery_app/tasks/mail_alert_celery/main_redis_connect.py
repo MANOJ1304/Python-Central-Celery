@@ -115,6 +115,24 @@ class FetchRedisRecords(ZZQLowTask):
                     Total alerts received: {}</font></h2>\n""".format(mail_msg_cnt) +\
                     self.main_html['newsletter_html']
                 try:
+                    # redis monitoring task.
+                    redis_monitoring_dict = {
+                        "timestamp": time.asctime(),
+                        "count": mail_msg_cnt
+                        }
+                    rec_data = self.redis_obj.get("OP:ERR:SUMMARY")
+                    if rec_data is None:
+                        new_data = []
+                        new_data.append(redis_monitoring_dict)
+                        final_rec_data = json.dumps(new_data)
+                    elif isinstance(rec_data, bytes):
+                        rec_data = rec_data.decode("utf-8")
+                        if isinstance(rec_data, list):
+                            rec_data.append(redis_monitoring_dict)
+                        final_rec_data = json.dumps(rec_data[-10:])
+
+                    self.redis_obj.set("OP:ERR:SUMMARY", final_rec_data)
+
                     logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
                     logger.info(
                         "current time: {}\t--diff time: {}\t//\\>last seen time: {}\tcon:{}".format(
