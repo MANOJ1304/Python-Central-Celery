@@ -4,6 +4,7 @@ import json
 import logging
 import logging.config
 import time
+from datetime import datetime
 import yaml
 import redis
 from tasks.celery_queue_tasks import ZZQLowTask
@@ -117,20 +118,27 @@ class FetchRedisRecords(ZZQLowTask):
                 try:
                     # redis monitoring task.
                     redis_monitoring_dict = {
-                        "timestamp": time.asctime(),
+                        "timestamp": str(datetime.now()),
                         "count": mail_msg_cnt
                         }
                     rec_data = self.redis_obj.get("OP:ERR:SUMMARY")
+                    logger.info("redis_monitoring_dict: {}\t\t type: {}\n##".format(
+                        redis_monitoring_dict, type(redis_monitoring_dict)))
+
                     if rec_data is None:
-                        new_data = []
-                        new_data.append(redis_monitoring_dict)
-                        final_rec_data = json.dumps(new_data)
+                        first_red_data = []
+                        first_red_data.append(redis_monitoring_dict)
+                        final_rec_data = json.dumps(first_red_data)
                     elif isinstance(rec_data, bytes):
-                        rec_data = rec_data.decode("utf-8")
+                        rec_data = json.loads(rec_data.decode("utf-8"))
                         if isinstance(rec_data, list):
                             rec_data.append(redis_monitoring_dict)
+                        else:
+                            logger.info(
+                                "redis record is not list type.. "
+                                "rec_data: {}\t type is: {}").format(rec_data, type(rec_data))
+                            rec_data = [json.dumps(redis_monitoring_dict)]
                         final_rec_data = json.dumps(rec_data[-10:])
-
                     self.redis_obj.set("OP:ERR:SUMMARY", final_rec_data)
 
                     logger.critical("time to send mail.....{}\n\n ".format(time.asctime()))
