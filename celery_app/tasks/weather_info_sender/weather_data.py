@@ -124,8 +124,17 @@ class WeatherData(ZZQLowTask):
                         self.slack_alert("Error, getting forecast api info", msg)
                         break
 
-                    response_data = self.util_obj.modify_weather_data(response_data)
-                    post_ar.append(response_data)
+                    try:
+                        response_data = self.util_obj.modify_weather_data(response_data)
+                        post_ar.append(response_data)
+                    except Exception as e:
+                        msg = (
+                            "Error is: {} \t"
+                            "weather url: {} \t "
+                            "city: {} ").format(e, weather_url, city)
+                        print("\33[31m"+msg+"\33[0m")
+                        self.slack_alert("Error, getting city name forecast api info", msg)
+                        continue
 
             weather_api = posturl + weather_posturl
             try:
