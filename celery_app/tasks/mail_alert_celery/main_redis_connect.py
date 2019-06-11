@@ -94,7 +94,11 @@ class FetchRedisRecords(ZZQLowTask):
                             message["data"], er))
                         continue
                 print("cnt_->>  %d %s," % (cnt, received_err_data))
-                html_info = make_html_file(received_err_data)
+                html_info = make_html_file(
+                    received_err_data,
+                    self.config_json['first_url'],
+                    self.config_json['slack_key']
+                )
                 first_name_sub = self.config_json["redis_connect"]["redis_name"]
                 # html_info['subject'] = str(first_name_sub)+": "+str(html_info['subject'])
                 logger.info(

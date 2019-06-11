@@ -4,7 +4,7 @@ from jinja2 import Template
 from tasks.mail_alert_celery.api_get import ApiRequest
 
 
-def make_html_file(data):
+def make_html_file(data, first_url, slack_key):
     """html file """
     # print('kkkd... ', data, type(data))
     if isinstance(data, str):
@@ -73,7 +73,7 @@ def make_html_file(data):
             </html>
                 '''
     )
-    api_obj = ApiRequest()
+    api_obj = ApiRequest(first_url, slack_key)
     ve_name = api_obj.get_venue_info(data['veId'])
     data['ve_name'] = ve_name
     a = t.render(item=data)
