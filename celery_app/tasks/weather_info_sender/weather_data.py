@@ -1,6 +1,7 @@
 """start weather data post."""
 # import json
 import os
+import time
 import datetime
 import warnings
 import logging
@@ -24,6 +25,7 @@ class WeatherData(ZZQLowTask):
     def __init__(self):
         """ initialise process start from here. """
         self.run_day = 'today'
+        self.retry_cnt = 0
         self.util_obj = UtilData()
         self.cnt = 0
         self.config_json = ''
@@ -71,11 +73,60 @@ class WeatherData(ZZQLowTask):
         os.system(
             "slack-notification random \"{}\"  \"{}\" \"{}\"".format(title, data, self.slack_key))
 
+    def modify_weather_json(self, data, api_name):
+        """ modify weather data. """
+        try:
+            response_data = self.util_obj.modify_weather_data(data)
+            return response_data
+        except Exception as e:
+            msg = (
+                "Error while modifying data: {} \t"
+                "weather url: {} \t ").format(e, api_name)
+            print("\33[31m"+msg+"\33[0m")
+            self.slack_alert("Error, weather getting city name forecast api info", msg)
+            return None
+
+    def get_city_weather(self, city_weather_api):
+        """get city weather from weather api. """
+        try:
+            # FIXME: critical error
+            response = requests.get(city_weather_api)
+            response_data = response.json()
+            # print("forecast api: {}\t response: {}".format(city_weather_api, response_data))
+            if 'error' in response_data.keys():
+                raise Exception(response_data)
+            modified_json = self.modify_weather_json(response_data, city_weather_api)
+            return modified_json
+        except Exception as e:
+            self.retry_cnt += 1
+            print("sleep time started.. {}\t retry cnt: {}".format(e, self.retry_cnt))
+            time.sleep(10)
+            if self.retry_cnt == 3:
+                msg = "Error in forecast api: {} \tweather url: {} \t ".format(e, city_weather_api)
+                print("\33[31m"+msg+"\33[0m")
+                self.slack_alert("Error, weather forecast api info", msg)
+                self.retry_cnt = 0
+            self.get_city_weather(city_weather_api)
+            return None
+
+    def get_auth(self, login_url, auth_json):
+        """ get access code. """
+        r = requests.post(login_url, json=auth_json, verify=False)
+        if r.status_code == 200:
+            auth_token = r.json()['jwt']
+            print(
+                'The login status is successfull  and status code is --> {}'.format(
+                    r.status_code))
+            return auth_token
+        else:
+            msg = "The login api is not working."
+            print("\33[31m"+msg+"\33[0m")
+            self.slack_alert("Error, weather Login api", msg)
+            return None
+
     def start_process(self):
         """ main process start from here."""
         # self.setup_logging()
-        auth_json = self.config_json['weather_api']['auth_json']
-        login_api = self.config_json['weather_api']['login_api']
         new_posturl = self.config_json['weather_api']['posturl']
         post_header = self.config_json['weather_api']['post_header']
         weather_city_name_posturl = self.config_json['weather_api']['weather_city_name_posturl']
@@ -84,23 +135,14 @@ class WeatherData(ZZQLowTask):
         forecast_key = self.config_json['weather_server']['forecast_key']
 
         for data_cnt, posturl in enumerate(new_posturl):
-            access_token_url = posturl+login_api
-            r = requests.post(access_token_url, json=auth_json, verify=False)
-            if r.status_code == 200:
-                auth_token = r.json()['jwt']
-                print(
-                    'The login status is successfull  and status code is --> {}'.format(
-                        r.status_code))
-            else:
-                msg = "The login api is not working."
-                print("\33[31m"+msg+"\33[0m")
-                self.slack_alert("Error, weather Login api", msg)
-                break
+            auth_token = self.get_auth(
+                posturl+self.config_json['weather_api']['login_api'],
+                self.config_json['weather_api']['auth_json']
+            )
 
-            headers = post_header
-            headers['Authorization'] = 'Bearer ' + auth_token
+            post_header['Authorization'] = 'Bearer ' + auth_token
             get_city_names = posturl + weather_city_name_posturl[data_cnt]
-            r = requests.get(get_city_names, headers=headers, verify=False)
+            r = requests.get(get_city_names, headers=post_header)
             try:
                 city_name_list = r.json()['cities']
             except Exception as e:
@@ -124,35 +166,16 @@ class WeatherData(ZZQLowTask):
                         weather_post_date = datetime.datetime.strftime(
                             datetime.date.today(), '%Y-%m-%d')
 
-                    try:
-                        weather_url = forecast_posturl.format(forecast_key, city, weather_post_date)
-                        response = requests.get(weather_url)
-                        response_data = response.json()
-                    except Exception as e:
-                        msg = (
-                            "Error is: {} \t"
-                            "weather url: {} \t "
-                            "city: {} ").format(e, weather_url, city)
-                        print("\33[31m"+msg+"\33[0m")
-                        self.slack_alert("Error, weather getting forecast api info", msg)
-                        break
-
-                    try:
-                        response_data = self.util_obj.modify_weather_data(response_data)
-                        post_ar.append(response_data)
-                    except Exception as e:
-                        msg = (
-                            "Error is: {} \t"
-                            "weather url: {} \t "
-                            "city: {} ").format(e, weather_url, city)
-                        print("\33[31m"+msg+"\33[0m")
-                        self.slack_alert("Error, weather getting city name forecast api info", msg)
-                        continue
+                    forecast_weather_api = forecast_posturl.format(
+                        forecast_key, city, weather_post_date)
+                    response_data = self.get_city_weather(forecast_weather_api)
+                    print("received data for: {}".format(city))
+                    post_ar.append(response_data)
 
             weather_api = posturl + weather_posturl
             try:
                 r = requests.post(
-                    weather_api, headers=headers, json=post_ar)
+                    weather_api, headers=post_header, json=post_ar)
                 # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
                 # print(" weather response data\n\t\t=>   {}".format(r.json()))
             except Exception as e:
@@ -162,7 +185,7 @@ class WeatherData(ZZQLowTask):
                     "api response: {} \t"
                     "city: {}").format(e, weather_api, r.json(), city_name_list)
                 print("\33[31m"+msg+"\33[0m")
-                self.slack_alert("Error, weather posting weather info", msg)
+                self.slack_alert("Error, occurred during posting weather json.", msg)
                 break
 
             if r.status_code == 201:
