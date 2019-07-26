@@ -30,6 +30,7 @@ class WeatherData(ZZQLowTask):
         self.cnt = 0
         self.config_json = ''
         self.slack_key = ''
+        self.delete_url = "?delete={{\"weather_date\": \"{}\"}}"
 
     def run(self, *args, **kwargs):
         """ start celery process from here. """
@@ -124,6 +125,22 @@ class WeatherData(ZZQLowTask):
             self.slack_alert("Error, weather Login api", msg)
             return None
 
+    def delete_weather(self, delete_url, post_header):
+        """ delete weather data of current date."""
+        try:
+            delete_url = delete_url+self.delete_url.format(datetime.date.today().strftime("%Y-%m-%d"))
+            r = requests.get(delete_url, headers=post_header)
+            # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
+            print("\33[36m delete weather response data \t=>   {} \33[0m ".format(r.json()))
+        except Exception as e:
+            msg = (
+                "Error info: {} \t"
+                "weather delete url: {} \t"
+                "api response: {} \t"
+                ).format(e, delete_url, r.json())
+            print("\33[31m"+msg+"\33[0m")
+            self.slack_alert("Error, occurred during posting weather json.", msg)
+
     def start_process(self):
         """ main process start from here."""
         # self.setup_logging()
@@ -173,7 +190,9 @@ class WeatherData(ZZQLowTask):
                     post_ar.append(response_data)
 
             weather_api = posturl + weather_posturl
+
             try:
+                self.delete_weather(weather_api, post_header)
                 r = requests.post(
                     weather_api, headers=post_header, json=post_ar)
                 # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
