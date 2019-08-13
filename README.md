@@ -16,3 +16,7 @@ Running instructions:
                 $ celery worker -A analyzer -Q priority_high -l INFO
                 $ celery worker -A analyzer -Q default -l INFO
                 $ celery worker -A analyzer -Q iviu_queue -l INFO
+
+# Dependecies:
+                go to celery_app and change "celery_config.py"
+                for CELERY_BROKER_URL and CELERY_RESULT_BACKEND
