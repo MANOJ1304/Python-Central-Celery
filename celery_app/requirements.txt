@@ -4,7 +4,7 @@ python-dateutil==2.7.2
 PyYAML==3.12
 tzlocal==1.5.1
 cloudinary==1.7.0
-celery==4.2.1
+celery==4.4.0
 pony==0.7.6
 pytz==2018.7
 redis==3.2.0

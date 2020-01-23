@@ -24,13 +24,15 @@ class WeatherData(ZZQLowTask):
 
     def __init__(self):
         """ initialise process start from here. """
-        self.run_day = 'today'
+        # self.run_day = 'today'
         self.retry_cnt = 0
         self.util_obj = UtilData()
         self.cnt = 0
         self.config_json = ''
         self.slack_key = ''
-        self.delete_url = "?delete={{\"weather_date\": \"{}\"}}"
+        # self.delete_url = "?delete={{\"weather_date\": \"{}\"}}"
+        self.delete_url = "?delete={{\"weather_date\": \"{}\",\"location.name\":\"{}\"}}"
+        self.delete_info = {}
 
     def run(self, *args, **kwargs):
         """ start celery process from here. """
@@ -74,29 +76,66 @@ class WeatherData(ZZQLowTask):
         os.system(
             "slack-notification random \"{}\"  \"{}\" \"{}\"".format(title, data, self.slack_key))
 
-    def modify_weather_json(self, data, api_name):
+    def modify_weather_json(self, data):
         """ modify weather data. """
-        try:
-            response_data = self.util_obj.modify_weather_data(data)
-            return response_data
-        except Exception as e:
-            msg = (
-                "Error while modifying data: {} \t"
-                "weather url: {} \t ").format(e, api_name)
-            print("\33[31m"+msg+"\33[0m")
-            self.slack_alert("Error, weather getting city name forecast api info", msg)
-            return None
+        response_data = self.util_obj.modify_weather_data(data)
+        return response_data
+        # try:
+        #     response_data = self.util_obj.modify_weather_data(data)
+        #     return response_data
+        # except Exception as e:
+        #     msg = (
+        #         "Error while modifying data: {} \t"
+        #         "weather url: {} \t ").format(e, api_name)
+        #     print("\33[31m"+msg+"\33[0m")
+        #     self.slack_alert("Error, weather getting city name forecast api info", msg)
+        #     return None
 
-    def get_city_weather(self, city_weather_api):
+    def get_city_weather(self, forecast_url, api_access_key, city):
         """get city weather from weather api. """
+        # print("\n test....input...",forecast_url, api_access_key, city)
         try:
+            params = {
+                'access_key': api_access_key,
+                'query': city,
+                'forecast_days': 1,
+                'hourly': 1,
+                'interval': 24
+                }
+
+            day_result = requests.get(forecast_url, params)
+            day_response = day_result.json()
+
+            params.update({'interval' : 1})
+            hourly_result = requests.get(forecast_url, params)
+            hourly_response = hourly_result.json()
+
+
+            input_data_for_processing = {
+                "location":day_response['location'],
+                "daily":day_response['forecast'],
+                "hourly":hourly_response['forecast'],
+            }
+
+            day_response_forecast = list(day_response['forecast'].values())[0]
+            date_to_d = day_response_forecast['date']
+            city_to_d = day_response['location']['name']
+            self.delete_info.update({city_to_d:date_to_d})
+            # print("CHECK DELETE PARAMETERS",date_to_d,city_to_d)
+            # print(input_data_for_processing)
+
             # FIXME: critical error
-            response = requests.get(city_weather_api)
-            response_data = response.json()
+            # response = requests.get(city_weather_api)
+            # response_data = response.json()
+            # print("\n\n\n 3rd party response---",response_data)
+            # exit()
             # print("forecast api: {}\t response: {}".format(city_weather_api, response_data))
-            if 'error' in response_data.keys():
-                raise Exception(response_data)
-            modified_json = self.modify_weather_json(response_data, city_weather_api)
+            if 'error' in day_response.keys():
+                raise Exception(day_response)
+            if 'error' in hourly_response.keys():
+                raise Exception(hourly_response)
+
+            modified_json = self.modify_weather_json(input_data_for_processing)
             return modified_json
         except Exception as e:
             self.retry_cnt += 1
@@ -105,9 +144,9 @@ class WeatherData(ZZQLowTask):
             if self.retry_cnt == 3:
                 msg = "Error in forecast api: {} \tweather url: {} \t ".format(e, city_weather_api)
                 print("\33[31m"+msg+"\33[0m")
-                self.slack_alert("Error, weather forecast api info", msg)
+                # self.slack_alert("Error, weather forecast api info", msg)
                 self.retry_cnt = 0
-            self.get_city_weather(city_weather_api)
+            self.get_city_weather(forecast_url, api_access_key, city)
             return None
 
     def get_auth(self, login_url, auth_json):
@@ -122,16 +161,18 @@ class WeatherData(ZZQLowTask):
         else:
             msg = "The login api is not working."
             print("\33[31m"+msg+"\33[0m")
-            self.slack_alert("Error, weather Login api", msg)
+            # self.slack_alert("Error, weather Login api", msg)
             return None
 
-    def delete_weather(self, delete_url, post_header):
+    def delete_weather(self, delete_url, post_header,city,date):
         """ delete weather data of current date."""
         try:
-            delete_url = delete_url+self.delete_url.format(datetime.date.today().strftime("%Y-%m-%d"))
+            # delete_url = delete_url+self.delete_url.format(datetime.date.today().strftime("%Y-%m-%d"))
+            delete_url = delete_url+self.delete_url.format(date, city)
+            # print("\n DELETE url",delete_url)
             r = requests.get(delete_url, headers=post_header)
             # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
-            print("\33[36m delete weather response data \t=>   {} \33[0m ".format(r.json()))
+            print("\33[36m delete weather response data=>{} for city {} day {} \33[0m".format(r.json(),city,date))
         except Exception as e:
             msg = (
                 "Error info: {} \t"
@@ -139,7 +180,7 @@ class WeatherData(ZZQLowTask):
                 "api response: {} \t"
                 ).format(e, delete_url, r.json())
             print("\33[31m"+msg+"\33[0m")
-            self.slack_alert("Error, occurred during posting weather json.", msg)
+            # self.slack_alert("Error, occurred during posting weather json.", msg)
 
     def start_process(self):
         """ main process start from here."""
@@ -167,32 +208,41 @@ class WeatherData(ZZQLowTask):
                     "city name url: {}\t "
                     "Error is: {} \tand response.: {}").format(get_city_names, e, r.json())
                 print("\33[31m"+msg+"\33[0m")
-                self.slack_alert("Error, weather getting city names", msg)
+                # self.slack_alert("Error, weather getting city names", msg)
                 break
 
             city_name_list = {i.lower() for i in city_name_list}
-            print("\n\n\t\t->>city name is: {}".format(city_name_list))
+            #--------------------------------
+            #NOTE FOR TEST SINGLE CITY
+            # city_name_list = ['bangalore']
+            #--------------------------------
+            print("\n\n\t\t->>city name list is: {}".format(city_name_list))
 
             post_ar = []
             for city in city_name_list:
                 if city.strip():
-                    if self.run_day == 'tommorrow':
-                        weather_post_date = datetime.datetime.strftime(
-                            datetime.date.today()+datetime.timedelta(days=1), '%Y-%m-%d')
-                    elif self.run_day == 'today':
-                        weather_post_date = datetime.datetime.strftime(
-                            datetime.date.today(), '%Y-%m-%d')
+                    weather_post_date = datetime.datetime.strftime(datetime.date.today(), '%Y-%m-%d')
+                    # if self.run_day == 'tommorrow':
+                    #     weather_post_date = datetime.datetime.strftime(
+                    #         datetime.date.today()+datetime.timedelta(days=1), '%Y-%m-%d')
+                    # elif self.run_day == 'today':
+                    #     weather_post_date = datetime.datetime.strftime(
+                    #         datetime.date.today(), '%Y-%m-%d')
 
-                    forecast_weather_api = forecast_posturl.format(
-                        forecast_key, city, weather_post_date)
-                    response_data = self.get_city_weather(forecast_weather_api)
-                    print("received data for: {}".format(city))
+                    # forecast_weather_api = forecast_posturl.format(
+                    #     forecast_key, city, weather_post_date)
+                    # forecast_weather_api = forecast_posturl.format(
+                    #     forecast_key, city)
+                    response_data = self.get_city_weather(forecast_posturl, forecast_key, city)
+                    # print("received data for: {}".format(city))
                     post_ar.append(response_data)
 
             weather_api = posturl + weather_posturl
 
             try:
-                self.delete_weather(weather_api, post_header)
+                for k,v in self.delete_info.items():
+                    self.delete_weather(weather_api, post_header, k, v)
+                # print("\n check",self.delete_info)
                 r = requests.post(
                     weather_api, headers=post_header, json=post_ar)
                 # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
