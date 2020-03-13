@@ -198,11 +198,17 @@ class WeatherData(ZZQLowTask):
                 self.config_json['weather_api']['auth_json']
             )
 
-            post_header['Authorization'] = 'Bearer ' + auth_token
-            get_city_names = posturl + weather_city_name_posturl[data_cnt]
+            city_auth_token = self.get_auth(
+                posturl+self.config_json['weather_api']['login_api'],
+                self.config_json['weather_api']['demo_user_credentials']
+            )            
+            
+            post_header['Authorization'] = 'Bearer ' + city_auth_token
+            get_city_names = posturl + weather_city_name_posturl
             r = requests.get(get_city_names, headers=post_header)
             try:
-                city_name_list = r.json()['cities']
+                city_api_response = list(r.json()['venue_properties'].values())
+                city_name_list = list(set([rec['WEATHER_LOC'].replace('#',',') for rec in city_api_response if rec['WEATHER_LOC']]))
             except Exception as e:
                 msg = (
                     "city name url: {}\t "
@@ -218,6 +224,7 @@ class WeatherData(ZZQLowTask):
             #--------------------------------
             print("\n\n\t\t->>city name list is: {}".format(city_name_list))
 
+            post_header['Authorization'] = 'Bearer ' + auth_token
             post_ar = []
             for city in city_name_list:
                 if city.strip():
