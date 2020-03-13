@@ -31,7 +31,7 @@ class WeatherData(ZZQLowTask):
         self.config_json = ''
         self.slack_key = ''
         # self.delete_url = "?delete={{\"weather_date\": \"{}\"}}"
-        self.delete_url = "?delete={{\"weather_date\": \"{}\",\"location.name\":\"{}\"}}"
+        self.delete_url = "?delete={{\"weather_date\":\"{}\",\"location.name\":\"{}\",\"location.region\":\"{}\"}}"
         self.delete_info = {}
 
     def run(self, *args, **kwargs):
@@ -120,7 +120,8 @@ class WeatherData(ZZQLowTask):
             day_response_forecast = list(day_response['forecast'].values())[0]
             date_to_d = day_response_forecast['date']
             city_to_d = day_response['location']['name']
-            self.delete_info.update({city_to_d:date_to_d})
+            region_to_d = day_response['location']['region']
+            self.delete_info.update({city_to_d + "$" + region_to_d:date_to_d})
             # print("CHECK DELETE PARAMETERS",date_to_d,city_to_d)
             # print(input_data_for_processing)
 
@@ -164,11 +165,11 @@ class WeatherData(ZZQLowTask):
             # self.slack_alert("Error, weather Login api", msg)
             return None
 
-    def delete_weather(self, delete_url, post_header,city,date):
+    def delete_weather(self, delete_url, post_header,city,region,date):
         """ delete weather data of current date."""
         try:
             # delete_url = delete_url+self.delete_url.format(datetime.date.today().strftime("%Y-%m-%d"))
-            delete_url = delete_url+self.delete_url.format(date, city)
+            delete_url = delete_url+self.delete_url.format(date, city, region)
             # print("\n DELETE url",delete_url)
             r = requests.get(delete_url, headers=post_header)
             # print("on cnt:{}\t data.... {}".format(self.cnt, response_data))
@@ -248,7 +249,8 @@ class WeatherData(ZZQLowTask):
 
             try:
                 for k,v in self.delete_info.items():
-                    self.delete_weather(weather_api, post_header, k, v)
+                    s_k = k.split('$')
+                    self.delete_weather(weather_api, post_header, s_k[0], s_k[1], v)
                 # print("\n check",self.delete_info)
                 r = requests.post(
                     weather_api, headers=post_header, json=post_ar)
