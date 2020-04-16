@@ -20,3 +20,4 @@ flower
 cryptography
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-slack-alert.git#egg=slacknotification
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-cross-shop-analytics.git#egg=cross_shopping_analytics
+-e git+https://github.com/Intelipower/python-wildfire-cli.git#egg=wildfire

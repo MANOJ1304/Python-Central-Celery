@@ -9,6 +9,8 @@ RUN export CELERY_RESULT_BACKEND='redis://redis:6379/0'
 # RUN mkdir  /celery_app/conf
 # RUN chown -R root:root /celery_app/conf
 # RUN git clone  https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-redis-pub-sub-collector /celery_app
+
+
 COPY celery_app /celery_app
 WORKDIR /celery_app/
 RUN pip install --upgrade pip
