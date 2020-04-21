@@ -1,18 +1,18 @@
-redis:
-
-    host: '35.242.209.197'
-
-    password: 'NmMtoaZ74Yyq'
-
-    port: '6379'
-
 # redis:
 
-#     host: 'localhost'
+#     host: '35.242.209.197'
 
-#     password: 'hello'
+#     password: 'NmMtoaZ74Yyq'
 
 #     port: '6379'
+
+redis:
+
+    host: 'localhost'
+
+    password: 'hello'
+
+    port: '6379'
 
 
 mail_config:
