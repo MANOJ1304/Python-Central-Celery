@@ -46,6 +46,7 @@ a list of Address Matches for other analysis and manual review.'''
         # print(cdata)
         # self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"])
         # print(kwargs['output'])
+        print('cdata ', cdata)
         return cdata
 
     def __draw_chart(self, data, chart_name):
@@ -74,6 +75,7 @@ a list of Address Matches for other analysis and manual review.'''
 
     def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list, ):
         log.debug("{} {}".format(username, password))
+        print("date range {}".format(date_range))
         w =  WildfireApi(username, password, cfg)
         d = (w.venues()
         .analytics(venue_id=venue_id)

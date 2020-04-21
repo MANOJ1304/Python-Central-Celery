@@ -28,8 +28,8 @@ class MjsCode(JsCode):
 class Base():
 
     def __init__(self):
-        colors = ['#B7990D', '#3D2C2E']
-        text_colors = ["#333", "#efefef"]
+        colors = ['#B7990D', '#3D2C2E', "#276FBF", "#183059"]
+        text_colors = ["#333", "#efefef", "#efefef", "#efefef"]
         self.line_colors = [ opts.ItemStyleOpts(color=i) for i in colors ]
         self.bar_colors = [ opts.ItemStyleOpts(color=i) for i in colors ]
         self.bar_label_text_colors = text_colors
@@ -49,7 +49,7 @@ class Base():
             ),
              "single_value": opts.LabelOpts(
                 horizontal_align="center",
-                color='#fff ',
+                color='#666',
                 position=None,
                 font_size=10,
                 
@@ -69,14 +69,6 @@ class Base():
                 formatter=JsCode(""" function(x){ var numberValue = Math.abs(x.data[1]) > 999 ? Math.sign(x.data[1])*((Math.abs(x.data[1])/1000).toFixed(1)) + 'k' : Math.sign(x.data[1])*Math.abs(x.data[1]); var value = Number(x.data[1]).toLocaleString('en-US'); return  numberValue ; } """
                  ) ,
             ),
-             "x_data": opts.LabelOpts(
-                # horizontal_align="center",
-                # color='#fff',
-                position='top',
-                font_size=9,
-                formatter=JsCode(""" function(x){ console.log(x); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
-                 ) ,
-            ),
             "percent": opts.LabelOpts(
                 vertical_align= 'middle',
                 horizontal_align="center",
@@ -91,10 +83,24 @@ class Base():
                 margin = 15,
                 font_size = 12,
                 formatter= JsCode(" function (value, index) { var val = value; var numberValue = Math.abs(val) > 999 ? Math.sign(val)*((Math.abs(val)/1000).toFixed(1)) + 'k' : Math.sign(val)*Math.abs(val); return numberValue + ' '; }")
+            ),
+             "x_data": opts.LabelOpts(
+                # horizontal_align="center",
+                # color='#fff',
+                horizontal_align = "right",
+                position='top',
+                font_size=9,
+                formatter=JsCode(""" function(x){ console.log(x); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
+                 ) ,
             )
         }
         
-
+        range_colors = [
+            "#fedd63",
+            "#fcaf5d",
+            "#ff6666"
+            ]
+        # range_colors.reverse()
         self.visual_map_options = {
             "count" : opts.VisualMapOpts(
                     is_piecewise=True,
@@ -102,14 +108,10 @@ class Base():
                     min_=  0,
                     range_text = ['0'],
                     is_calculable = True,
-                    range_color = [
-                        "#fedd63",
-                        "#fcaf5d",
-                        "#ff6666"
-                    ],
+                    range_color = range_colors,
                     item_width = 40,                 
                     item_height = 5,
-                    pos_left= '5%'
+                    pos_left= '10%'
                 ),
             "dwell" : opts.VisualMapOpts(
                     is_piecewise=True,
@@ -119,14 +121,10 @@ class Base():
                     
                     range_text = ['0'],
                     is_calculable = True,
-                    range_color = [
-                        "#fedd63",
-                        "#fcaf5d",
-                        "#ff6666"
-                    ],
+                    range_color = range_colors,
                     item_width = 20,                 
                     item_height = 5,
-                    pos_left= '5%'
+                    pos_left= '10%'
                     # formatter= JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.round(hours) > 0){  hours = Math.round(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.round(minutes) > 0){ timeStamp.push(Math.round(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.round(timeDiff);seconds = timeDiff; if (Math.round(seconds) > 0 ) { timeStamp.push(Math.round(seconds) + 's'); } return timeStamp.join(''); } return timeLapse(low) + ' - ' + timeLapse(high) }")
                 )
         }
@@ -134,11 +132,11 @@ class Base():
         self.visual_map_formatter = {
             "count":
             {
-                "formatter": JsCode("function(low,high){  return  parseInt(high,10).toLocaleString('en-US') }")
+                "formatter": JsCode("function(low,high){  return  Number(parseInt(high,10)).toLocaleString('US-en'); }")
             },
             "dwell":
             {
-                "formatter": JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.round(hours) > 0){  hours = Math.round(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.round(minutes) > 0){ timeStamp.push(Math.round(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.round(timeDiff);seconds = timeDiff; if (Math.round(seconds) > 0 ) { timeStamp.push(Math.round(seconds) + 's'); } return timeStamp.join(''); } return  timeLapse(high) }")
+                "formatter": JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.round(hours) > 1){  hours = Math.round(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.round(minutes) > 1){ timeStamp.push(Math.round(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.round(timeDiff);seconds = timeDiff; if (Math.round(seconds) > 1 ) { /*timeStamp.push(Math.round(seconds) + 's');*/ } return timeStamp.join(''); } return  timeLapse(high) }")
             }
         }
 
@@ -198,7 +196,7 @@ class BarChart(Base):
     def ydata(self, title: str,  data: list, options: dict = {}):
         # print("Label Options", self.bar_label_text_colors.pop())
         print("Options ", options)
-        self.chart.add_yaxis(title, data, category_gap="65%", itemstyle_opts=self.bar_colors.pop(),  **options )
+        self.chart.add_yaxis(title, data, category_gap="60%", itemstyle_opts=self.bar_colors.pop(),  **options )
 
         return self
 
@@ -278,7 +276,7 @@ class CustomMap(Base):
         # print("Max Value",df[1].max())
         # self.visual_map_options[self.stats_type].update(**{"max_": df[1].max(), "min_":0} )
         # self.visual_map_options[self.stats_type].update()
-        self.visual_map_options[self.stats_type].update(**self.visual_map_formatter[self.stats_type], max = int(df[1].max()))
+        self.visual_map_options[self.stats_type].update(**self.visual_map_formatter[self.stats_type], max = df[1].max())
 
         self.global_opts["default"].update({
                 "visualmap_opts": self.visual_map_options[self.stats_type]
@@ -345,13 +343,13 @@ class StatsMap(Base):
             'scatter' : { 'show': True, 'position': 'inside' },
             'geo': { 'show': False, 'position': 'top'}
         }
-        self.map_initial_opts.update({"width":width, "height":height, "animation_opts":opts.AnimationOpts(animation=False)})
+        self.map_initial_opts.update({"width":width, "height":height, "animation_opts":opts.AnimationOpts(animation=False) })
         self.chart  =  Geo( custom=True, init_opts=self.map_initial_opts)
         self.map_name = map_name
         self.js_code_label = utils.JsCode(label)
 
     def schema(self, data):
-        self.chart.add_schema(maptype=self.map_name , map_data=data, zoom=1)
+        self.chart.add_schema(maptype=self.map_name , map_data=data, zoom=1.0, itemstyle_opts = opts.ItemStyleOpts(area_color="#D1F5FF", border_color = "#A0C1D1", border_width= 1, opacity= 0.3))
         return self
 
     def coordinates(self, area_coordinates:dict):
@@ -359,7 +357,7 @@ class StatsMap(Base):
         [self.chart.add_coordinate(k, i[0], i[1]) for k,i in area_coordinates.items()]
         return self
     
-    def set_data(self, data,  stats = "scatter", type_ = 'scatter', color="#2f4554"):
+    def set_data(self, data,  stats = "scatter", type_ = 'scatter', color="#42597A"):
         df = pd.DataFrame(data)
         # print("Max Value",data)
         # self.global_opts["default"]["visualmap_opts"].update(**{"max": df[1].max(), "min_":0} )
@@ -373,12 +371,12 @@ class StatsMap(Base):
                         
                         range_text = ["High", "Low"],
                         is_calculable = True,
-                        # range_color = [
-                        #                 "#79de7c",
-                        #                 "#fedd63",
-                        #                 "#fcaf5d",
-                        #                 "#ff6666"
-                        #                 ],
+                        range_color = [
+                                        "#79de7c",
+                                        "#fedd63",
+                                        "#fcaf5d",
+                                        "#ff6666"
+                                        ],
                         item_width=70,                 
                         item_height=5
                     )
@@ -388,11 +386,11 @@ class StatsMap(Base):
         label_opts = opts.LabelOpts(
             formatter="{b}\n{c}", 
             is_show= True, 
-            position= "inside", ##42597A
-            color=color,
+            position= "left", 
+            color='#666666',
             background_color="#eeeeee",
             border_radius=5,
-            border_color=color,
+            border_color="#666666",
             font_size=10
         )
         label_opts.update(padding=5, lineHeight=13)
@@ -400,21 +398,18 @@ class StatsMap(Base):
         label = "function(val) {  return val.data.name + '\n'+ val.data.value.splice(-1,1)[0]; }"
         js_code_label = MjsCode(label)
         
-        self.chart.add(stats,  data,
+        self.chart.add(stats,  data, 
             type_=  self.chart_type.get(type_), 
             symbol_size=self.symbol_size.get(type_), 
             is_large=False, 
             effect_opts=opts.EffectOpts(is_show=False),
-            color= '#42597A80',
             linestyle_opts=opts.LineStyleOpts(curve=0.2, width=1, color=color),
+            itemstyle_opts=self.bar_colors.pop(),
             label_opts=opts.LabelOpts(
                 is_show=self.is_label.get(type_).get('show'),
                 formatter=js_code_label,
                 position= self.is_label.get(type_).get('position'),
-                font_size=9,
-                color='#082131',
-                border_color='#082131',
-                # background_color="#42597a80"
+                font_size=9
             )
         )
         return self

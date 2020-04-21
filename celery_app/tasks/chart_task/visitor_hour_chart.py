@@ -31,7 +31,6 @@ class VisitorHourChart(BaseChartTask):
     description = '''Matches address from sources A and B and constructs
 a list of Address Matches for other analysis and manual review.'''
     public = True
-    autoinclude = True
 
     def __init__(self):
         super(VisitorHourChart, self).__init__()
@@ -88,20 +87,33 @@ a list of Address Matches for other analysis and manual review.'''
 
        
         bar = BarChart(bar_title=self.map_image)
-        # chart_options["global"]['yaxis_opts'].update(bar.label_style['x_data'])
-        # bar.label_style['x_data'].update(color = bar.bar_label_text_colors.pop())
-        # bar.set_option(chart_options["series"], {}, chart_options["global"]['yaxis_opts'])
-        bar.get_chart_instance().add_xaxis(x_axis)
-        bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%",
-            label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
-        bar.get_chart_instance().add_yaxis("Previous week", pw, gap="40%",
-        label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
+# <<<<<<< HEAD
+#         # chart_options["global"]['yaxis_opts'].update(bar.label_style['x_data'])
+#         # bar.label_style['x_data'].update(color = bar.bar_label_text_colors.pop())
+#         # bar.set_option(chart_options["series"], {}, chart_options["global"]['yaxis_opts'])
+#         bar.get_chart_instance().add_xaxis(x_axis)
+#         bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%",
+#             label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
+#         bar.get_chart_instance().add_yaxis("Previous week", pw, gap="40%",
+#         label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
+#         bar.get_chart_instance().set_global_opts(xaxis_opts=opts.AxisOpts(name='Hours',
+#             position='bottom', name_location='center', name_gap=40))
+#         # bar.set
+#         # print(bar.get_chart_instance().dump_options())
+#         bar.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
+#             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
+# =======
+        bar.xaxis(x_axis)
+        bar.ydata("Current Week", cw , options={"gap":"0%", "label_opts":bar.label_style['x_data']})
+        bar.ydata("Previous week", pw , options={"gap":"40%", "label_opts":bar.label_style['x_data']})
+        # bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%", label_opts=bar.label_style['x_data'])
+        # bar.get_chart_instance().add_yaxis("Previous week", pw, gap="40%", label_opts=bar.label_style['x_data'])
         bar.get_chart_instance().set_global_opts(xaxis_opts=opts.AxisOpts(name='Hours',
             position='bottom', name_location='center', name_gap=40))
-        # bar.set
         # print(bar.get_chart_instance().dump_options())
         bar.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
+# 
         
         # c = (
         #     Bar()
