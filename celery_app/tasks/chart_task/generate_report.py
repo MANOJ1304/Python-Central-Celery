@@ -26,7 +26,7 @@ class GenerateReport(BaseChartTask):
     name = 'Generate Report'
     description = ''
     public = True
-    autoinclude = False
+    autoinclude = True
 
     def __init__(self):
         self.base_path = ''
