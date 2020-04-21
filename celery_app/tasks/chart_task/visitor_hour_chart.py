@@ -31,6 +31,7 @@ class VisitorHourChart(BaseChartTask):
     description = '''Matches address from sources A and B and constructs
 a list of Address Matches for other analysis and manual review.'''
     public = True
+    autoinclude = False
 
     def __init__(self):
         super(VisitorHourChart, self).__init__()

@@ -22,7 +22,7 @@ class DataFetch(BaseChartTask):
     description = '''Matches address from sources A and B and constructs
 a list of Address Matches for other analysis and manual review.'''
     public = True
-    autoinclude = True
+    autoinclude = False
 
     def __init__(self):
         super(DataFetch, self).__init__()
