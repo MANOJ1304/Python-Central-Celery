@@ -58,16 +58,16 @@ a list of Address Matches for other analysis and manual review.'''
         if "stack" in list(chart_options["series"].keys()):
             stack = chart_options["series"]["stack"]
             
-        for title, data in data_storage.items():
-            if title in ["new", "repeat"]: 
+        for legend, data in data_storage.items():
+            if legend in ["new", "repeat"]: 
                 # print("Values", title, data_storage.get(title), total)
-                nr_data= [  {"value": n, "percent": n / t} for n, t in list(zip(data_storage.get(title) , total))]
-                bar.ydata(title, nr_data , options=chart_options["series"])
+                nr_data= [  {"value": n, "percent": n / t} for n, t in list(zip(data_storage.get(legend) , total))]
+                bar.ydata(legend.replace("_"," ").title(), nr_data , options=chart_options["series"])
 
         # chart_options["label_opts"] = self.label_style[chart_options["label_opts"]] 
-        for title, data in data_storage.items():
-            if title in ["total_visitor"]: 
-                line.ydata(title, data)
+        for legend, data in data_storage.items():
+            if legend in ["total_visitor"]: 
+                line.ydata(legend.replace("_"," ").title(), data)
         # bar.set_option(chart_options)
         
         bar.set_option(chart_options["series"], {}, chart_options["global"]['yaxis_opts'])
@@ -77,9 +77,11 @@ a list of Address Matches for other analysis and manual review.'''
         # overlap.render(file_name="visualization/html/abc.html")
         grid = OverLap(width="540px", height="300px")
         grid.add(overlap, is_control_axis_index=True)
+
         print(grid.get_chart_instance().dump_options())
         grid.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
+        
         # bar.get_chart_instance().overlap(line.get_chart_instance())
         # bar.generate(file_name="{}/{}.html".format(self.report_path_html, self.map_image),
         # image_name="{}/{}.png".format(self.report_path_image, self.map_image))
