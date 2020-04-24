@@ -31,21 +31,26 @@ a list of Address Matches for other analysis and manual review.'''
 
     def run(self, kwargs):
         # print('Task Started', args[0], args[1])
+
         self.report_details = kwargs["report"]
         self.build_dir()
         # self.map_image =  self.map_image + self.report_details["stats_type"]
 
         if not self.dev:    
-            
+
+            venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
+            map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
+            map_bounding = {"width": map_info.get("dim_x")*2, "height": map_info.get("dim_y")*2 }
+
             data = self.__get_areas(**kwargs["creds"], **kwargs["data_params"])
             
-            self.__draw_chart(data[0], data[3])
+            self.__draw_chart(data[0], map_bounding, data[3])
         kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'],
                 self.report_path_image, self.map_image + self.report_details["stats_type"])
 
         return kwargs['output']
 
-        # bar.generate(file_name="visualization/html/render.html", image_name="visualization/images/example.png")
+        # bar.generate(file_name="visualization/html/render.html", image_name="visualization/[xzX]/images/example.png")
 
 
     def __get_areas(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, exclude_params:list, agg_type:str):
@@ -81,9 +86,9 @@ a list of Address Matches for other analysis and manual review.'''
 
         # print(self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object))
         analytics = self.__process_analytics(username, password, cfg, venue_id, elasttic_filters, date_range, agg_type, exclude_params)
-        print(analytics.get("analytic_data")[0].get("aggregation_data"))
+        
         adata = [[k, v.get(self.report_details["stats_type"]).get("value")]for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
-
+        print("Stats", json.dumps(adata))
         return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object, adata)
 
     def __reproces(self, data, obj, analytics_data):
@@ -113,17 +118,23 @@ a list of Address Matches for other analysis and manual review.'''
         for i in analytics_data:
             if i[0] in list(area_name.keys()):
                 ddd.append([area_name[i[0]], i[1]])
+        print("Areas",json.dumps(area_name))
         return { "type": 'FeatureCollection', "features": area_polygon}, centroid_p, area_name, ddd
 
-    def __draw_chart(self, map_data, data:dict = {}):
+    def __draw_chart(self, map_data, bounding, data:dict = {}, ):
         # print(json.dumps(map_data, indent=4))
         
-        map = CustomMap("makemymap", self.report_details["stats_type"])
-        map.schema(map_data) 
+
+
+        map = CustomMap("makemymap", self.report_details["stats_type"], )
+        map.schema(map_data)
+        map.set_add_global_options(bounding) 
         map.set_data(data)
         # print(map.get_chart_instance().dump_options())
+
         map.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image + self.report_details["stats_type"]),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image + self.report_details["stats_type"]))   
+
 
     def __process_analytics(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list):
         log.debug("{} {}".format(username, password))
@@ -136,5 +147,9 @@ a list of Address Matches for other analysis and manual review.'''
         
         return d
 
-    def __process_data(self, data:dict):
+    def __process_venue_data(self, username, password, venue_id:str,  cfg:dict) :
+        w =  WildfireApi(username, password, cfg)
+        data = (w.venues() 
+        .get_one(venue_id))
+
         return data

@@ -8,7 +8,7 @@ from pyecharts.charts import Line
 from snapshot_selenium import snapshot as driver
 from pyecharts.render import make_snapshot
 import time
-from .utils import get_date, get_week_number, get_month_name, day_of_week
+from .utils import get_date, get_week_number, get_month_name, day_of_week, get_12_hour, get_date_with_format
 
 from weasyprint import HTML
 import argparse
@@ -45,13 +45,16 @@ class GenerateReport(BaseChartTask):
     def __create_report(self, report_data, report_name):
         env = Environment(loader=FileSystemLoader('{}'.format(self.base_path)))
         cover = env.get_template("templates/scorecard.html")
-        env.globals.update(day_of_week=day_of_week, get_date=get_date)
+        env.globals.update(day_of_week=day_of_week, get_date=get_date,
+            get_12_hour=get_12_hour, get_date_with_format=get_date_with_format)
 
         cover_out = cover.render(report_data)
         covers = HTML(string=cover_out).render(stylesheets=["{}/css/style.css".format(self.base_path)])
         # all_pages = [p for p in covers.pages]
         # mains = HTML(filename="../templates/cover.html").render(stylesheets=["../css/style.css"])
         # mains.write_pdf('report.pdf')
+        # with open('{}/{}/pdf.html'.format(self.root_path, self.report_path_pdf), 'w') as f:
+        #     f.write(cover_out)
         report_path = '{}/{}/{}.pdf'.format(self.root_path, self.report_path_pdf, report_name)
         covers.write_pdf(report_path)
         return report_path

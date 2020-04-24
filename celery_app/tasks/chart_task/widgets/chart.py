@@ -85,9 +85,8 @@ class Base():
                 formatter= JsCode(" function (value, index) { var val = value; var numberValue = Math.abs(val) > 999 ? Math.sign(val)*((Math.abs(val)/1000).toFixed(1)) + 'k' : Math.sign(val)*Math.abs(val); return numberValue + ' '; }")
             ),
              "x_data": opts.LabelOpts(
-                # horizontal_align="center",
+                horizontal_align="left",
                 # color='#fff',
-                horizontal_align = "right",
                 position='top',
                 font_size=9,
                 formatter=JsCode(""" function(x){ console.log(x); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
@@ -165,10 +164,13 @@ class Base():
         self.chart = {}
 
 
+    def set_add_global_options(self, options:dict ={}):
+        self.chart.options.update(options)
 
     def set_globl_option(self, options: dict = {}):
         # options["label_opts"] = self.label_style[options.get('label_opts')]  if  not options.get('label_opts') == None else self.global_opts
         self.chart.set_global_opts( **self.global_opts["default"] )
+        
         return self
 
     def get_chart_instance(self):
@@ -195,7 +197,7 @@ class BarChart(Base):
 
     def ydata(self, title: str,  data: list, options: dict = {}):
         # print("Label Options", self.bar_label_text_colors.pop())
-        print("Options ", options)
+        # print("Options ", options)
         self.chart.add_yaxis(title, data, category_gap="60%", itemstyle_opts=self.bar_colors.pop(),  **options )
 
         return self
@@ -254,9 +256,10 @@ class OverLap(Base):
 
 class CustomMap(Base):
 
-    def __init__(self, map_name:str = "", map_stats_type:str="count",  label_show:str=False, width: str = "540px", height: str= "300px", options:dict = {}):
+    def __init__(self, map_name:str = "", map_stats_type:str="count",  label_show:str=False, width: str = "540px", height: str= "300px", bounding:list =[], options:dict = {}):
         super(CustomMap, self).__init__()
-        self.map_initial_opts = {"width":width, "height":height, "animation_opts":opts.AnimationOpts(animation=False), "showLegendSymbol": True} 
+        self.map_initial_opts = {"width":width, "height":height, "animation_opts":opts.AnimationOpts(animation=False), "showLegendSymbol": True, "boundingCoords":bounding} 
+        # print("Map",self.map_initial_opts, )
         self.chart  =  CMap( init_opts=self.map_initial_opts)
         self.map_name = map_name
         self.is_label = label_show

@@ -80,7 +80,7 @@ class BaseChartTask(app_task.Task):
     description = ''
 
     def __init__(self):
-        self.dev = True
+        self.dev = False
         super(BaseChartTask, self).__init__()
         self.report_details ={}
     # def run(self, *args, **kwargs):

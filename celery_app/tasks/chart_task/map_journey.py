@@ -37,12 +37,16 @@ a list of Address Matches for other analysis and manual review.'''
         self.report_details = kwargs["report"]
         self.build_dir()
 
-        if not self.dev:    
+        if not self.dev:
+            venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
+            map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
+            map_bounding = { "width": map_info.get("dim_x")*2, "height": map_info.get("dim_y")*2 }
+
             data = self.__get_areas(**kwargs["creds"], **kwargs["data_params"])
             
-            self.__draw_chart(data[0], data[3], data[1])
+            self.__draw_chart(data[0], data[3], data[1], map_bounding)
+        
         kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, self.map_image) 
-
         return kwargs['output']
 
         # bar.generate(file_name="visualization/html/render.html", image_name="visualization/images/example.png")
@@ -118,29 +122,41 @@ a list of Address Matches for other analysis and manual review.'''
                 ddd.append(i)
         return { "type": 'FeatureCollection', "features": area_polygon}, centroid_p, area_name, ddd
 
-    def __draw_chart(self, map_data, data:dict = {}, area_coordinates: list = []):
+    def __draw_chart(self, map_data, data:dict = {}, area_coordinates: list = [], bounding:dict={}):
         # print(json.dumps(map_data, indent=4))
         # print(json.dumps(data, indent=4))
         df = pd.DataFrame(data)
-        def get_stats(data, field):
+        def get_stats(data, field, journey_type="origins"):
             count_stats = []
             link_stats = [] 
             ds = df.loc[df.groupby(field)['value'].idxmax()] 
             ds = ds.sort_values(by=["value"], ascending= False) 
             for r,i in ds.iterrows():  
-                count_stats.append((i.source, i.value)) 
-                link_stats.append((i.source,i.target)) 
+                # count_stats.append((i.source, "")) 
+                if journey_type == "origins":
+                    count_stats.append((i.target, i.value))
+                    count_stats.append((i.source, ""))  
+                    link_stats.append((i.source,i.target)) 
+                    
+                else:
+                    count_stats.append((i.source, i.value)) 
+                    count_stats.append((i.target, "")) 
+                    link_stats.append((i.target,i.source)) 
+                    
             return   count_stats,  link_stats 
 
-        source = get_stats(df, "source")
-        target = get_stats(df, "target")
+        source = self.find_top_places(df, "source")
+        target = self.find_top_places(df, "target")
+        # print(source[0])
+        print(target[0])
         map = StatsMap("makemymap")
         map.coordinates(area_coordinates)
         map.schema(map_data) 
-        map.set_data(source[0][:5], "", type_= 'map', )
-        map.set_data(source[1][:5], "", type_= 'geo',  color="#42597A")
-        map.set_data(target[0][:5], "", type_= 'map', )
-        map.set_data(target[1][:5], "", type_= 'geo',  color="#3090B5")
+        map.set_add_global_options(bounding) 
+        map.set_data(source[0][:10], "", type_= 'map',   color="#0197F6")
+        map.set_data(source[1][:5], "Top 5 Origins", type_= 'geo',  color="#0197F6")
+        map.set_data(target[0][:10], "", type_= 'map', color="#271033")
+        map.set_data(target[1][:5], "Top 5 Destinations", type_= 'geo',  color="#271033")
         # print(map.get_chart_instance().dump_options())
         map.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))   
@@ -163,4 +179,60 @@ a list of Address Matches for other analysis and manual review.'''
         return d
 
     def __process_data(self, data:dict):
+        return data
+    
+    def find_top_places(self, df, palce_type):
+        def toptrafficplace(data, type_):
+            def appl(x):
+                # print("adas",x)
+                f = {
+                    "count": x.count()
+                }
+                return pd.DataFrame(f)
+        
+            # ds = df.loc[df.groupby("target")['value'].idxmax()] 
+            dg = df[[type_]].groupby(type_).apply(appl)
+            dg = dg.reindex().sort_values(["count"], ascending= False)
+            areas = []
+            for  r,i in dg.head(5).iterrows(): 
+                # print(r)
+                areas.append(r[0])
+
+            return areas
+
+        # dg = df.loc[df['count'].idxmax()] 
+        # dg = dg.reindex().sort_values(["count"], ascending= False)
+        # dg.loc[dg.groupby("source")['value'].idxmax()] 
+        # ds = ds.sort_values(by=["value"], ascending= False) 
+        # ['72de0ac8c9774e8bb1bbe02829c34a79', 'f18e4a48df214700a1aad8704955bc78', 'bc671d58a9754b5093e050d0709a957c', '9586546f3386460c947b87d3a9abfb56', '3692a6ea35914ec6bef270701b9c4c9c']
+        # ['fb286aae96414d09a2fa55823e3b2b98', '534c21da29bd49d583919d58f476a027', 'd1181384dbba4004abcfc1bcfab958aa', 'bc671d58a9754b5093e050d0709a957c', '291922e7bade4ba9a3eb59e3c403f483']
+
+        # print(toptrafficplace(df, palce_type))
+        palces = toptrafficplace(df, palce_type)
+        # print(palces)
+        # origins = toptrafficplace(df, "source")
+        # dss =  df[df[palce_type].isin(palces)]
+        frames = []
+        for i in palces:
+            dss = df[df[palce_type].isin([i])]
+            final_data = dss.loc[dss.groupby(palce_type)['value'].idxmax()].sort_values(["value"], ascending=False)[["source", "target", "value"]].head(1)
+            frames.append(final_data)
+        # print(dss)
+        count_stats = []
+        link_stats = []
+        for r, i in pd.concat(frames).iterrows():
+            count_stats.append((i[palce_type], i.value)) 
+            if palce_type == "source":
+                count_stats.append((i.target, "")) 
+            elif palce_type == "target":
+                count_stats.append((i.source, "")) 
+            link_stats.append((i.source,i.target)) 
+        return count_stats, link_stats
+
+
+    def __process_venue_data(self, username, password, venue_id:str,  cfg:dict) :
+        w =  WildfireApi(username, password, cfg)
+        data = (w.venues() 
+        .get_one(venue_id))
+
         return data

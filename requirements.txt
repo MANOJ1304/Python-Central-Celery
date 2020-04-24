@@ -20,6 +20,8 @@ flower
 cryptography
 snapshot-selenium
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-slack-alert.git#egg=slacknotification
+dateparser
+weasyprint
 # -e git+https://intelipowerbuild:ZyC4z3kVRQRRgithub.com/Intelipower/python-wildfire-cli.git
 # -e git+https://intelipowerbuild:ZyC4z3kVRQRRgithub.com/Intelipower/pythion-pyecharts-modified.git#egg=pyecharts
 # https://github.com/Intelipower/pythion-pyecharts-modified.git

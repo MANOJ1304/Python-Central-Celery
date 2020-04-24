@@ -41,12 +41,13 @@ a list of Address Matches for other analysis and manual review.'''
             self.report_path_image,
             kwargs["chart_name"]
         ) 
+        events = self.__get_events(**kwargs["creds"], **kwargs["data_params"])
         # data = self.__process_data( data)
         # d = data["analytic_data"][0]
         # print(cdata)
         # self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"])
         # print(kwargs['output'])
-        print('cdata ', cdata)
+        cdata['events'] = events
         return cdata
 
     def __draw_chart(self, data, chart_name):
@@ -75,7 +76,6 @@ a list of Address Matches for other analysis and manual review.'''
 
     def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list, ):
         log.debug("{} {}".format(username, password))
-        print("date range {}".format(date_range))
         w =  WildfireApi(username, password, cfg)
         d = (w.venues()
         .analytics(venue_id=venue_id)
@@ -86,3 +86,32 @@ a list of Address Matches for other analysis and manual review.'''
         
         # print(json.dumps(d, indent=4))
         return d
+
+    def __get_events(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict,
+        date_range:list, agg_type:str, exclude_params:list):
+        log.debug("{} {}".format(username, password))
+        events = cfg['events']
+        search_dict = {
+            'type': events['type'],
+            "start_time": {
+                "$gte":events['gt'],
+                "$lte":events['lt'],
+            }
+        }
+        w =  WildfireApi(username, password, cfg)
+        d = (w.venues()
+        .get(venue_id)
+        .events()
+        .lists(search=search_dict, pagination=True, sort_fields='start_time'))
+        events_data = {}
+        for item in d['_items']:
+            start_time = item.get('start_time', '1970-01-01 00:00:00').split(' ')
+            end_time = item.get('end_time', '1970-01-01 00:00:00').split(' ')
+            data = {'name': item['name'][0]['text'], 'start_time': start_time[1], 'end_time': end_time[1]}
+            if events_data.get(start_time[0], None) is not None:
+                events_data[start_time[0]].append(data)
+            else:
+                events_data[start_time[0]] = [data]
+
+        # print(json.dumps(d, indent=4))
+        return events_data

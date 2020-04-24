@@ -76,6 +76,13 @@ def get_display_date(dt_in_str):
     # dt = datetime.fromtimestamp(dt_in_ms / 1000)
     return custom_strftime('%B {S}, %Y', dt)
 
+def get_date_with_format(dt_in_str):
+    return datetime.strptime(dt_in_str, "%Y-%m-%d")
+
+def get_12_hour(str_hour):
+    d = datetime.strptime(str_hour, "%H:%M:%S")
+    return d.strftime("%I %p" )
+
 
 # print custom_strftime('%B {S}, %Y', dt.now())
 
