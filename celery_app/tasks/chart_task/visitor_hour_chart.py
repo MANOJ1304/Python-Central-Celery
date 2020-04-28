@@ -114,6 +114,8 @@ a list of Address Matches for other analysis and manual review.'''
         # print(bar.get_chart_instance().dump_options())
         bar.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
+        # Reset data
+        self.__reset_data()
 # 
         
         # c = (
@@ -179,3 +181,7 @@ a list of Address Matches for other analysis and manual review.'''
                 self.last_week['visitors'] = self.last_week['visitors'] + d['analytic_data'][0]['series'][3]['total_visitor']
         # print(json.dumps(d, indent=4))
         # return d
+
+    def __reset_data(self):
+        self.current_week = {'x_axis': [], 'visitors': []}
+        self.last_week = {'x_axis': [], 'visitors': []}
