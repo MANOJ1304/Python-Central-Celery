@@ -6,7 +6,9 @@ from tasks.historical_view.format_notification import DataFormator
 from tasks.historical_view.redis_operations import RedisOp
 import json
 from tasks.celery_queue_tasks import ZZQLowTask
+import logging
 
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 class HistoricalView(ZZQLowTask):
     """."""
@@ -38,6 +40,7 @@ class HistoricalView(ZZQLowTask):
         veId = config['venue_id']
         floor_id = config['floor_id']
         e_map = config['emap_config']
+        es_index = config['index']
         cfg = {
             "es": {
             "host": config['es_config']['host'],
@@ -94,18 +97,6 @@ class HistoricalView(ZZQLowTask):
                                         }
                                         },
                                         {
-                                        "bool": {
-                                            "should": [
-                                            {
-                                                "exists": {
-                                                "field": "sensors.id"
-                                                }
-                                            }
-                                            ],
-                                            "minimum_should_match": 1
-                                        }
-                                        },
-                                        {
                                             "bool": {
                                             "should": [
                                                 {
@@ -128,22 +119,26 @@ class HistoricalView(ZZQLowTask):
                     },
                     "size":0
                 },
-                "index": "prod-*"
+                "index": es_index+"-*"
                 }
         }
         
         
         fetchdata = ESDataFetch(cfg)
         es_raw_data_list = fetchdata.get_plain_data() ## list of records retreived from ES
-        print(len(es_raw_data_list)) 
+        # print(len(es_raw_data_list)) 
+        logging.info("Data set size: {}".format(len(es_raw_data_list)))
+        
         redis_obj = RedisOp(config['redis_config'],e_map) #initialise redis class
         
         # sort the es data list in ascending order
         es_raw_data_list_ordered = sorted(es_raw_data_list,key = lambda i: datetime.datetime.strptime(i['@timestamp'],"%Y-%m-%dT%H:%M:%S.%fZ")) #.datetime.datetime.strptime("%Y-%m-%dT%H:%M:%S")
         
         # get the channel from redis which created from frontend when user clicks on live view button. we publish messages on this channel.
-        publish_channel = redis_obj.get_channel()  
+        publish_channel = redis_obj.get_channel() 
+        logging.info("Publishing data on channel: {}".format(str(publish_channel)))
         
         # send the raw data to extract needed info, create new object for notification and publish them on the retreived channel
         df_obj = DataFormator()
-        df_obj.format_notification(es_raw_data_list_ordered,publish_channel,config['redis_config'])
+        df_obj.format_notification(es_raw_data_list_ordered,publish_channel,config['redis_config'],config['category'])
+        logging.info("Processing completed.")
