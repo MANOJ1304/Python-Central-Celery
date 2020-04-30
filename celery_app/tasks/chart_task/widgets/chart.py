@@ -16,6 +16,7 @@ import json
 import re
 import time
 from pyecharts.commons.utils import JsCode
+import math
 
 class MjsCode(JsCode):
     def replace(self, pattern: str, repl: str):
@@ -26,8 +27,10 @@ class MjsCode(JsCode):
         return self
 
 class Base():
+    
 
     def __init__(self):
+        self.desired_width = 520
         colors = ['#B7990D', '#3D2C2E', "#276FBF", "#183059"]
         text_colors = ["#333", "#efefef", "#efefef", "#efefef"]
         self.line_colors = [ opts.ItemStyleOpts(color=i) for i in colors ]
@@ -85,10 +88,13 @@ class Base():
                 formatter= JsCode(" function (value, index) { var val = value; var numberValue = Math.abs(val) > 999 ? Math.sign(val)*((Math.abs(val)/1000).toFixed(1)) + 'k' : Math.sign(val)*Math.abs(val); return numberValue + ' '; }")
             ),
              "x_data": opts.LabelOpts(
-                horizontal_align="left",
-                # color='#fff',
-                position='top',
-                font_size=9,
+                vertical_align="middle",
+                color='#fff',
+                position='insideBottom',
+                font_size=8,
+                rotate=90,
+                margin=15,
+                horizontal_align='top',
                 formatter=JsCode(""" function(x){ console.log(x); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
                  ) ,
             )
@@ -180,6 +186,9 @@ class Base():
         
         self.chart.render(file_name)
         make_snapshot(   driver, file_name, image_name, pixel_ratio=1.5)
+    
+    def calculate_desired_height(self, map_width, map_height):
+        return  self.desired_width * (map_height / map_width)
 
 
 
@@ -256,8 +265,14 @@ class OverLap(Base):
 
 class CustomMap(Base):
 
-    def __init__(self, map_name:str = "", map_stats_type:str="count",  label_show:str=False, width: str = "540px", height: str= "300px", bounding:list =[], options:dict = {}):
+    def __init__(self, map_name:str = "", map_stats_type:str="count",  label_show:str=False, width: str = "540px", height: str= "300px", bounding:dict ={}, options:dict = {}):
         super(CustomMap, self).__init__()
+
+        # self.width = bounding.get('width', 0)
+        # self.height = bounding.get('height', 0)
+        self.width = self.desired_width
+        self.height = self.calculate_desired_height(bounding.get('width', 0), bounding.get('height', 0))
+
         self.map_initial_opts = {"width":width, "height":height, "animation_opts":opts.AnimationOpts(animation=False), "showLegendSymbol": True, "boundingCoords":bounding} 
         # print("Map",self.map_initial_opts, )
         self.chart  =  CMap( init_opts=self.map_initial_opts)
@@ -279,7 +294,7 @@ class CustomMap(Base):
         # print("Max Value",df[1].max())
         # self.visual_map_options[self.stats_type].update(**{"max_": df[1].max(), "min_":0} )
         # self.visual_map_options[self.stats_type].update()
-        self.visual_map_options[self.stats_type].update(**self.visual_map_formatter[self.stats_type], max = df[1].max())
+        self.visual_map_options[self.stats_type].update(**self.visual_map_formatter[self.stats_type], max = math.ceil(df[1].max()))
 
         self.global_opts["default"].update({
                 "visualmap_opts": self.visual_map_options[self.stats_type]
@@ -299,6 +314,7 @@ class CustomMap(Base):
         label_opts.update(padding=1)
         self.chart.add("", data, maptype=self.map_name ,  
         label_opts=label_opts, is_map_symbol_show=False,
+            zoom=1
         )
         return self
 
@@ -306,8 +322,14 @@ class CustomMap(Base):
 
 class StatsMap(Base):
 
-    def __init__(self, map_name:str = "", width: str = "540px", height: str= "300px", options:dict = {}):
+    def __init__(self, map_name:str = "", width: str = "540px", height: str= "300px", options:dict = {}, bounding: dict = {}):
         super(StatsMap, self).__init__()
+        print('bounding ' , bounding)
+        # self.width = bounding.get('width', 0)
+        # self.height = bounding.get('height', 0)
+
+        self.width = self.desired_width
+        self.height = self.calculate_desired_height(bounding.get('width', 0), bounding.get('height', 0))
 
         label = "function(params){ return '\n' + params.name + '\n Visitors:' + (new Intl.NumberFormat('en-UK', { maximumFractionDigits: 0 }).format(params.value)) + '\n'}"
 
@@ -352,7 +374,7 @@ class StatsMap(Base):
         self.js_code_label = utils.JsCode(label)
 
     def schema(self, data):
-        self.chart.add_schema(maptype=self.map_name , map_data=data, zoom=1.0, itemstyle_opts = opts.ItemStyleOpts(area_color="#D1F5FF", border_color = "#A0C1D1", border_width= 1, opacity= 0.3))
+        self.chart.add_schema(maptype=self.map_name , map_data=data, zoom=1, itemstyle_opts = opts.ItemStyleOpts(area_color="#D1F5FF", border_color = "#A0C1D1", border_width= 1, opacity= 0.3))
         return self
 
     def coordinates(self, area_coordinates:dict):

@@ -63,7 +63,8 @@ class GenerateReport(BaseChartTask):
 
     def __send_report(self, report_data, report_path):
         mail_config = report_data['mail']
-        receipients = ','.join([ i['email_address'] for i in mail_config['recipient']])
+        # receipients = ','.join([ i['email_address'] for i in mail_config['recipient']])
+        receipients = tuple([ Address(i['name'], i['email_address'].split('@')[0], i['email_address'].split('@')[1])  for i in mail_config['recipient']])
         mail_content = mail_config['body']
         subject = '{} Report - {}'.format(mail_config['subject']['type'], mail_config['subject']['site'])
         reply_email = mail_config['reply-to'][0]['email']

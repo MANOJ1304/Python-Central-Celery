@@ -40,7 +40,7 @@ a list of Address Matches for other analysis and manual review.'''
         if not self.dev:
             venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
             map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
-            map_bounding = { "width": map_info.get("dim_x")*2, "height": map_info.get("dim_y")*2 }
+            map_bounding = { "width": map_info.get("dim_x"), "height": map_info.get("dim_y") }
 
             data = self.__get_areas(**kwargs["creds"], **kwargs["data_params"])
             
@@ -149,10 +149,10 @@ a list of Address Matches for other analysis and manual review.'''
         target = self.find_top_places(df, "target")
         # print(source[0])
         print(target[0])
-        map = StatsMap("makemymap")
+        map = StatsMap("makemymap", bounding=bounding)
         map.coordinates(area_coordinates)
         map.schema(map_data) 
-        map.set_add_global_options(bounding) 
+        map.set_add_global_options({'width': map.width, 'height': map.height}) 
         map.set_data(source[0][:10], "", type_= 'map',   color="#0197F6")
         map.set_data(source[1][:5], "Top 5 Origins", type_= 'geo',  color="#0197F6")
         map.set_data(target[0][:10], "", type_= 'map', color="#271033")

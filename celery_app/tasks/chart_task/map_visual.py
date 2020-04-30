@@ -40,7 +40,8 @@ a list of Address Matches for other analysis and manual review.'''
 
             venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
             map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
-            map_bounding = {"width": map_info.get("dim_x")*2, "height": map_info.get("dim_y")*2 }
+            # map_bounding = {"width":  map_info.get("dim_x"), "height": map_info.get("dim_y") }
+            map_bounding = {"width":  map_info.get("dim_x"), "height": map_info.get("dim_y") }
 
             data = self.__get_areas(**kwargs["creds"], **kwargs["data_params"])
             
@@ -124,11 +125,9 @@ a list of Address Matches for other analysis and manual review.'''
     def __draw_chart(self, map_data, bounding, data:dict = {}, ):
         # print(json.dumps(map_data, indent=4))
         
-
-
-        map = CustomMap("makemymap", self.report_details["stats_type"], )
+        map = CustomMap("makemymap", self.report_details["stats_type"], bounding=bounding)
         map.schema(map_data)
-        map.set_add_global_options(bounding) 
+        map.set_add_global_options({'width': map.width, 'height': map.height}) 
         map.set_data(data)
         # print(map.get_chart_instance().dump_options())
 

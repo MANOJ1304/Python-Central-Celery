@@ -35,8 +35,11 @@ a list of Address Matches for other analysis and manual review.'''
         self.build_dir()
         if not self.dev:    
             data = self.__get_areas(**kwargs["creds"], **kwargs["data_params"])
+            venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
+            map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
+            map_bounding = {"width": map_info.get("dim_x")*2, "height": map_info.get("dim_y")*2 }
             
-            self.__draw_chart(data[0], data[3], data[1])
+            self.__draw_chart(data[0], data[3], data[1], bounding=map_bounding)
         kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, self.map_image)
 
         return kwargs['output']
@@ -116,10 +119,10 @@ a list of Address Matches for other analysis and manual review.'''
                 ddd.append([area_name[i[0]], i[1]])
         return { "type": 'FeatureCollection', "features": area_polygon}, centroid_p, area_name, ddd
 
-    def __draw_chart(self, map_data, data:dict = {}, area_coordinates: list = []):
+    def __draw_chart(self, map_data, data:dict = {}, area_coordinates: list = [], bounding:dict = {}):
         # print(json.dumps(map_data, indent=4))
         # print(json.dumps(data, indent=4))
-        map = StatsMap("makemymap")
+        map = StatsMap("makemymap", bounding=bounding)
         map.coordinates(area_coordinates)
         map.schema(map_data) 
         map.set_data(data,"Entrance Count")
@@ -159,4 +162,11 @@ a list of Address Matches for other analysis and manual review.'''
         return d
 
     def __process_data(self, data:dict):
+        return data
+
+    def __process_venue_data(self, username, password, venue_id:str,  cfg:dict) :
+        w =  WildfireApi(username, password, cfg)
+        data = (w.venues() 
+        .get_one(venue_id))
+
         return data

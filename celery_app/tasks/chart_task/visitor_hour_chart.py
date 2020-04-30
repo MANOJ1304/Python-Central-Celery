@@ -58,7 +58,7 @@ a list of Address Matches for other analysis and manual review.'''
         # Current week operations
 
         df = pd.DataFrame(self.current_week)
-        df['x_axis'] = pd.to_datetime(df['x_axis'])
+        df['x_axis'] = pd.to_datetime(df['x_axis'], utc=True)
         df['hour'] = df['x_axis'].dt.hour
         df = df[(df['hour'] >= 10) & (df['hour'] <= 21)]
         grp = df.groupby('hour').sum().reset_index()
@@ -88,27 +88,16 @@ a list of Address Matches for other analysis and manual review.'''
 
        
         bar = BarChart(bar_title=self.map_image)
-# <<<<<<< HEAD
-#         # chart_options["global"]['yaxis_opts'].update(bar.label_style['x_data'])
-#         # bar.label_style['x_data'].update(color = bar.bar_label_text_colors.pop())
-#         # bar.set_option(chart_options["series"], {}, chart_options["global"]['yaxis_opts'])
-#         bar.get_chart_instance().add_xaxis(x_axis)
-#         bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%",
-#             label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
-#         bar.get_chart_instance().add_yaxis("Previous week", pw, gap="40%",
-#         label_opts=bar.label_style['x_data'], itemstyle_opts=bar.bar_colors.pop())
-#         bar.get_chart_instance().set_global_opts(xaxis_opts=opts.AxisOpts(name='Hours',
-#             position='bottom', name_location='center', name_gap=40))
-#         # bar.set
-#         # print(bar.get_chart_instance().dump_options())
-#         bar.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
-#             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
-# =======
+
         bar.xaxis(x_axis)
-        bar.ydata("Current Week", cw , options={"gap":"0%", "label_opts":bar.label_style['x_data']})
-        bar.ydata("Previous week", pw , options={"gap":"40%", "label_opts":bar.label_style['x_data']})
-        # bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%", label_opts=bar.label_style['x_data'])
-        # bar.get_chart_instance().add_yaxis("Previous week", pw, gap="40%", label_opts=bar.label_style['x_data'])
+        # bar.ydata("Current Week", cw , options={"gap":"0%", "label_opts":bar.label_style['x_data']})
+        # bar.ydata("Previous week", pw , options={"gap":"10%", "label_opts":bar.label_style['x_data']})
+        # add_yaxis(title, data, category_gap="60%", itemstyle_opts=self.bar_colors.pop(),  **options )
+        
+        bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%", label_opts=bar.label_style['x_data'],
+            category_gap="30%", itemstyle_opts=bar.bar_colors.pop())
+        bar.get_chart_instance().add_yaxis("Previous week", pw, gap="10%", label_opts=bar.label_style['x_data'],
+            category_gap="30%", itemstyle_opts=bar.bar_colors.pop())
         bar.get_chart_instance().set_global_opts(xaxis_opts=opts.AxisOpts(name='Hours',
             position='bottom', name_location='center', name_gap=40))
         # print(bar.get_chart_instance().dump_options())

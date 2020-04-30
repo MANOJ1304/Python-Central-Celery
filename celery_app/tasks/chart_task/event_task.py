@@ -53,6 +53,7 @@ class EventsTask(BaseChartTask):
         .events()
         .lists(search=search_dict, pagination=True, sort_fields='start_time'))
         events_data = {}
+
         for item in d['_items']:
             try:
                 start_time = item['start_time'].split(' ')

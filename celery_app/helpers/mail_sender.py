@@ -113,7 +113,8 @@ def send_email_message(receivers_mail, attachment, mail_content, subject, report
         
         print('Pdf attachment added')
 
-        msg['From'] = sender_address
+        # msg['From'] = sender_address
+        msg['From'] =  Address(cfg['mail_config']['name'], "no-reply", 'tesinsights.com')
         msg['To'] = receiver_address
         msg['Subject'] = subject
         msg.add_header('reply-to', reply_to)

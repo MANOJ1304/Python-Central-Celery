@@ -15,16 +15,33 @@ redis:
 #     port: '6379'
 
 
+# mail_config:
+#     server: "smtp.gmail.com"
+
+#     port: 587
+
+#     username: "dev@intelipower.co.za"
+
+#     password: "DevelopMent@22"
+
+#     default_sender: "dev@intelipower.co.za"
+
+#     use_tls: False
+
+#     use_ssl: True
+
+#     name: 'Tes Insights'
+
 mail_config:
-    server: "smtp.gmail.com"
+    server: "smtp.ionos.co.uk"
 
     port: 587
 
-    username: "dev@intelipower.co.za"
+    username: "no-reply@tesinsights.com"
 
-    password: "DevelopMent@22"
+    password: "mG$R8N4W"
 
-    default_sender: "dev@intelipower.co.za"
+    default_sender: "no-reply@tesinsights.com"
 
     use_tls: False
 
