@@ -1,7 +1,7 @@
 chardet==3.0.4
 hiredis==0.2.0
 python-dateutil==2.7.2
-PyYAML==3.12
+PyYAML
 tzlocal==1.5.1
 cloudinary==1.7.0
 celery==4.4.0
