@@ -30,6 +30,14 @@ def register_tasks():
 
 
 register_tasks()
+
+# from celery.task.control import revoke
+# import time
 # if __name__ == '__main__':
 #     task_b = Sum()
-#     task_b.delay(1, 20)
+#     task_id=str(task_b.delay(3, 20, None))
+#     print("\n Task ID",task_id)
+#     print(type(task_id))
+#     time.sleep(5)
+#     # print(revoke(task_id, terminate=True))
+#     # print(task_b.delay(0, 0, task_id))
