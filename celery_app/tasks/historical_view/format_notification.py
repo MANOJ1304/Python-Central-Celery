@@ -20,7 +20,7 @@ class DataFormator(object):
         for es_message in data_list:
             # print(es_message['@timestamp'])
             notification_obj['seq_number'] = seq_number
-            notification_obj['historical'] = False
+            notification_obj['historical'] = True
             seq_number = seq_number + 1
         
             ##notification/monitor obj
@@ -69,14 +69,14 @@ class DataFormator(object):
                     notification_monitor_device_obj['user_info']['sub_type'] = area_classification.get('mapping').get(str(es_message.get('area_aacn'))).get('name')
                     notification_monitor_device_obj['user_info']['type'] = 'visitor' ## check
                     notification_monitor_device_obj['user_info']['update_rate'] = 10 ## check
-            # else:
-            #     notification_monitor_device_obj['user_info'] = {}
-            #     notification_monitor_device_obj['user_info']['color'] = '#00FF00' ## check
-            #     notification_monitor_device_obj['user_info']['icon'] = 'account-star' ## check
-            #     notification_monitor_device_obj['user_info']['label'] = 'Unknown' ## check
-            #     notification_monitor_device_obj['user_info']['sub_type'] = 'st'
-            #     notification_monitor_device_obj['user_info']['type'] = 'visitor' ## check
-            #     notification_monitor_device_obj['user_info']['update_rate'] = 10 ## check
+            else:
+                notification_monitor_device_obj['user_info'] = {}
+                notification_monitor_device_obj['user_info']['color'] = '#00FF00' ## check
+                notification_monitor_device_obj['user_info']['icon'] = 'account-star' ## check
+                notification_monitor_device_obj['user_info']['label'] = 'Unknown' ## check
+                notification_monitor_device_obj['user_info']['sub_type'] = 'Unknown'
+                notification_monitor_device_obj['user_info']['type'] = 'visitor' ## check
+                notification_monitor_device_obj['user_info']['update_rate'] = 10 ## check
             
             notification_monitor_obj['device'] = notification_monitor_device_obj
             
