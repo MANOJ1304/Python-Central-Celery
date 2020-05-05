@@ -1,6 +1,9 @@
 # from redis_operations import redis_publish
 import time
 from tasks.historical_view.redis_operations import RedisOp
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 class DataFormator(object):
     
@@ -64,24 +67,32 @@ class DataFormator(object):
                 if area_classification.get('mapping').get(str(es_message.get('area_aacn'))) != None:
                     # print(area_classification.get('mapping').get(str(es_message.get('area_aacn'))))
                     notification_monitor_device_obj['user_info']['color'] = area_classification.get('mapping').get(str(es_message.get('area_aacn'))).get('color')
-                    notification_monitor_device_obj['user_info']['icon'] = 'account-star' ## check
-                    notification_monitor_device_obj['user_info']['label'] = 'Unknown' ## check
+                    notification_monitor_device_obj['user_info']['icon'] = 'account-star' 
+                    notification_monitor_device_obj['user_info']['label'] = 'Unknown' 
                     notification_monitor_device_obj['user_info']['sub_type'] = area_classification.get('mapping').get(str(es_message.get('area_aacn'))).get('name')
-                    notification_monitor_device_obj['user_info']['type'] = 'visitor' ## check
-                    notification_monitor_device_obj['user_info']['update_rate'] = 10 ## check
+                    notification_monitor_device_obj['user_info']['type'] = 'visitor' 
+                    notification_monitor_device_obj['user_info']['update_rate'] = 10 
+                else:
+                    notification_monitor_device_obj['user_info'] = {}
+                    notification_monitor_device_obj['user_info']['color'] = '#00FF00' 
+                    notification_monitor_device_obj['user_info']['icon'] = 'account-star' 
+                    notification_monitor_device_obj['user_info']['label'] = 'Unknown' 
+                    notification_monitor_device_obj['user_info']['sub_type'] = 'Unknown'
+                    notification_monitor_device_obj['user_info']['type'] = 'visitor' 
+                    notification_monitor_device_obj['user_info']['update_rate'] = 10 ## chec
             else:
                 notification_monitor_device_obj['user_info'] = {}
-                notification_monitor_device_obj['user_info']['color'] = '#00FF00' ## check
-                notification_monitor_device_obj['user_info']['icon'] = 'account-star' ## check
-                notification_monitor_device_obj['user_info']['label'] = 'Unknown' ## check
+                notification_monitor_device_obj['user_info']['color'] = '#00FF00' 
+                notification_monitor_device_obj['user_info']['icon'] = 'account-star' 
+                notification_monitor_device_obj['user_info']['label'] = 'Unknown'
                 notification_monitor_device_obj['user_info']['sub_type'] = 'Unknown'
-                notification_monitor_device_obj['user_info']['type'] = 'visitor' ## check
-                notification_monitor_device_obj['user_info']['update_rate'] = 10 ## check
+                notification_monitor_device_obj['user_info']['type'] = 'visitor'
+                notification_monitor_device_obj['user_info']['update_rate'] = 10
             
             notification_monitor_obj['device'] = notification_monitor_device_obj
-            
+                
             ##notification/monitor/distance obj
-            notification_monitor_distance_obj['action'] = 'unknown' ## check
+            notification_monitor_distance_obj['action'] = 'unknown'
             notification_monitor_distance_obj['moved'] = es_message.get('properties_moved')
             notification_monitor_distance_obj['proximity'] = es_message.get('properties_proximity')
             notification_monitor_distance_obj['unit'] = es_message.get('properties_unit')
