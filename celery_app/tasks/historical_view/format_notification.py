@@ -77,7 +77,7 @@ class DataFormator(object):
                     notification_monitor_device_obj['user_info']['color'] = '#00FF00' 
                     notification_monitor_device_obj['user_info']['icon'] = 'account-star' 
                     notification_monitor_device_obj['user_info']['label'] = 'Unknown' 
-                    notification_monitor_device_obj['user_info']['sub_type'] = 'Unknown'
+                    notification_monitor_device_obj['user_info']['sub_type'] = 'unknown'
                     notification_monitor_device_obj['user_info']['type'] = 'visitor' 
                     notification_monitor_device_obj['user_info']['update_rate'] = 10 ## chec
             else:
@@ -85,7 +85,7 @@ class DataFormator(object):
                 notification_monitor_device_obj['user_info']['color'] = '#00FF00' 
                 notification_monitor_device_obj['user_info']['icon'] = 'account-star' 
                 notification_monitor_device_obj['user_info']['label'] = 'Unknown'
-                notification_monitor_device_obj['user_info']['sub_type'] = 'Unknown'
+                notification_monitor_device_obj['user_info']['sub_type'] = 'unknown'
                 notification_monitor_device_obj['user_info']['type'] = 'visitor'
                 notification_monitor_device_obj['user_info']['update_rate'] = 10
             
