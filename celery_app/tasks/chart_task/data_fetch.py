@@ -34,18 +34,19 @@ a list of Address Matches for other analysis and manual review.'''
         print('Is dev ', self.dev)
         self.report_details = kwargs["report"]
         self.build_dir()
-        
+        if kwargs.get('chart_name', None) is None:
+            kwargs['chart_name'] = self.map_image
+
         if not self.dev:
-            
-            data = self.__get_data(**kwargs["creds"], **kwargs["data_params"])
+            data = self.__get_data(**kwargs["creds"], **kwargs["data_params"], area_id = kwargs['chart_options'].get('area_id', None))
             data = self.__process_data( data)
             d = data["analytic_data"][0]
             # print(d)
-            self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"])
-        kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, self.map_image) 
+            self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"], kwargs['chart_name'])
+        kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, kwargs['chart_name']) 
         return kwargs['output']
 
-    def __draw_chart(self, xaxis, data_storage, chart_options:dict= {}):
+    def __draw_chart(self, xaxis, data_storage, chart_options:dict= {}, chart_name = "vis"):
 
         bar = BarChart("dsad")
         line = LineChart("sad")
@@ -79,23 +80,31 @@ a list of Address Matches for other analysis and manual review.'''
         grid.add(overlap, is_control_axis_index=True)
 
         print(grid.get_chart_instance().dump_options())
-        grid.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
-            image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))
+        grid.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
+            image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, chart_name))
         
         # bar.get_chart_instance().overlap(line.get_chart_instance())
         # bar.generate(file_name="{}/{}.html".format(self.report_path_html, self.map_image),
         # image_name="{}/{}.png".format(self.report_path_image, self.map_image))
 
 
-    def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list, ):
+    def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict,
+        date_range:list, agg_type:str, exclude_params:list, area_id:str = None):
         log.debug("{} {}".format(username, password))
+
+        is_area_compute = False
+        area_info = {}
+        if area_id is not None:
+            is_area_compute = True
+            area_info = self.get_area_info(username, password, cfg, venue_id, area_id)
+       
         w =  WildfireApi(username, password, cfg)
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .wifi()
-        .set_filter(date_range, agg_type, elasttic_filters, exclude_params)
+        .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, is_area_compute = is_area_compute, area_filter = area_info)
         .request())
-        # print(json.dumps(d, indent=4))
+        print(json.dumps(d, indent=4))
         return d
 
     def __process_data(self, data:dict):
@@ -108,5 +117,21 @@ a list of Address Matches for other analysis and manual review.'''
                 dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,[ dateparser.parse(item).strftime("%-d %b, %y") for item in i[1]] ) 
             elif isinstance(i[1], str): 
                 dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,dateparser.parse(i[1]).strftime("%-d %b, %y"))
-                 
         return data
+
+    def get_area_info(self, username, password, cfg:dict, venue_id:str, area_id:str):
+        # w =  WildfireApi(username, password, cfg)
+        # d = (w.venues() 
+        #     .get(venue_id)
+        #     .pois()
+        #     .lists(search={"type": "area", "area_id": area_id}, ))
+        area_data = {}
+        # area_data['area.zeid'] = d['_items'][0]['zone_id']
+        # area_data['properties.floor_id'] = d['_items'][0]['floor_id']
+        area_data['area_ids.id'] = area_id
+        # area_data['venue_id'] = venue_id
+        area_data['gt'] = 0
+        area_data['lt'] = 6
+        # print(d)
+        return area_data
+        

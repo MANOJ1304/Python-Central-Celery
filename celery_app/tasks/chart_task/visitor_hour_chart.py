@@ -56,15 +56,20 @@ a list of Address Matches for other analysis and manual review.'''
 
     def __draw_chart(self, chart_options):
         # Current week operations
+        # print('Current week ', self.current_week)
+
+        # print('LAst week ', self.last_week)
 
         df = pd.DataFrame(self.current_week)
-        df['x_axis'] = pd.to_datetime(df['x_axis'], utc=True)
+        df['x_axis'] = df['x_axis'].apply(lambda x:  x[:23])
+        df['x_axis'] = pd.to_datetime(df['x_axis'])
         df['hour'] = df['x_axis'].dt.hour
         df = df[(df['hour'] >= 10) & (df['hour'] <= 21)]
         grp = df.groupby('hour').sum().reset_index()
 
         # Last week operations
         df = pd.DataFrame(self.last_week)
+        df['x_axis'] = df['x_axis'].apply(lambda x:  x[:23])
         df['x_axis'] = pd.to_datetime(df['x_axis'])
         df['hour'] = df['x_axis'].dt.hour
         df = df[(df['hour'] >= 10) & (df['hour'] <= 21)]

@@ -1,4 +1,4 @@
-from pyecharts.charts import Bar, CMap, Geo, Map, Grid, Line
+from pyecharts.charts import Bar, CMap, Geo, Map, Grid, Line, Pie
 from pyecharts import options as opts
 # from snapshot_phantomjs import snapshot as driver
 from snapshot_selenium import snapshot as driver
@@ -87,7 +87,7 @@ class Base():
                 font_size = 12,
                 formatter= JsCode(" function (value, index) { var val = value; var numberValue = Math.abs(val) > 999 ? Math.sign(val)*((Math.abs(val)/1000).toFixed(1)) + 'k' : Math.sign(val)*Math.abs(val); return numberValue + ' '; }")
             ),
-             "x_data": opts.LabelOpts(
+            "x_data": opts.LabelOpts(
                 vertical_align="middle",
                 color='#fff',
                 position='insideBottom',
@@ -97,6 +97,10 @@ class Base():
                 horizontal_align='top',
                 formatter=JsCode(""" function(x){ console.log(x); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
                  ) ,
+            ),
+            "donut_chart": opts.LabelOpts(
+                formatter=JsCode(" function(params) { return params.value + '\\n' + params.percent + '%';} "),
+                is_show=True 
             )
         }
         
@@ -183,7 +187,6 @@ class Base():
         return self.chart
 
     def generate(self, file_name:str = "render.html", image_name: str = "example.png" ):
-        
         self.chart.render(file_name)
         make_snapshot(   driver, file_name, image_name, pixel_ratio=1.5)
     
@@ -439,11 +442,19 @@ class StatsMap(Base):
         )
         return self
 
-if __name__ == '__main__':
+class PieChart(Base):
+    def __init__(self, bar_title: str, width:str ="540px", height:str = "300px"):
+        super(PieChart, self).__init__()
+        self.chart = Pie(init_opts=opts.InitOpts(width=width, height=height, animation_opts=opts.AnimationOpts(animation=False)))
+        self.doughnut_radius = [40, 70]
+        self.colors = [ "#33b913", "#ff6666", "#1c028b","#fe8349", "#2145c7"]
 
-    b = (BarChart("Test")
-    .xaxis( Faker.choose())
-    .ydata("A",Faker.values())
-    .ydata("B",Faker.values())
-    .generate(file_name="visualization/test/html/render.html", image_name="visualization/test/images/example.png"))
+
+# if __name__ == '__main__':
+
+#     b = (BarChart("Test")
+#     .xaxis( Faker.choose())
+#     .ydata("A",Faker.values())
+#     .ydata("B",Faker.values())
+#     .generate(file_name="visualization/test/html/render.html", image_name="visualization/test/images/example.png"))
     

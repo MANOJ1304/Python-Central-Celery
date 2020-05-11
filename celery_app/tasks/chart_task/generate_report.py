@@ -38,6 +38,7 @@ class GenerateReport(BaseChartTask):
         self.report_details = kwargs["report"]
         self.build_dir()
         self.base_path = kwargs['report']['root_path']
+        self.template_path = kwargs['report']['template']
         report_path = self.__create_report(kwargs['report_data'], kwargs['report_name'], )
         print('Report created')
         self.__send_report(kwargs['report_data'], report_path)
@@ -45,7 +46,7 @@ class GenerateReport(BaseChartTask):
     
     def __create_report(self, report_data, report_name):
         env = Environment(loader=FileSystemLoader('{}'.format(self.base_path)))
-        cover = env.get_template("templates/scorecard.html")
+        cover = env.get_template("templates/{}".format(self.template_path))
         env.globals.update(day_of_week=day_of_week, get_date=get_date,
             get_12_hour=get_12_hour, get_date_with_format=get_date_with_format)
 

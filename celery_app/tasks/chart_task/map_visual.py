@@ -59,7 +59,7 @@ a list of Address Matches for other analysis and manual review.'''
         w =  WildfireApi(username, password, cfg)
         d = (w.venues() 
             .get(venue_id) 
-            .pois() 
+            .pois()
             .lists(search={"type": "area"}, pagination=True))
 
         # print(json.dumps(d))
@@ -89,7 +89,7 @@ a list of Address Matches for other analysis and manual review.'''
         analytics = self.__process_analytics(username, password, cfg, venue_id, elasttic_filters, date_range, agg_type, exclude_params)
         
         adata = [[k, v.get(self.report_details["stats_type"]).get("value")]for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
-        print("Stats", json.dumps(adata))
+        # print("Stats", json.dumps(adata))
         return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object, adata)
 
     def __reproces(self, data, obj, analytics_data):

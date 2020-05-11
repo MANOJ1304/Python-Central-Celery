@@ -67,5 +67,5 @@ class EventsTask(BaseChartTask):
                 continue
         # print('events_data ', '*' * 100)
         # print(json.dumps(d, indent=4))
-        print( len(d['_items']))
+        # print( len(d['_items']))
         return events_data

@@ -148,7 +148,7 @@ a list of Address Matches for other analysis and manual review.'''
         source = self.find_top_places(df, "source")
         target = self.find_top_places(df, "target")
         # print(source[0])
-        print(target[0])
+        # print(target[0])
         map = StatsMap("makemymap", bounding=bounding)
         map.coordinates(area_coordinates)
         map.schema(map_data) 

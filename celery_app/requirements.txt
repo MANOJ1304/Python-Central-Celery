@@ -23,3 +23,4 @@ cryptography
 snapshot-selenium
 dateparser
 weasyprint
+# https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/pythion-pyecharts-modified.git

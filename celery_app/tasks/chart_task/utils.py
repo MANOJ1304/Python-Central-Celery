@@ -117,3 +117,9 @@ def prepare_report_data(visitors_summmary_info, header_info, chart_info, footer_
     report_data['chart_info'] = chart_info
     report_data['footer_info'] = footer_info
     return report_data
+
+def convert_capitalize(label):
+    return ' '.join([i.capitalize() for i in label.split('_')])
+
+def round_number(num):
+    return "{:.2f}".format(num)

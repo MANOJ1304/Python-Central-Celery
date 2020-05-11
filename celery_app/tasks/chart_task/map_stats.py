@@ -87,7 +87,7 @@ a list of Address Matches for other analysis and manual review.'''
         # print(json.dumps(journey, indent=4))
         analytics = self.__process_analytics(username, password, cfg, venue_id, elasttic_filters, date_range, agg_type, exclude_params)
         adata = [[list(v.keys())[:1][0], v.get("value")] for v in analytics.get("analytic_data")[0].get("series")]
-        print("Analytics", adata)
+        # print("Analytics", adata)
         return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object, adata)
 
     def __reproces(self, data, obj, analytics_data):
@@ -142,7 +142,7 @@ a list of Address Matches for other analysis and manual review.'''
         .store_count()
         .set_filter(date_range, agg_type, elasttic_filters, exclude_params)
         .request())
-        print("Stats" , d)
+        # print("Stats" , d)
         return d
 
     def __process_analytics_journey(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list, pre_compute: bool =True, pre_compute_filter: dict = {"type": "sorted_cross_shopping"}):
