@@ -122,6 +122,6 @@ class DataFormator(object):
             # print(notification_obj)
             redis_obj = RedisOp(config)
             redis_obj.redis_publish(notification_obj,publish_channel)
-            time.sleep(1/50) # to decrease the speed of messages published so user can view data properly
+            time.sleep(1/10) # to decrease the speed of messages published so user can view data properly
             
         # exit()

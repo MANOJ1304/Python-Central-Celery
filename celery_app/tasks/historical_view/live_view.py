@@ -119,7 +119,7 @@ class HistoricalView(ZZQLowTask):
                     },
                     "size":0
                 },
-                "index": es_index+"-*"
+                "index": es_index   
                 }
         }
         
