@@ -119,7 +119,7 @@ a list of Address Matches for other analysis and manual review.'''
         for i in analytics_data:
             if i[0] in list(area_name.keys()):
                 ddd.append([area_name[i[0]], i[1]])
-        print("Areas",json.dumps(area_name))
+        # print("Areas",json.dumps(area_name))
         return { "type": 'FeatureCollection', "features": area_polygon}, centroid_p, area_name, ddd
 
     def __draw_chart(self, map_data, bounding, data:dict = {}, ):

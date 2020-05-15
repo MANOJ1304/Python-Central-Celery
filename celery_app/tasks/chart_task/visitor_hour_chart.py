@@ -14,7 +14,7 @@ from pyecharts.charts import Bar
 from snapshot_selenium import snapshot as driver
 from pyecharts.render import make_snapshot
 import time
-from  .utils import get_ts
+from  .utils import get_ts, get_12_hour
 import pandas as pd
 
 from datetime import timedelta, datetime
@@ -93,18 +93,23 @@ a list of Address Matches for other analysis and manual review.'''
 
        
         bar = BarChart(bar_title=self.map_image)
-
-        bar.xaxis(x_axis)
+        x_axis_label = []
+        # for i in x_axis:
+        #     hr = get_12_hour('{}:00:00'.format(i))
+        #     hr = hr.split(' ')
+        #     hr = '{} {}'.format(hr[0], '.'.join(list(hr[1])) )   
+        #     x_axis_label.append(hr)
+        x_axis_label = [get_12_hour('{}:00:00'.format(i)).lstrip('0') for i in x_axis ]
+        bar.xaxis(x_axis_label)
         # bar.ydata("Current Week", cw , options={"gap":"0%", "label_opts":bar.label_style['x_data']})
         # bar.ydata("Previous week", pw , options={"gap":"10%", "label_opts":bar.label_style['x_data']})
         # add_yaxis(title, data, category_gap="60%", itemstyle_opts=self.bar_colors.pop(),  **options )
-        
         bar.get_chart_instance().add_yaxis("Current Week", cw, gap="0%", label_opts=bar.label_style['x_data'],
             category_gap="30%", itemstyle_opts=bar.bar_colors.pop())
-        bar.get_chart_instance().add_yaxis("Previous week", pw, gap="10%", label_opts=bar.label_style['x_data'],
+        bar.get_chart_instance().add_yaxis("Previous Week", pw, gap="10%", label_opts=bar.label_style['x_data'],
             category_gap="30%", itemstyle_opts=bar.bar_colors.pop())
         bar.get_chart_instance().set_global_opts(xaxis_opts=opts.AxisOpts(name='Hours',
-            position='bottom', name_location='center', name_gap=40))
+            position='bottom', axislabel_opts=opts.LabelOpts(font_size=8, rotate=-15)),)
         # print(bar.get_chart_instance().dump_options())
         bar.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))

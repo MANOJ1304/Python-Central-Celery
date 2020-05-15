@@ -64,6 +64,7 @@ a list of Address Matches for other analysis and manual review.'''
             # print(line.dump_options())
             make_snapshot(driver, "{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
                 "{}/{}/{}.png".format(self.root_path, self.report_path_image, chart_name))
+            
             # bar.generate(file_name="visualization/html/render.html", image_name="visualization/images/example.png")
 
 

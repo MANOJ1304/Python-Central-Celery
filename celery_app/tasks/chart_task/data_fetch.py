@@ -79,7 +79,7 @@ a list of Address Matches for other analysis and manual review.'''
         grid = OverLap(width="540px", height="300px")
         grid.add(overlap, is_control_axis_index=True)
 
-        print(grid.get_chart_instance().dump_options())
+        # print(grid.get_chart_instance().dump_options())
         grid.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, chart_name))
         
@@ -104,7 +104,7 @@ a list of Address Matches for other analysis and manual review.'''
         .wifi()
         .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, is_area_compute = is_area_compute, area_filter = area_info)
         .request())
-        print(json.dumps(d, indent=4))
+        # print(json.dumps(d, indent=4))
         return d
 
     def __process_data(self, data:dict):

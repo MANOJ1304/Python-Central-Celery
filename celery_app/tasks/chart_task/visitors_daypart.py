@@ -5,15 +5,14 @@ from .widgets.chart import PieChart
 from pyecharts import options as opts
 from pyecharts.commons.utils import JsCode
 from boltons.iterutils import research, get_path
-import logging
+
 import json
-import dateparser
 import copy
 
 from snapshot_selenium import snapshot as driver
 from pyecharts.render import make_snapshot
 import time
-log = logging.getLogger(__name__)
+
 
 CELERY_ROUTES = {
     'BaseTask': {'queue': 'priority_high'},

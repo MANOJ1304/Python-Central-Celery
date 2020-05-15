@@ -1,4 +1,4 @@
-from pyecharts.charts import Bar, CMap, Geo, Map, Grid, Line, Pie
+from pyecharts.charts import Bar, CMap, Geo, Map, Grid, Line, Pie, Sankey
 from pyecharts import options as opts
 # from snapshot_phantomjs import snapshot as driver
 from snapshot_selenium import snapshot as driver
@@ -327,7 +327,7 @@ class StatsMap(Base):
 
     def __init__(self, map_name:str = "", width: str = "540px", height: str= "300px", options:dict = {}, bounding: dict = {}):
         super(StatsMap, self).__init__()
-        print('bounding ' , bounding)
+        # print('bounding ' , bounding)
         # self.width = bounding.get('width', 0)
         # self.height = bounding.get('height', 0)
 
@@ -448,6 +448,12 @@ class PieChart(Base):
         self.chart = Pie(init_opts=opts.InitOpts(width=width, height=height, animation_opts=opts.AnimationOpts(animation=False)))
         self.doughnut_radius = [40, 70]
         self.colors = [ "#33b913", "#ff6666", "#1c028b","#fe8349", "#2145c7"]
+
+class SankeyChart(Base):
+    def __init__(self, width:str ="540px", height:str = "300px"):
+        super(SankeyChart, self).__init__()
+        self.chart = Sankey(init_opts=opts.InitOpts(width=width, height=height, animation_opts=opts.AnimationOpts(animation=False)))
+        
 
 
 # if __name__ == '__main__':

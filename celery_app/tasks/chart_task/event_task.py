@@ -1,19 +1,12 @@
 from tasks.celery_queue_tasks import BaseChartTask
 from wildfire.wildfire_api import WildfireApi
-from .widgets.chart import BarChart, LineChart, OverLap, CustomMap
-from pyecharts import options as opts
-from pyecharts.commons.utils import JsCode
-from boltons.iterutils import research, get_path
+
 import logging
 import json
-import dateparser
-import dpath
 import copy
-from pyecharts.faker import Faker
-from pyecharts.charts import Line
-from snapshot_selenium import snapshot as driver
-from pyecharts.render import make_snapshot
+
 import time
+
 log = logging.getLogger(__name__)
 
 CELERY_ROUTES = {
@@ -41,8 +34,8 @@ class EventsTask(BaseChartTask):
         search_dict = {
             'type': events['type'],
             "start_time": {
-                "$gte":events['gt'],
-                "$lte":events['lt'],
+                "$gte": events['gt'],
+                "$lte": events['lt'],
             }
         }
         # w = None

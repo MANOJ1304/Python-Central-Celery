@@ -18,7 +18,7 @@ PyMySQL==0.9.3
 slackclient==1.3.0
 flower
 cryptography
-snapshot-selenium
+# snapshot-selenium
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-slack-alert.git#egg=slacknotification
 dateparser
 weasyprint

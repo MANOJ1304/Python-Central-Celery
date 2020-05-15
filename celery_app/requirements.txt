@@ -20,7 +20,7 @@ flower
 cryptography
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-slack-alert.git#egg=slacknotification
 -e git+https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/python-cross-shop-analytics.git#egg=cross_shopping_analytics
-snapshot-selenium
+# snapshot-selenium
 dateparser
 weasyprint
 # https://intelipowerbuild:ZyC4z3kVRQRR@github.com/Intelipower/pythion-pyecharts-modified.git
