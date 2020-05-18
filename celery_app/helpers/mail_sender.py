@@ -85,7 +85,7 @@ def send_mail(receivers_mail, attachment, mail_content, subject, root_path,  rep
         session.quit()
         print('Mail Sent')
 
-def send_email_message(receivers_mail, attachment, mail_content, subject, report_data, reply_to = None):
+def send_email_message(receivers_mail, attachment, mail_content, subject, report_data, reply_to = None, bcc = [], receivers = []):
     with open(os.getcwd()+'/configs/config.yaml') as yamlfile:
         cfg = yaml.load(yamlfile, Loader=yaml.FullLoader)
         sender_address = cfg['mail_config']['username']
@@ -125,6 +125,8 @@ def send_email_message(receivers_mail, attachment, mail_content, subject, report
         s.starttls()
 
         s.login(sender_address, sender_pass)
-        s.send_message(msg)
+        final_rec = receivers + bcc
+        s.send_message (to_addrs=final_rec, msg=msg)
+        # s.send
         s.quit()
         print('Mail Sent')

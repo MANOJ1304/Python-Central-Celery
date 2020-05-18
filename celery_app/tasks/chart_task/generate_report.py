@@ -70,7 +70,9 @@ class GenerateReport(BaseChartTask):
         mail_content = mail_config['body']
         subject = '{} Report - {}'.format(mail_config['subject']['type'], mail_config['subject']['site'])
         reply_email = mail_config['reply-to'][0]['email']
+        bcc = mail_config.get('bcc', [])
         print(' mail_content ', mail_content)
+        receivers = [i['email_address'] for i in mail_config['recipient']]
         # send_mail(receipients, report_path, mail_content, subject, report_data['root_path'], reply_email )
-        send_email_message(receipients, report_path, mail_content, subject, report_data, reply_email)
+        send_email_message(receipients, report_path, mail_content, subject, report_data, reply_email, bcc, receivers)
         
