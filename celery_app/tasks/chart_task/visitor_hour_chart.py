@@ -93,12 +93,13 @@ a list of Address Matches for other analysis and manual review.'''
 
        
         bar = BarChart(bar_title=self.map_image)
-        x_axis_label = []
+        
         # for i in x_axis:
         #     hr = get_12_hour('{}:00:00'.format(i))
         #     hr = hr.split(' ')
         #     hr = '{} {}'.format(hr[0], '.'.join(list(hr[1])) )   
         #     x_axis_label.append(hr)
+        x_axis_label = []
         x_axis_label = [get_12_hour('{}:00:00'.format(i)).lstrip('0') for i in x_axis ]
         bar.xaxis(x_axis_label)
         # bar.ydata("Current Week", cw , options={"gap":"0%", "label_opts":bar.label_style['x_data']})
