@@ -58,7 +58,7 @@ class SendMessage(ZZQLowTask):
         # Configure HTTP basic authorization: BasicAuth
         configuration = clicksend_client.Configuration()
         configuration.username = venue_info["credential"]["username"]
-        configuration.password = venue_info["credential"]["password"]
+        configuration.password = venue_info["credential"]["password"].replace("\\","")
         
         # create an instance of the API class
         api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
