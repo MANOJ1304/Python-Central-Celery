@@ -3,7 +3,7 @@ import pytz
 import jwt
 import calendar
 from datetime import datetime
-
+import math
 
 def time_to_utc(input_time, zone_name):
     local = pytz.timezone(zone_name)
@@ -101,7 +101,7 @@ def get_12_hour(str_hour):
 
 
 def convert_str_time(seconds):
-    seconds = int(seconds)
+    seconds = round(seconds)
     seconds = seconds % (24 * 3600)
     hour = seconds // 3600
     seconds %= 3600
@@ -161,3 +161,11 @@ def convert_capitalize(label):
 
 def round_number(num):
     return "{:.2f}".format(num)
+
+# Check date for weekend
+def is_weekend(date_str, date_format):
+  edate  = datetime.strptime(date_str, date_format)
+  if edate.weekday() <5:
+    return False
+  else:
+    return True

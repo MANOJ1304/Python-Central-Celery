@@ -54,11 +54,11 @@ class Base():
                 horizontal_align="center",
                 color='#666',
                 position=None,
-                font_size=10,
+                font_size=9,
                 
                 vertical_align= "middle",
                 
-                formatter=JsCode(""" function(x){ var numberValue = Math.abs(x.data[1]) > 999 ? Math.sign(x.data[1])*((Math.abs(x.data[1])/1000).toFixed(1)) + 'k' : Math.sign(x.data[1])*Math.abs(x.data[1]); var value = Number(x.data[1]).toLocaleString('en-US'); return  value ; } """
+                formatter=JsCode(""" function(x){ var numberValue = Math.abs(x.data) > 999 ? Math.sign(x.data)*((Math.abs(x.data)/1000).toFixed(1)) + 'k' : Math.sign(x.data)*Math.abs(x.data); var value = Number(x.data).toLocaleString('en-US'); return  value ; } """
                  ) ,
             ),
              "single_value_k": opts.LabelOpts(
@@ -233,7 +233,7 @@ class BarChart(Base):
 class LineChart(Base):
     def __init__(self, bar_title: str):
         super(LineChart, self).__init__()
-        self.chart = Line(init_opts=opts.InitOpts(animation_opts=opts.AnimationOpts(animation=False)))
+        self.chart = Line(init_opts=opts.InitOpts(animation_opts=opts.AnimationOpts(animation=False),))
         self.configuration = {}
         self.set_globl_option()
 

@@ -1,0 +1,1373 @@
+[
+    {
+        "trend": {},
+        "aggregation_data": {
+            "links": [
+                {
+                    "source": "4bf929a11e7140ceb9c973af0dc1ef95",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 198,
+                    "value_per": 42.7
+                },
+                {
+                    "source": "6e24036d41cb4f518334482510b430a0",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 77,
+                    "value_per": 16.6
+                },
+                {
+                    "source": "88c2074dc50d4614be7f69996fa2a5cc",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 64,
+                    "value_per": 13.8
+                },
+                {
+                    "source": "2e9bc30122bf4379acaf1926f6295f3f",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 54,
+                    "value_per": 11.7
+                },
+                {
+                    "source": "30d063c77ebc41fe84a17b929f36655d",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 28,
+                    "value_per": 6.0
+                },
+                {
+                    "source": "548c97a3b56f4c439c5ec92d046d6fa8",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 15,
+                    "value_per": 3.2
+                },
+                {
+                    "source": "8a21ba94f36746b28ae5913548577129",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 15,
+                    "value_per": 3.2
+                },
+                {
+                    "source": "4c69516911f24c7bad5e803e4caaf386",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 10,
+                    "value_per": 2.2
+                },
+                {
+                    "source": "4309834628c546f3896f7e99f30a6641",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 2,
+                    "value_per": 0.4
+                },
+                {
+                    "source": "2802af57917446e586d3b8db33ba31d5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "838558c4078b4352a30805ee2f3b66e5",
+                    "value": 1,
+                    "value_per": 0.2
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2022709e8211eab4cb32d89c6c49d1",
+                    "value": 311,
+                    "value_per": 59.2
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2026449e8211eab4cb32d89c6c49d1",
+                    "value": 68,
+                    "value_per": 13.0
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2029329e8211eab4cb32d89c6c49d1",
+                    "value": 53,
+                    "value_per": 10.1
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea202c0c9e8211eab4cb32d89c6c49d1",
+                    "value": 48,
+                    "value_per": 9.1
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea202f549e8211eab4cb32d89c6c49d1",
+                    "value": 16,
+                    "value_per": 3.1
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2032ec9e8211eab4cb32d89c6c49d1",
+                    "value": 13,
+                    "value_per": 2.5
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2038149e8211eab4cb32d89c6c49d1",
+                    "value": 7,
+                    "value_per": 1.3
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea203bd49e8211eab4cb32d89c6c49d1",
+                    "value": 6,
+                    "value_per": 1.1
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea203eb89e8211eab4cb32d89c6c49d1",
+                    "value": 2,
+                    "value_per": 0.4
+                },
+                {
+                    "source": "838558c4078b4352a30805ee2f3b66e5",
+                    "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                    "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "target": "ea2041929e8211eab4cb32d89c6c49d1",
+                    "value": 1,
+                    "value_per": 0.2
+                }
+            ],
+            "nodes": [
+                {
+                    "name": "Parking 2",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 355.783745,
+                    "y": 108.275925,
+                    "id": "4bf929a11e7140ceb9c973af0dc1ef95",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 132,
+                    "value_per": 0.43
+                },
+                {
+                    "name": "Parking 3",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 577.0644386128786,
+                    "y": 113.84445,
+                    "id": "6e24036d41cb4f518334482510b430a0",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 17072,
+                    "value_per": 55.91
+                },
+                {
+                    "name": "Best Cleaners",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 695.8444075,
+                    "y": 192.37413500000002,
+                    "id": "88c2074dc50d4614be7f69996fa2a5cc",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "d14652503ed3485484492d3b213f03e8",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "2E8B57",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Services"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Services"
+                            }
+                        ]
+                    },
+                    "value": 860,
+                    "value_per": 2.82
+                },
+                {
+                    "name": "Mariano's",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 600.5962,
+                    "y": 185.02772,
+                    "id": "2e9bc30122bf4379acaf1926f6295f3f",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "f6ba21e11bd64e2db1b5db08900c3985",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "FFFF00",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Mariano's"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Mariano's"
+                            }
+                        ]
+                    },
+                    "value": 5603,
+                    "value_per": 18.35
+                },
+                {
+                    "name": "Parking 5",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 726.0567550000001,
+                    "y": 196.55869,
+                    "id": "30d063c77ebc41fe84a17b929f36655d",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 128,
+                    "value_per": 0.42
+                },
+                {
+                    "name": "Cilantro Taco Grill",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 687.3008725,
+                    "y": 176.70672000000002,
+                    "id": "548c97a3b56f4c439c5ec92d046d6fa8",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "8B6508",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Restaurant"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Restaurant"
+                            }
+                        ]
+                    },
+                    "value": 762,
+                    "value_per": 2.5
+                },
+                {
+                    "name": "The Accounting Network",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 695.8452272450436,
+                    "y": 197.45772,
+                    "id": "8a21ba94f36746b28ae5913548577129",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "d14652503ed3485484492d3b213f03e8",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "2E8B57",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Services"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Services"
+                            }
+                        ]
+                    },
+                    "value": 277,
+                    "value_per": 0.91
+                },
+                {
+                    "name": "Family Dental Care",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 668.416589831666,
+                    "y": 182.24934000000002,
+                    "id": "4c69516911f24c7bad5e803e4caaf386",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "352b24e778d942b7b935bbea53d1ccf4",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "DA70D6",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Health & Beauty"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Health & Beauty"
+                            }
+                        ]
+                    },
+                    "value": 569,
+                    "value_per": 1.86
+                },
+                {
+                    "name": "Parking 1",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 128.2391351217064,
+                    "y": 104.097295,
+                    "id": "4309834628c546f3896f7e99f30a6641",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 47,
+                    "value_per": 0.15
+                },
+                {
+                    "name": "Honey Baked Ham",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 537.92541,
+                    "y": 177.865615,
+                    "id": "2802af57917446e586d3b8db33ba31d5",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "8B6508",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Restaurant"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Restaurant"
+                            }
+                        ]
+                    },
+                    "value": 15,
+                    "value_per": 0.05
+                },
+                {
+                    "name": "Dunkin Donuts",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 703.5985175000001,
+                    "y": 176.70715,
+                    "id": "838558c4078b4352a30805ee2f3b66e5",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "8B6508",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Restaurant"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Restaurant"
+                            }
+                        ]
+                    },
+                    "value": 464,
+                    "value_per": 3.17,
+                    "inflow": 464,
+                    "outflow": 525
+                },
+                {
+                    "name": "Parking 3",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 577.0644386128786,
+                    "y": 113.84445,
+                    "id": "ea2022709e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 17072,
+                    "value_per": 55.91
+                },
+                {
+                    "name": "Best Cleaners",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 695.8444075,
+                    "y": 192.37413500000002,
+                    "id": "ea2026449e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "d14652503ed3485484492d3b213f03e8",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "2E8B57",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Services"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Services"
+                            }
+                        ]
+                    },
+                    "value": 860,
+                    "value_per": 2.82
+                },
+                {
+                    "name": "Parking 2",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 355.783745,
+                    "y": 108.275925,
+                    "id": "ea2029329e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 132,
+                    "value_per": 0.43
+                },
+                {
+                    "name": "Mariano's",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 600.5962,
+                    "y": 185.02772,
+                    "id": "ea202c0c9e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "f6ba21e11bd64e2db1b5db08900c3985",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "FFFF00",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Mariano's"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Mariano's"
+                            }
+                        ]
+                    },
+                    "value": 5603,
+                    "value_per": 18.35
+                },
+                {
+                    "name": "Cilantro Taco Grill",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 687.3008725,
+                    "y": 176.70672000000002,
+                    "id": "ea202f549e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "8B6508",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Restaurant"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Restaurant"
+                            }
+                        ]
+                    },
+                    "value": 762,
+                    "value_per": 2.5
+                },
+                {
+                    "name": "The Accounting Network",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 695.8452272450436,
+                    "y": 197.45772,
+                    "id": "ea2032ec9e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "d14652503ed3485484492d3b213f03e8",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "2E8B57",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Services"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Services"
+                            }
+                        ]
+                    },
+                    "value": 277,
+                    "value_per": 0.91
+                },
+                {
+                    "name": "Family Dental Care",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 668.416589831666,
+                    "y": 182.24934000000002,
+                    "id": "ea2038149e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "352b24e778d942b7b935bbea53d1ccf4",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "DA70D6",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Health & Beauty"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Health & Beauty"
+                            }
+                        ]
+                    },
+                    "value": 569,
+                    "value_per": 1.86
+                },
+                {
+                    "name": "Parking 5",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 726.0567550000001,
+                    "y": 196.55869,
+                    "id": "ea203bd49e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 128,
+                    "value_per": 0.42
+                },
+                {
+                    "name": "Honey Baked Ham",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 537.92541,
+                    "y": 177.865615,
+                    "id": "ea203eb89e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "8B6508",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Restaurant"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Restaurant"
+                            }
+                        ]
+                    },
+                    "value": 15,
+                    "value_per": 0.05
+                },
+                {
+                    "name": "Parking 1",
+                    "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                    "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                    "x": 128.2391351217064,
+                    "y": 104.097295,
+                    "id": "ea2041929e8211eab4cb32d89c6c49d1",
+                    "cat_id": {
+                        "type": "main",
+                        "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                        "category_color": {
+                            "cymk": {
+                                "c": 0,
+                                "k": 0,
+                                "m": 0.39,
+                                "y": 0.87
+                            },
+                            "hex": "0000FF",
+                            "pantone": "",
+                            "rgb": {
+                                "b": 45,
+                                "g": 170,
+                                "r": 247
+                            }
+                        },
+                        "label": [
+                            {
+                                "language": "en_US",
+                                "text": "Parking"
+                            },
+                            {
+                                "language": "fr",
+                                "text": "Parking"
+                            }
+                        ]
+                    },
+                    "value": 47,
+                    "value_per": 0.15
+                }
+            ]
+        },
+        "visitor_type_data": {
+            "4": {
+                "links": [
+                    {
+                        "source": "8ee498e21ba143999f07a1fe30aae884",
+                        "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target": "838558c4078b4352a30805ee2f3b66e5",
+                        "value": 2,
+                        "value_per": 50.0
+                    },
+                    {
+                        "source": "c9fc5197614d46eeb5bbdcd8ef5d83d3",
+                        "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target": "838558c4078b4352a30805ee2f3b66e5",
+                        "value": 2,
+                        "value_per": 50.0
+                    },
+                    {
+                        "source": "838558c4078b4352a30805ee2f3b66e5",
+                        "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target": "6e24036d41cb4f518334482510b430a0",
+                        "value": 69,
+                        "value_per": 95.83
+                    },
+                    {
+                        "source": "838558c4078b4352a30805ee2f3b66e5",
+                        "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target": "ea17f51e9e8211eab4cb32d89c6c49d1",
+                        "value": 3,
+                        "value_per": 4.17
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "Subway",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 695.8452325000001,
+                        "y": 211.46804,
+                        "id": "8ee498e21ba143999f07a1fe30aae884",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "8B6508",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Restaurant"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Restaurant"
+                                }
+                            ]
+                        },
+                        "value": 85,
+                        "value_per": 2.01
+                    },
+                    {
+                        "name": "PetSmart",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 125.59851499999999,
+                        "y": 180.074345,
+                        "id": "c9fc5197614d46eeb5bbdcd8ef5d83d3",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "d14652503ed3485484492d3b213f03e8",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "2E8B57",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Services"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Services"
+                                }
+                            ]
+                        },
+                        "value": 831,
+                        "value_per": 19.6
+                    },
+                    {
+                        "name": "Dunkin Donuts",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 703.5985175000001,
+                        "y": 176.70715,
+                        "id": "838558c4078b4352a30805ee2f3b66e5",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "8B6508",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Restaurant"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Restaurant"
+                                }
+                            ]
+                        },
+                        "value": 4,
+                        "value_per": 14.84,
+                        "inflow": 4,
+                        "outflow": 72
+                    },
+                    {
+                        "name": "Parking 3",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 577.0644386128786,
+                        "y": 113.84445,
+                        "id": "6e24036d41cb4f518334482510b430a0",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "0000FF",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Parking"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Parking"
+                                }
+                            ]
+                        },
+                        "value": 2694,
+                        "value_per": 63.55
+                    },
+                    {
+                        "name": "Subway",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 695.8452325000001,
+                        "y": 211.46804,
+                        "id": "ea17f51e9e8211eab4cb32d89c6c49d1",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "8B6508",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Restaurant"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Restaurant"
+                                }
+                            ]
+                        },
+                        "value": 85,
+                        "value_per": 2.01
+                    }
+                ]
+            },
+            "3": {
+                "links": [
+                    {
+                        "source": "838558c4078b4352a30805ee2f3b66e5",
+                        "source_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "target_floor": "c5b49355d5df4a55818d8a0419f73533",
+                        "source_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target_bldg": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "target": "6e24036d41cb4f518334482510b430a0",
+                        "value": 144,
+                        "value_per": 100.0
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "Parking 3",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 577.0644386128786,
+                        "y": 113.84445,
+                        "id": "6e24036d41cb4f518334482510b430a0",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "5dcfa32df1974eaca679c148b4e038e5",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "0000FF",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Parking"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Parking"
+                                }
+                            ]
+                        },
+                        "value": 8768,
+                        "value_per": 95.13
+                    },
+                    {
+                        "name": "Dunkin Donuts",
+                        "floor_id": "c5b49355d5df4a55818d8a0419f73533",
+                        "building_id": "dfd572324a884d9e8d35f178aa77bf0d",
+                        "x": 703.5985175000001,
+                        "y": 176.70715,
+                        "id": "838558c4078b4352a30805ee2f3b66e5",
+                        "cat_id": {
+                            "type": "main",
+                            "category_id": "c44fd456018b4034acb1c590a593ea1a",
+                            "category_color": {
+                                "cymk": {
+                                    "c": 0,
+                                    "k": 0,
+                                    "m": 0.39,
+                                    "y": 0.87
+                                },
+                                "hex": "8B6508",
+                                "pantone": "",
+                                "rgb": {
+                                    "b": 45,
+                                    "g": 170,
+                                    "r": 247
+                                }
+                            },
+                            "label": [
+                                {
+                                    "language": "en_US",
+                                    "text": "Restaurant"
+                                },
+                                {
+                                    "language": "fr",
+                                    "text": "Restaurant"
+                                }
+                            ]
+                        },
+                        "value": 0.0,
+                        "value_per": 4.87,
+                        "inflow": 0,
+                        "outflow": 144
+                    }
+                ]
+            }
+        }
+    }
+]

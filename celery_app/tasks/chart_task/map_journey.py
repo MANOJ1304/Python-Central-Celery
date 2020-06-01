@@ -154,9 +154,9 @@ a list of Address Matches for other analysis and manual review.'''
         map.schema(map_data) 
         map.set_add_global_options({'width': map.width, 'height': map.height}) 
         map.set_data(source[0][:10], "", type_= 'map',   color="#0197F6")
-        map.set_data(source[1][:5], "Top 5 Origins", type_= 'geo',  color="#0197F6")
+        map.set_data(source[1][:5], "Origins", type_= 'geo',  color="#0197F6")
         map.set_data(target[0][:10], "", type_= 'map', color="#271033")
-        map.set_data(target[1][:5], "Top 5 Destinations", type_= 'geo',  color="#271033")
+        map.set_data(target[1][:5], "Destinations", type_= 'geo',  color="#271033")
         # print(map.get_chart_instance().dump_options())
         map.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image))   

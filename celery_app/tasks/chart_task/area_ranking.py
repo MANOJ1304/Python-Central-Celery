@@ -31,8 +31,9 @@ class AreaRankingTask(BaseChartTask):
         d = (w.venues() 
             .get(venue_id)
             .pois()
-            .lists())
+            .lists(pagination=True))
         area_names = {}
+        print('pois length', len(d['_items']))
         if len(d['_items']) > 0:
             for area in d['_items']:
                 area_names[area['area_id']] = area['name'][0].get("text") if isinstance(area['name'], list) else 'Area'
@@ -54,6 +55,7 @@ class AreaRankingTask(BaseChartTask):
             res = d['analytic_data'][0]['series'][0]
             for key, value in res.items():
                 value['area_name'] = area_names.get(key, '')
+                value['area_id'] = key
                 result.append(value)
             
             result = sorted(result, key= lambda k: k['one_done']['value'], reverse=True)

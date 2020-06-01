@@ -58,6 +58,8 @@ class GenerateReport(BaseChartTask):
         # mains.write_pdf('report.pdf')
         # with open('{}/{}/pdf.html'.format(self.root_path, self.report_path_pdf), 'w') as f:
         #     f.write(cover_out)
+        # with open('{}/{}/data.json'.format(self.root_path, self.report_path_pdf), 'w') as f:
+        #     f.write(json.dumps(report_data))
         report_path = '{}/{}/{}.pdf'.format(self.root_path, self.report_path_pdf, report_name)
         covers.write_pdf(report_path)
         return report_path

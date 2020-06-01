@@ -74,8 +74,7 @@ a list of Address Matches for other analysis and manual review.'''
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .wifi()
-        .set_filter(date_range, agg_type, elasttic_filters, exclude_params)
-        
+        .set_filter(date_range, 'visitors', elasttic_filters, exclude_params)
         .request())
         # print(json.dumps(d, indent=4))
         return d

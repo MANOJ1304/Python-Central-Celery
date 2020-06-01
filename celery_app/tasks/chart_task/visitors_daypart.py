@@ -68,24 +68,28 @@ class VisitorsDayPart(BaseChartTask):
             weekend_percent = [round_number((i/weekend_total) * 100) for i in weekend_data['data']]
 
             pchart = PieChart("")
+
+            formatter = "function(params) { return Number(params.value).toLocaleString('en-US')  + '\\n' + params.percent + '%';}"
             pchart.chart.add(
                 "",
                 [list(z) for z in zip(weekday_data['labels'], weekday_data['data'], weekday_percent)],
-                center=["30%", "40%"],
+                center=["28%", "42%"],
                 radius=pchart.doughnut_radius,
                 label_opts=opts.LabelOpts(
-                    formatter=JsCode(" function(params) { return params.value + '\\n' + params.percent + '%';} "),
-                    is_show=True 
+                    formatter=JsCode(formatter),
+                    is_show=True,
+                    font_size=8
                 )
             )
             pchart.chart.add(
                 "",
                 [list(z) for z in zip(weekend_data['labels'],  weekend_data['data'], weekend_percent)],
-                center=["75%", "40%"],
+                center=["73%", "42%"],
                 radius=pchart.doughnut_radius,
                 label_opts=opts.LabelOpts(
-                    formatter=JsCode(" function(params) { return params.value + '\\n' + params.percent + '%';} "),
-                    is_show=True 
+                    formatter=JsCode(formatter),
+                    is_show=True ,
+                    font_size=8
                 )
             )
             pchart.chart.set_global_opts(

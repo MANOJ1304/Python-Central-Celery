@@ -26,6 +26,12 @@ class CrossShopChart(BaseChartTask):
     def __init__(self):
         super(CrossShopChart, self).__init__()
         self.map_image = 'cross_shop_chart'
+        st_parking_areas = ["4309834628c546f3896f7e99f30a6641", "4bf929a11e7140ceb9c973af0dc1ef95" , "6e24036d41cb4f518334482510b430a0" ,
+        "9bf0aec600b042a3abd249cc441178a5", "30d063c77ebc41fe84a17b929f36655d"]
+        sg_parking_areas = ["50428e8a52f343f594d55abc038129b2","68799e931b2949338bc20591e43adc6f","6893c9a23d0a441d93900b6c2a2a14c6",
+        "6fa02129add644d2a0d36f2ede0631b0","b67773c62263411eae232e54e33ed863",
+        "f1554d8ef8ce41b9b6e7b527e8accbbf","e11dd4a7261244d7872c2c2fd0b53405"]
+        self.parking_areas = st_parking_areas #+ sg_parking_areas
     
 
     def run(self, kwargs):
@@ -70,17 +76,48 @@ class CrossShopChart(BaseChartTask):
         # print(data)
         formatter = 'function(data) { return data.name ; }'
         cross_shop_res = data['analytic_data']
+        
         if len(data['analytic_data']) > 0:
             agg_data = cross_shop_res[0]['aggregation_data']
             links = agg_data['links']
             nodes = agg_data['nodes']
+
+            # links_index = []
+
+            # links = [v for v in links if v['source'] not in self.parking_areas]
+
+            # links = [v for v in links if v['target'] not in self.parking_areas]
+
+            # nodes = [v for v in nodes if 'parking' not in v['name'].lower() and (v['id'] not in self.parking_areas)]
+
+            # for i, v in enumerate(links):
+            #     if v['target'] in self.parking_areas:
+            #         try:
+            #             links.pop(i)
+            #             # print(i, v['source'])
+            #             # links_index.append(i)
+            #             # del links[i]
+            #         except Exception as e:
+            #             pass
+            # _ = [links.pop(i) for i in links_index]
+
+            # with open('cross.json','w') as f:
+            #     f.write(json.dumps(cross_shop_res, indent=4))       
+            # for i, v in enumerate(nodes):
+            #     if (v['id'] in st_parking_areas) or ('parking' in v['name'].lower()):
+            #         # print('Parking id ', v['source'], v['target'])
+            #         try:
+            #             nodes.pop(i)
+            #         except Exception as e:
+            #             pass
+            # nodes = agg_data['nodes']
             sankeyChart = SankeyChart()
             sankeyChart.chart.add(
                 "",
                 nodes,
                 links,
                 linestyle_opt=opts.LineStyleOpts(opacity=0.2, curve=0.5, color="source"),
-                label_opts=opts.LabelOpts(position="right", formatter=JsCode(formatter)),
+                label_opts=opts.LabelOpts(position="right", formatter=JsCode(formatter), font_size=8),
             )
 
             sankeyChart.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),

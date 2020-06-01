@@ -3,6 +3,7 @@ from wildfire.wildfire_api import WildfireApi
 from .widgets.chart import BarChart, LineChart, OverLap
 from pyecharts import options as opts
 from pyecharts.commons.utils import JsCode
+from pyecharts.charts import Line
 from boltons.iterutils import research, get_path
 import logging
 import json
@@ -11,22 +12,24 @@ import dpath
 import os
 import pathlib
 
+from .utils import is_weekend
+
 log = logging.getLogger(__name__)
 
 
 CELERY_ROUTES = {
     'BaseTask': {'queue': 'priority_high'},
 }
-class DataFetch(BaseChartTask):
-    name = 'Data Fetch'
+class VisitorGraph(BaseChartTask):
+    name = 'Visitor Graph'
     description = '''Matches address from sources A and B and constructs
 a list of Address Matches for other analysis and manual review.'''
     public = True
     autoinclude = True
 
     def __init__(self):
-        super(DataFetch, self).__init__()
-        self.map_image = "visitors"
+        super(VisitorGraph, self).__init__()
+        self.map_image = "visitors_graph"
         
 
     def run(self, kwargs):
@@ -48,44 +51,42 @@ a list of Address Matches for other analysis and manual review.'''
 
     def __draw_chart(self, xaxis, data_storage, chart_options:dict= {}, chart_name = "vis"):
 
-        bar = BarChart("dsad")
-        line = LineChart("sad")
-        
-        bar.xaxis(xaxis,)
-        line.xaxis(xaxis,)
-        # print(list(zip(data_storage.get("new") , data_storage.get("repeat"))))
+        lc = LineChart("dsad")
+        line = Line(init_opts=opts.InitOpts(animation_opts=opts.AnimationOpts(animation=False),
+            width='1200px', height='300px'))
+        line.add_xaxis(xaxis)
+        # bar.xaxis(xaxis,)
         total = [ sum([x,y]) for x, y in list(zip(data_storage.get("new") , data_storage.get("repeat")))]
-        # print(total)
-        if "stack" in list(chart_options["series"].keys()):
-            stack = chart_options["series"]["stack"]
-            
-        for legend, data in data_storage.items():
-            if legend in ["new", "repeat"]: 
-                # print("Values", title, data_storage.get(title), total)
-                nr_data= [  {"value": n, "percent": n / t} for n, t in list(zip(data_storage.get(legend) , total))]
-                bar.ydata(legend.replace("_"," ").title(), nr_data , options=chart_options["series"])
+        markline_formatter = """
+            function (data) {
+                return Number(Math.round(data.value)).toLocaleString('US-en');
+            }
+        """
+        date_format = '%d %b, %Y'
+        final_data = []
+        for i in range(len(total)):
+            td = {}
+            if (is_weekend(xaxis[i], date_format)):
+                td['itemStyle'] = {'color':'#183058'}
+                td['symbolSize'] = 0
+                # td['symbol'] = 'circle'
+            # else:
+                # td['itemStyle'] = {'color': '#eee', 'borderWidth': 1, 'borderColor': '#183059'}
+            td['value'] = total[i]
+            final_data.append(td)
 
-        # chart_options["label_opts"] = self.label_style[chart_options["label_opts"]] 
-        for legend, data in data_storage.items():
-            if legend in ["total_visitor"]: 
-                line.ydata(legend.replace("_"," ").title(), total)
-        # bar.set_option(chart_options)
+        line.add_yaxis('', final_data, symbol_size=0, color="#666", xaxis_index=0, itemstyle_opts=lc.line_colors.pop(),
+            label_opts= opts.LabelOpts(is_show=False),
+            markline_opts=opts.MarkLineOpts(data=[opts.MarkLineItem(type_="average")],
+                label_opts=opts.LabelOpts(is_show=True, formatter=JsCode(markline_formatter), position='middle'),
+                linestyle_opts=opts.LineStyleOpts( type_='dashed'),
+                symbol_size=5))
+
+        line.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(font_size=8, rotate=-15)))
+        lc.chart = line
         
-        bar.set_option(chart_options["series"], {}, chart_options["global"]['yaxis_opts'])
-        line.label_style['single_value'].update(color= '#000')
-        line.set_option({"label_opts": "single_value", "z_level":1})
-        overlap = bar.get_chart_instance().overlap(line.get_chart_instance())
-        # overlap.render(file_name="visualization/html/abc.html")
-        grid = OverLap(width="540px", height="300px")
-        grid.add(overlap, is_control_axis_index=True)
-
-        # print(grid.get_chart_instance().dump_options())
-        grid.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
+        lc.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, chart_name))
-        
-        # bar.get_chart_instance().overlap(line.get_chart_instance())
-        # bar.generate(file_name="{}/{}.html".format(self.report_path_html, self.map_image),
-        # image_name="{}/{}.png".format(self.report_path_image, self.map_image))
 
 
     def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict,
@@ -113,10 +114,10 @@ a list of Address Matches for other analysis and manual review.'''
         for i in r: 
             i = list(i) 
             if isinstance(i[1], list):
-                i[1] = [ dateparser.parse(item).strftime("%-d %b, %y") for item in i[1]] 
-                dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,[ dateparser.parse(item).strftime("%-d %b, %y") for item in i[1]] ) 
+                i[1] = [ dateparser.parse(item).strftime("%-d %b, %Y") for item in i[1]] 
+                dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,[ dateparser.parse(item).strftime("%-d %b, %Y") for item in i[1]] ) 
             elif isinstance(i[1], str): 
-                dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,dateparser.parse(i[1]).strftime("%-d %b, %y"))
+                dpath.util.set(data, "/".join([ str(item)  for item in i[0]]) ,dateparser.parse(i[1]).strftime("%-d %b, %Y"))
         return data
 
     def get_area_info(self, username, password, cfg:dict, venue_id:str, area_id:str):
