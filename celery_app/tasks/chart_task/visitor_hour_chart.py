@@ -152,7 +152,7 @@ a list of Address Matches for other analysis and manual review.'''
             d = (w.venues()
                 .analytics(venue_id=venue_id)
                 .wifi()
-                .set_filter(local_date_range, agg_type, elasttic_filters, exclude_params)
+                .set_filter(local_date_range, 'general', elasttic_filters, exclude_params)
                 .request())
 
             start_date = start_date + timedelta(days=1)

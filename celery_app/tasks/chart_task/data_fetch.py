@@ -40,6 +40,7 @@ a list of Address Matches for other analysis and manual review.'''
         if not self.dev:
             data = self.__get_data(**kwargs["creds"], **kwargs["data_params"], area_id = kwargs['chart_options'].get('area_id', None))
             data = self.__process_data( data)
+            # print('data', data)
             d = data["analytic_data"][0]
             # print(d)
             self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"], kwargs['chart_name'])
