@@ -64,27 +64,28 @@ class SendMessage(ZZQLowTask):
         # create an instance of the API class
         api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
         
-        template_str = self.get_template(api_instance)
-        template_dict =  json.loads(template_str.replace("\'","\""))
+        # template_str = self.get_template(api_instance)
+        # template_dict =  json.loads(template_str.replace("\'","\""))
 
-        template_m = [i for i in template_dict["data"]["data"] if i["template_id"] ==venue_info["message_type"]][0]
-        if template_m["template_id"] == 73193:
+        # template_m = [i for i in template_dict["data"]["data"] if i["template_id"] ==venue_info["message_type"]][0]
+        template_m = venue_info["sms_template"]
+        if template_m["template_id"] == 1:
             template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
                             site_alias = venue_info["message_info"]["site_alias"], 
                             zone_alias = venue_info["message_info"]["zone_alias"],
                             open_time= venue_info["message_info"]["open_time"])
-        elif template_m["template_id"] == 73414:
+        elif template_m["template_id"] == 2:
             template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
                             site_alias = venue_info["message_info"]["site_alias"], 
                             zone_alias = venue_info["message_info"]["zone_alias"],
                             close_time = venue_info["message_info"]["close_time"])
-        elif template_m["template_id"] == 73415:
+        elif template_m["template_id"] == 3:
             template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
                             site_alias = venue_info["message_info"]["site_alias"], 
                             zone_alias = venue_info["message_info"]["zone_alias"],
                             occupancy_count = venue_info["message_info"]["occupancy_count"],
                             occupancy_threshold = venue_info["message_info"]["occupancy_threshold"])
-        elif template_m["template_id"] == 73416:
+        elif template_m["template_id"] == 4:
             template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
                             site_alias = venue_info["message_info"]["site_alias"], 
                             zone_alias = venue_info["message_info"]["zone_alias"],

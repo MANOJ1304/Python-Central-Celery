@@ -33,32 +33,33 @@ class SendMailcl(ZZQLowTask):
 
     def run(self, *args, **kwargs):
         # print("\nENTER IN RUN METHOD")
-        self.send_mail(args[0],self.templates_body,self.template_subject)
+        self.send_mail(args[0],self.template_subject)
         return True
 
-    def send_mail(self, venue_info,template_body,template_sub):
+    def send_mail(self, venue_info,template_sub):
         sender = venue_info["sender"]
         s_password = venue_info["password"]
         recipient = venue_info["recipient"]
         sub = venue_info["sub"]
+        template_body = venue_info["email_template"]
         # template = config["template"]
         message_type = venue_info["message_type"] 
 
         body_data = template_body[str(message_type)]
-        if int(message_type) == 73193:
+        if int(message_type) == 1:
             body_data = body_data.format( 
                              venue_info["message_info"]["full_name"],
                              venue_info["message_info"]["open_time"])
-        elif int(message_type) == 73414:
+        elif int(message_type) == 2:
             body_data = body_data.format(
                              venue_info["message_info"]["full_name"],
                              venue_info["message_info"]["close_time"])
-        elif int(message_type) == 73415:
+        elif int(message_type) == 3:
             body_data = body_data.format(
                              venue_info["message_info"]["full_name"],
                              venue_info["message_info"]["occupancy_count"],
                              venue_info["message_info"]["occupancy_threshold"])                             
-        elif int(message_type) == 73416:
+        elif int(message_type) == 4:
             body_data = body_data.format(
                              venue_info["message_info"]["full_name"],
                              venue_info["message_info"]["area_alias"],
