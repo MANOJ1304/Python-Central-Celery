@@ -45,32 +45,32 @@ class SendMailcl(ZZQLowTask):
         # template = config["template"]
         message_type = venue_info["message_type"] 
 
-        body_data = template_body[str(message_type)]
+        body_data = template_body
         if int(message_type) == 1:
             body_data = body_data.format( 
-                             venue_info["message_info"]["full_name"],
-                             venue_info["message_info"]["open_time"])
+                             venue_info["full_name"],
+                             venue_info["open_time"])
         elif int(message_type) == 2:
             body_data = body_data.format(
-                             venue_info["message_info"]["full_name"],
-                             venue_info["message_info"]["close_time"])
+                             venue_info["full_name"],
+                             venue_info["close_time"])
         elif int(message_type) == 3:
             body_data = body_data.format(
-                             venue_info["message_info"]["full_name"],
-                             venue_info["message_info"]["occupancy_count"],
-                             venue_info["message_info"]["occupancy_threshold"])                             
+                             venue_info["full_name"],
+                             venue_info["occupancy_count"],
+                             venue_info["occupancy_threshold"])                             
         elif int(message_type) == 4:
             body_data = body_data.format(
-                             venue_info["message_info"]["full_name"],
-                             venue_info["message_info"]["area_alias"],
-                             venue_info["message_info"]["device_type"],
-                             venue_info["message_info"]["status"],)
+                             venue_info["full_name"],
+                             venue_info["area_alias"],
+                             venue_info["device_type"],
+                             venue_info["status"])
 
 
         subject = template_sub["subject"].format(
-                        venue_info["message_info"]["venue_owner_alias"],
-                        venue_info["message_info"]["site_alias"],
-                        venue_info["message_info"]["zone_alias"])
+                        venue_info["venue_owner_alias"],
+                        venue_info["site_alias"],
+                        venue_info["zone_alias"])
  
 
         # print ("\n\n SEND MAIL IN CC")

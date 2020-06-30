@@ -49,7 +49,7 @@ class SendMessage(ZZQLowTask):
             host=redis_config['host'], port=redis_config['port'], password=redis_config['password'], db=1)
 
 
-        print(api_respo)
+        # print(api_respo)
         print(redis_obj.lpush(
                         "OP:COMPUTE:sms", json.dumps(api_respo)))
         
@@ -60,7 +60,11 @@ class SendMessage(ZZQLowTask):
         configuration = clicksend_client.Configuration()
         configuration.username = venue_info["credential"]["username"]
         configuration.password = venue_info["credential"]["password"]
-        
+        # venue_info.update({"redis_config": {
+        #     "host": "localhost",
+        #     "port": 6379,
+        #     "password": ""
+        # }})
         # create an instance of the API class
         api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
         
@@ -69,34 +73,35 @@ class SendMessage(ZZQLowTask):
 
         # template_m = [i for i in template_dict["data"]["data"] if i["template_id"] ==venue_info["message_type"]][0]
         template_m = venue_info["sms_template"]
-        if template_m["template_id"] == 1:
-            template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
-                            site_alias = venue_info["message_info"]["site_alias"], 
-                            zone_alias = venue_info["message_info"]["zone_alias"],
-                            open_time= venue_info["message_info"]["open_time"])
-        elif template_m["template_id"] == 2:
-            template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
-                            site_alias = venue_info["message_info"]["site_alias"], 
-                            zone_alias = venue_info["message_info"]["zone_alias"],
-                            close_time = venue_info["message_info"]["close_time"])
-        elif template_m["template_id"] == 3:
-            template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
-                            site_alias = venue_info["message_info"]["site_alias"], 
-                            zone_alias = venue_info["message_info"]["zone_alias"],
-                            occupancy_count = venue_info["message_info"]["occupancy_count"],
-                            occupancy_threshold = venue_info["message_info"]["occupancy_threshold"])
-        elif template_m["template_id"] == 4:
-            template_m["body"] = template_m["body"].format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
-                            site_alias = venue_info["message_info"]["site_alias"], 
-                            zone_alias = venue_info["message_info"]["zone_alias"],
-                            area_alias= venue_info["message_info"]["area_alias"],
-                            device_type= venue_info["message_info"]["device_type"],
-                            status= venue_info["message_info"]["status"])
+        # print(venue_info)
+        if venue_info["message_type"] == 1:
+            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
+                            site_alias = venue_info["site_alias"], 
+                            zone_alias = venue_info["zone_alias"],
+                            open_time= venue_info["open_time"])
+        elif venue_info["message_type"] == 2:
+            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
+                            site_alias = venue_info["site_alias"], 
+                            zone_alias = venue_info["zone_alias"],
+                            close_time = venue_info["close_time"])
+        elif venue_info["message_type"] == 3:
+            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
+                            site_alias = venue_info["site_alias"], 
+                            zone_alias = venue_info["zone_alias"],
+                            occupancy_count = venue_info["occupancy_count"],
+                            occupancy_threshold = venue_info["occupancy_threshold"])
+        elif venue_info["message_type"] == 4:
+            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
+                            site_alias = venue_info["site_alias"], 
+                            zone_alias = venue_info["zone_alias"],
+                            area_alias= venue_info["area_alias"],
+                            device_type= venue_info["device_type"],
+                            status= venue_info["status"])
         
         
         # If you want to explictly set from, add the key _from to the message.
         sms_message = SmsMessage(source= venue_info["source"],
-                                body= template_m["body"],
+                                body= template_m,
                                 to= venue_info["to"])
 
         sms_messages = clicksend_client.SmsMessageCollection(messages=[sms_message])
@@ -107,7 +112,9 @@ class SendMessage(ZZQLowTask):
             api_response = (api_responser.replace("None","0"))
             data_to_push = json.loads(api_response.replace("\'","\""))
             if data_to_push["http_code"] == 200:
-                self.push_to_redis(data_to_push,venue_info["redis_config"],venue_info["message_info"]["belongs"])
+                # print(data_to_push)
+                # pass
+                self.push_to_redis(data_to_push,venue_info["redis_config"],venue_info["belongs"])
             else:
                 time.sleep(10)
                 self.post_messages(venue_info)
