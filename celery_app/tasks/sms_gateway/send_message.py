@@ -72,7 +72,7 @@ class SendMessage(ZZQLowTask):
         # template_dict =  json.loads(template_str.replace("\'","\""))
 
         # template_m = [i for i in template_dict["data"]["data"] if i["template_id"] ==venue_info["message_type"]][0]
-        template_m = venue_info["sms_template"]
+        template_m = venue_info["message_template"]
         # print(venue_info)
         if venue_info["message_type"] == 1:
             template_m = template_m.format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
