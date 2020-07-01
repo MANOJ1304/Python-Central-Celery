@@ -75,28 +75,28 @@ class SendMessage(ZZQLowTask):
         template_m = venue_info["sms_template"]
         # print(venue_info)
         if venue_info["message_type"] == 1:
-            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
-                            site_alias = venue_info["site_alias"], 
-                            zone_alias = venue_info["zone_alias"],
-                            open_time= venue_info["open_time"])
+            template_m = template_m.format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
+                            site_alias = venue_info["message_info"]["site_alias"], 
+                            zone_alias = venue_info["message_info"]["zone_alias"],
+                            open_time= venue_info["message_info"]["open_time"])
         elif venue_info["message_type"] == 2:
-            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
-                            site_alias = venue_info["site_alias"], 
-                            zone_alias = venue_info["zone_alias"],
-                            close_time = venue_info["close_time"])
+            template_m = template_m.format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
+                            site_alias = venue_info["message_info"]["site_alias"], 
+                            zone_alias = venue_info["message_info"]["zone_alias"],
+                            close_time = venue_info["message_info"]["close_time"])
         elif venue_info["message_type"] == 3:
-            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
-                            site_alias = venue_info["site_alias"], 
-                            zone_alias = venue_info["zone_alias"],
-                            occupancy_count = venue_info["occupancy_count"],
-                            occupancy_threshold = venue_info["occupancy_threshold"])
+            template_m = template_m.format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
+                            site_alias = venue_info["message_info"]["site_alias"], 
+                            zone_alias = venue_info["message_info"]["zone_alias"],
+                            occupancy_count = venue_info["message_info"]["occupancy_count"],
+                            occupancy_threshold = venue_info["message_info"]["occupancy_threshold"])
         elif venue_info["message_type"] == 4:
-            template_m = template_m.format(venue_owner_alias = venue_info["venue_owner_alias"] , 
-                            site_alias = venue_info["site_alias"], 
-                            zone_alias = venue_info["zone_alias"],
-                            area_alias= venue_info["area_alias"],
-                            device_type= venue_info["device_type"],
-                            status= venue_info["status"])
+            template_m = template_m.format(venue_owner_alias = venue_info["message_info"]["venue_owner_alias"] , 
+                            site_alias = venue_info["message_info"]["site_alias"], 
+                            zone_alias = venue_info["message_info"]["zone_alias"],
+                            area_alias= venue_info["message_info"]["area_alias"],
+                            device_type= venue_info["message_info"]["device_type"],
+                            status= venue_info["message_info"]["status"])
         
         
         # If you want to explictly set from, add the key _from to the message.
@@ -114,7 +114,7 @@ class SendMessage(ZZQLowTask):
             if data_to_push["http_code"] == 200:
                 # print(data_to_push)
                 # pass
-                self.push_to_redis(data_to_push,venue_info["redis_config"],venue_info["belongs"])
+                self.push_to_redis(data_to_push,venue_info["redis_config"],venue_info["message_info"]["belongs"])
             else:
                 time.sleep(10)
                 self.post_messages(venue_info)
