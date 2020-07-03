@@ -31,7 +31,11 @@ class CrossShopChart(BaseChartTask):
         sg_parking_areas = ["50428e8a52f343f594d55abc038129b2","68799e931b2949338bc20591e43adc6f","6893c9a23d0a441d93900b6c2a2a14c6",
         "6fa02129add644d2a0d36f2ede0631b0","b67773c62263411eae232e54e33ed863",
         "f1554d8ef8ce41b9b6e7b527e8accbbf","e11dd4a7261244d7872c2c2fd0b53405"]
-        self.parking_areas = st_parking_areas #+ sg_parking_areas
+        cn_p_a = ['3664e66c395e4cb291052f0d34174384', '45652c141f034b318c256797420802ba', '49cfb85ef80247b6877a3b904a4089fd', 
+            '82990a159d5f442a96b2fcf5a4b2e5e0', '947f9eb47fa645679543da1f6048da38', 'd323348dacf84d0cb719177394e1e1e8', 'dc650096740b4e528b4bfb39761a72e9',
+            'e0a306c066d444eca78c6fc863053de9', 'f39ea1a4fdfa4396b4170f494a35d5f1', 'b6a3ccbf605c472bb2c374d55ba55646']
+        self.parking_areas = st_parking_areas + sg_parking_areas + cn_p_a
+        
     
 
     def run(self, kwargs):
@@ -67,7 +71,7 @@ class CrossShopChart(BaseChartTask):
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .map_journey()
-        .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, True , {'type': 'cross_shopping'})
+        .set_filter(date_range, '', elasttic_filters, exclude_params, True , {'type': 'cross_shopping'})
         .request(query_string=area_params))
         # print(json.dumps(d, indent=4))
         return d
@@ -76,6 +80,9 @@ class CrossShopChart(BaseChartTask):
         # print(data)
         formatter = 'function(data) { return data.name ; }'
         cross_shop_res = data['analytic_data']
+
+        # with open('{}.json'.format(chart_name), 'w') as file:
+        #     file.write(json.dumps(data, indent=4))
         
         if len(data['analytic_data']) > 0:
             agg_data = cross_shop_res[0]['aggregation_data']
@@ -84,11 +91,11 @@ class CrossShopChart(BaseChartTask):
 
             # links_index = []
 
-            # links = [v for v in links if v['source'] not in self.parking_areas]
+            links = [v for v in links if v['source'] not in self.parking_areas]
 
-            # links = [v for v in links if v['target'] not in self.parking_areas]
+            links = [v for v in links if v['target'] not in self.parking_areas]
 
-            # nodes = [v for v in nodes if 'parking' not in v['name'].lower() and (v['id'] not in self.parking_areas)]
+            nodes = [v for v in nodes if 'parking' not in v['name'].lower() and (v['id'] not in self.parking_areas)]
 
             # for i, v in enumerate(links):
             #     if v['target'] in self.parking_areas:
@@ -111,6 +118,9 @@ class CrossShopChart(BaseChartTask):
             #         except Exception as e:
             #             pass
             # nodes = agg_data['nodes']
+
+            for node in nodes:
+                del node['value']
             sankeyChart = SankeyChart()
             sankeyChart.chart.add(
                 "",

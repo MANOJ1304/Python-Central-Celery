@@ -41,7 +41,7 @@ class GenerateReport(BaseChartTask):
         self.template_path = kwargs['report']['template']
         report_path = self.__create_report(kwargs['report_data'], kwargs['report_name'], )
         print('Report created')
-        self.__send_report(kwargs['report_data'], report_path)
+        # self.__send_report(kwargs['report_data'], report_path)
         return True
     
     def __create_report(self, report_data, report_name):
@@ -56,10 +56,10 @@ class GenerateReport(BaseChartTask):
         # all_pages = [p for p in covers.pages]
         # mains = HTML(filename="../templates/cover.html").render(stylesheets=["../css/style.css"])
         # mains.write_pdf('report.pdf')
-        # with open('{}/{}/pdf.html'.format(self.root_path, self.report_path_pdf), 'w') as f:
-        #     f.write(cover_out)
-        # with open('{}/{}/data.json'.format(self.root_path, self.report_path_pdf), 'w') as f:
-        #     f.write(json.dumps(report_data))
+        with open('{}/{}/pdf.html'.format(self.root_path, self.report_path_pdf), 'w') as f:
+            f.write(cover_out)
+        with open('{}/{}/data.json'.format(self.root_path, self.report_path_pdf), 'w') as f:
+            f.write(json.dumps(report_data))
         report_path = '{}/{}/{}.pdf'.format(self.root_path, self.report_path_pdf, report_name)
         covers.write_pdf(report_path)
         return report_path

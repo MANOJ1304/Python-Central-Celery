@@ -41,11 +41,18 @@ a list of Address Matches for other analysis and manual review.'''
             kwargs['chart_name'] = self.map_image
 
         if not self.dev:
-            data = self.__get_data(**kwargs["creds"], **kwargs["data_params"], area_id = kwargs['chart_options'].get('area_id', None))
+            interval = kwargs.get('api_filter', {}).get('interval', None)
+            data = self.__get_data(**kwargs["creds"], **kwargs["data_params"], area_id = kwargs['chart_options'].get('area_id', None),
+                visitor_filter = interval )
             data = self.__process_data( data)
             d = data["analytic_data"][0]
             # print(d)
             self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"], kwargs['chart_name'])
+            if interval is not None:
+                kwargs['output']['title'] += ' Week'
+            else:
+                kwargs['output']['title'] += ' Day' 
+            
         kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, kwargs['chart_name']) 
         return kwargs['output']
 
@@ -90,7 +97,7 @@ a list of Address Matches for other analysis and manual review.'''
 
 
     def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict,
-        date_range:list, agg_type:str, exclude_params:list, area_id:str = None):
+        date_range:list, agg_type:str, exclude_params:list, area_id:str = None, visitor_filter = None):
         log.debug("{} {}".format(username, password))
 
         is_area_compute = False
@@ -98,13 +105,16 @@ a list of Address Matches for other analysis and manual review.'''
         if area_id is not None:
             is_area_compute = True
             area_info = self.get_area_info(username, password, cfg, venue_id, area_id)
-       
+
+        qparams = {}
+        if visitor_filter is not None:
+            qparams['interval'] = visitor_filter
         w =  WildfireApi(username, password, cfg)
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .wifi()
         .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, is_area_compute = is_area_compute, area_filter = area_info)
-        .request())
+        .request(query_string=qparams))
         # print(json.dumps(d, indent=4))
         return d
 

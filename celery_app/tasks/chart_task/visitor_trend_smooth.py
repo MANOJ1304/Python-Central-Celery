@@ -48,6 +48,10 @@ a list of Address Matches for other analysis and manual review.'''
         if len(data['analytic_data']) > 0 and len(data['analytic_data'][0]['series'][3]['total_visitor']) > 0:
             # time.sleep(2)
             line = Line(init_opts=opts.InitOpts(width="400px", height='100px'))
+            x_axis_data = data['analytic_data'][0]['series'][3]['total_visitor']
+            if len(x_axis_data) < 7:
+                for i in range(7 - len(x_axis_data)):
+                    x_axis_data.insert(0, 0)
             _ = (
                 line
                 .add_xaxis(Faker.choose())

@@ -175,6 +175,7 @@ a list of Address Matches for other analysis and manual review.'''
             .map_journey()
             .set_filter(date_range, "", elasttic_filters, exclude_params, pre_compute, pre_compute_filter)
             .request())
+        # print(json.dumps(d, indent=4))
         
         return d
 
@@ -228,7 +229,6 @@ a list of Address Matches for other analysis and manual review.'''
                 count_stats.append((i.source, "")) 
             link_stats.append((i.source,i.target)) 
         return count_stats, link_stats
-
 
     def __process_venue_data(self, username, password, venue_id:str,  cfg:dict) :
         w =  WildfireApi(username, password, cfg)
