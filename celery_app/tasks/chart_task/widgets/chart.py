@@ -145,7 +145,7 @@ class Base():
             },
             "dwell":
             {
-                "formatter": JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.floor(hours) > 0){  hours = Math.round(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.floor(minutes) > 0){ timeStamp.push(Math.round(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.round(timeDiff);seconds = timeDiff; if (Math.floor(seconds) > 1 ) { /*timeStamp.push(Math.round(seconds) + 's');*/ } return timeStamp.join(''); } return  timeLapse(high) }")
+                "formatter": JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.floor(hours) > 0){  hours = Math.floor(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.floor(minutes) > 0){ timeStamp.push(Math.floor(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.floor(timeDiff);seconds = timeDiff; if (Math.floor(seconds) > 1 ) { /*timeStamp.push(Math.floor(seconds) + 's');*/ } return timeStamp.join(''); } return  timeLapse(high) }")
             }
         }
 

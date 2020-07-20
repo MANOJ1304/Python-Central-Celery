@@ -11,6 +11,8 @@ import dateparser
 import dpath
 import os
 import pathlib
+import pandas as pd
+import copy
 
 from .utils import is_weekend
 
@@ -47,23 +49,23 @@ a list of Address Matches for other analysis and manual review.'''
             data = self.__process_data( data)
             d = data["analytic_data"][0]
             # print(d)
-            self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"], kwargs['chart_name'])
+            self.__draw_chart(d["xAxis"], d["series"][-1], kwargs["chart_options"], kwargs['chart_name'], d['series'][3]['total_visitor'])
             if interval is not None:
                 kwargs['output']['title'] += ' Week'
             else:
-                kwargs['output']['title'] += ' Day' 
+                kwargs['output']['title'] += ' Day'
             
         kwargs['output']['img_url'] = '{}/{}/{}.png'.format(kwargs['config']['base_url'], self.report_path_image, kwargs['chart_name']) 
         return kwargs['output']
 
-    def __draw_chart(self, xaxis, data_storage, chart_options:dict= {}, chart_name = "vis"):
+    def __draw_chart(self, xaxis, data_storage, chart_options:dict= {}, chart_name = "vis", total_visitor:list = []):
 
         lc = LineChart("dsad")
         line = Line(init_opts=opts.InitOpts(animation_opts=opts.AnimationOpts(animation=False),
             width='1200px', height='300px'))
         line.add_xaxis(xaxis)
         # bar.xaxis(xaxis,)
-        total = [ sum([x,y]) for x, y in list(zip(data_storage.get("new") , data_storage.get("repeat")))]
+        # total = [ sum([x,y]) for x, y in list(zip(data_storage.get("new") , data_storage.get("repeat")))]
         markline_formatter = """
             function (data) {
                 return Number(Math.round(data.value)).toLocaleString('US-en');
@@ -71,7 +73,7 @@ a list of Address Matches for other analysis and manual review.'''
         """
         date_format = '%d %b, %Y'
         final_data = []
-        for i in range(len(total)):
+        for i in range(len(total_visitor)):
             td = {}
             if (is_weekend(xaxis[i], date_format)):
                 td['itemStyle'] = {'color':'#183058'}
@@ -79,7 +81,7 @@ a list of Address Matches for other analysis and manual review.'''
                 # td['symbol'] = 'circle'
             # else:
                 # td['itemStyle'] = {'color': '#eee', 'borderWidth': 1, 'borderColor': '#183059'}
-            td['value'] = total[i]
+            td['value'] = total_visitor[i]
             final_data.append(td)
 
         line.add_yaxis('', final_data, symbol_size=0, color="#666", xaxis_index=0, itemstyle_opts=lc.line_colors.pop(),
@@ -116,7 +118,9 @@ a list of Address Matches for other analysis and manual review.'''
         .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, is_area_compute = is_area_compute, area_filter = area_info)
         .request(query_string=qparams))
         # print(json.dumps(d, indent=4))
-        return d
+        new_d = self.pad_data(d, visitor_filter)
+
+        return new_d
 
     def __process_data(self, data:dict):
         # print("Data ===========", data)
@@ -145,4 +149,39 @@ a list of Address Matches for other analysis and manual review.'''
         area_data['lt'] = 6
         # print(d)
         return area_data
+
+    
+    def pad_data(self, d, interval):
+        res_data = d['analytic_data'][0]
+        wo_tz_axis = []
+
+        for ax in res_data['xAxis']:
+            wo_tz_axis.append(ax[:23] + '-01:00' )
+
+        wo_tz_axis
+        df_data = {'c_x_axis': wo_tz_axis, 'c_count': res_data['series'][3]['total_visitor']}
+        freq = 'D'
+        
+        if interval is not None:
+            freq = '7D'
+        
+        dr = pd.date_range(start=df_data['c_x_axis'][0], end=df_data['c_x_axis'][-1], freq=freq)
+        df = pd.DataFrame(df_data)
+        df['c_x_axis'] = pd.to_datetime(df['c_x_axis'])
+        df1 = pd.DataFrame({'c_x_axis': dr, 'c_count': 0})
+        final_df = pd.merge(df, df1, on='c_x_axis', how='outer')
+        final_df.fillna(0, inplace=True)
+        final_df.sort_values(by='c_x_axis', inplace=True)
+        
+        x_axis = list(final_df['c_x_axis'].astype(str))
+        vis_counts = list(final_df['c_count_x'].astype(int))
+
+        result = copy.deepcopy(d)
+        result['analytic_data'][0]['xAxis'] = x_axis
+        result['analytic_data'][0]['series'][3]['total_visitor'] = vis_counts
+
+        return result
+        
+
+
         

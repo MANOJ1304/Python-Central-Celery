@@ -37,6 +37,7 @@ class AreaPoisTask(BaseChartTask):
         if len(d['_items']) > 0:
             for area in d['_items']:
                 area_names[area['area_id']] = area['name'][0].get("text") if isinstance(area['name'], list) else 'Area'
+        # print(area_names)
         return area_names
 
     def __get_data(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict,
