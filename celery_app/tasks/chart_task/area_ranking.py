@@ -73,4 +73,4 @@ class AreaRankingTask(BaseChartTask):
                 # value['avg_change'] = str(value['avg_change'])
         # print(json.dumps(result, indent=4))
         
-        return result[:10]
+        return result
