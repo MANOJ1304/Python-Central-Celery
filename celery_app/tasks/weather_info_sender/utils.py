@@ -91,6 +91,7 @@ class UtilData(object):
         }
 
         weather_schema['location']['name'] = api_weather_data['location']['name']
+        weather_schema['location']['weather_city'] = api_weather_data['location'].get('weather_city',api_weather_data['location']['name'])
         weather_schema['location']['region'] = api_weather_data['location']['region']
         weather_schema['location']['country'] = api_weather_data['location']['country']
         weather_schema['location']['lat'] = api_weather_data['location']['lat']
