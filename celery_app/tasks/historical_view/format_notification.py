@@ -23,7 +23,7 @@ class DataFormator(object):
         for es_message in data_list:
             # print(es_message['@timestamp'])
             notification_obj['seq_number'] = seq_number
-            notification_obj['historical'] = True
+            notification_obj['historical'] = False
             seq_number = seq_number + 1
         
             ##notification/monitor obj

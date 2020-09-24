@@ -7,6 +7,7 @@ from tasks.historical_view.redis_operations import RedisOp
 import json
 from tasks.celery_queue_tasks import ZZQLowTask
 import logging
+import time
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
@@ -123,6 +124,7 @@ class HistoricalView(ZZQLowTask):
                 }
         }
         
+        start = time.time()
         
         fetchdata = ESDataFetch(cfg)
         es_raw_data_list = fetchdata.get_plain_data() ## list of records retreived from ES
@@ -137,6 +139,8 @@ class HistoricalView(ZZQLowTask):
         # get the channel from redis which created from frontend when user clicks on live view button. we publish messages on this channel.
         publish_channel = redis_obj.get_channel() 
         logging.info("Publishing data on channel: {}".format(str(publish_channel)))
+        
+        logging.info(f'Time: {time.time() - start}')
         
         # send the raw data to extract needed info, create new object for notification and publish them on the retreived channel
         df_obj = DataFormator()
