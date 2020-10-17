@@ -10,6 +10,8 @@ import dateparser
 import dpath
 import copy
 import pathlib
+import re
+import uuid
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +29,8 @@ a list of Address Matches for other analysis and manual review.'''
         super(MapVisual, self).__init__()
         # self.map_image = "area_heatmap"
         self.map_image = "area_heatmap_"
+        self.currency_symbol = ''
+        self.venue_id = ''
         pass
 
     def run(self, kwargs):
@@ -37,7 +41,7 @@ a list of Address Matches for other analysis and manual review.'''
         # self.map_image =  self.map_image + self.report_details["stats_type"]
 
         if not self.dev:    
-
+            self.venue_id = kwargs["data_params"]["venue_id"]
             venue_data = self.__process_venue_data(kwargs["creds"]["username"], kwargs["creds"]["password"], kwargs["data_params"]["venue_id"], kwargs["data_params"]["cfg"] )
             map_info = venue_data.get("building")[0].get("floor")[0].get("map_info")
             # map_bounding = {"width":  map_info.get("dim_x"), "height": map_info.get("dim_y") }
@@ -87,8 +91,16 @@ a list of Address Matches for other analysis and manual review.'''
 
         # print(self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object))
         analytics = self.__process_analytics(username, password, cfg, venue_id, elasttic_filters, date_range, agg_type, exclude_params)
-        
-        adata = [[k, v.get(self.report_details["stats_type"]).get("value")]for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
+        if self.report_details["stats_type"] in ['sales_person_info', 'sales_info']:
+            if len(analytics.get("analytic_data")) > 0:
+                self.currency_symbol = list(analytics.get("analytic_data")[0].get("aggregation_data").values())[0]['sales_info']['unit']
+                print(self.currency_symbol)
+
+        if self.report_details["stats_type"] == 'sales_person_info':
+            # print('analytics ', analytics)
+            adata = [[k, v.get("sales_info").get('sales_by_person')] for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
+        else:
+            adata = [[k, v.get(self.report_details["stats_type"]).get("value")]for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
         # print("Stats", json.dumps(adata))
         return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object, adata)
 
@@ -100,50 +112,74 @@ a list of Address Matches for other analysis and manual review.'''
         
         for item in data:
             #  print(item)
-             cent = {item[4]: item[5]}
-             anames = {item[4]: item[5]}
-             dpath.util.set(obj, "geometry", item[0])
-             dpath.util.set(obj, "properties/building_id", item[1])
-             dpath.util.set(obj, "properties/floor_id", item[2])
-             dpath.util.set(obj, "properties/zone_id", item[3])
-             dpath.util.set(obj, "properties/area_id", item[5])
-             dpath.util.set(obj, "properties/text", item[5])
-             dpath.util.set(obj, "properties/name", item[5])
-             o = copy.deepcopy(obj)
-             area_polygon.append(dict(o))
+            area_id = item[4]
+            a_name = item[5]
+            if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b':
+                a_name = self.get_area_codes(a_name, True)
+            if a_name is None:
+                a_name = ''
+            cent = {area_id: a_name}
+        
+            anames = {area_id: a_name}
+            
+            dpath.util.set(obj, "geometry", item[0])
+            dpath.util.set(obj, "properties/building_id", item[1])
+            dpath.util.set(obj, "properties/floor_id", item[2])
+            dpath.util.set(obj, "properties/zone_id", item[3])
+            dpath.util.set(obj, "properties/area_id", a_name)
+            dpath.util.set(obj, "properties/text", a_name)
+            dpath.util.set(obj, "properties/name", a_name)
+            o = copy.deepcopy(obj)
+            area_polygon.append(dict(o))
             #  print()
-             centroid_p.update(copy.deepcopy(cent))
-             area_name.update(copy.deepcopy(anames))
+            centroid_p.update(copy.deepcopy(cent))
+            area_name.update(copy.deepcopy(anames))
         # print(json.dumps(area_name))
         ddd = []
         for i in analytics_data:
             if i[0] in list(area_name.keys()):
-                ddd.append([area_name[i[0]], i[1]])
+                if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b':
+                    ar_name = self.get_area_codes(area_name[i[0]], True)
+                    if ar_name is not None:
+                        ddd.append([ar_name, i[1]])  
+                else:
+                    ddd.append([area_name[i[0]], i[1]])
+                # ddd.append([self.get_area_codes(area_name[i[0]]), i[1]])
         # print("Areas",json.dumps(area_name))
         return { "type": 'FeatureCollection', "features": area_polygon}, centroid_p, area_name, ddd
 
-    def __draw_chart(self, map_data, bounding, data:dict = {}, ):
+    def __draw_chart(self, map_data, bounding, data:dict = {}):
         # print(json.dumps(map_data, indent=4))
         
         map = CustomMap("makemymap", self.report_details["stats_type"], bounding=bounding)
+        map.is_label = True
+        
+        if self.report_details["stats_type"] in ['sales_person_info', 'sales_info']:
+            map.set_currency(self.currency_symbol)
         map.schema(map_data)
-        map.set_add_global_options({'width': map.width, 'height': map.height}) 
+        map.set_add_global_options({'width': map.width, 'height': map.height, }) 
         map.set_data(data)
+
+        # print(json.dumps(data, indent=4))
         # print(map.get_chart_instance().dump_options())
 
         map.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, self.map_image + self.report_details["stats_type"]),
-            image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image + self.report_details["stats_type"]))   
+            image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, self.map_image + self.report_details["stats_type"]))
 
 
     def __process_analytics(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, agg_type:str, exclude_params:list):
         log.debug("{} {}".format(username, password))
+
+        query_params = {}
+        if self.report_details["stats_type"] in ['sales_person_info', 'sales_info']:
+            query_params['report_changes'] = 1
+
         w =  WildfireApi(username, password, cfg)
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .area_heatmap()
         .set_filter(date_range, agg_type, elasttic_filters, exclude_params)
-        .request())
-        
+        .request(query_params))
         return d
 
     def __process_venue_data(self, username, password, venue_id:str,  cfg:dict) :
@@ -152,3 +188,16 @@ a list of Address Matches for other analysis and manual review.'''
         .get_one(venue_id))
 
         return data
+    
+
+
+    def get_area_codes(self, name:str, display:bool = False):
+        p = re.findall(r"^[WCE][0-9]+", name, flags=re.IGNORECASE)
+        if len(p) > 0:
+            print(p[0], name)
+            return p[0]
+        else:
+            if not display:
+                return ''.join(e[0] for e in name.split(' '))
+            else:
+                return ''

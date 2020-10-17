@@ -93,7 +93,7 @@ a list of Address Matches for other analysis and manual review.'''
 
         line.set_global_opts(xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(font_size=8, rotate=-15)))
         lc.chart = line
-        
+
         lc.generate(file_name="{}/{}/{}.html".format(self.root_path, self.report_path_html, chart_name),
             image_name="{}/{}/{}.png".format(self.root_path, self.report_path_image, chart_name))
 

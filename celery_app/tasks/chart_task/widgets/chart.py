@@ -36,6 +36,7 @@ class Base():
         self.line_colors = [ opts.ItemStyleOpts(color=i) for i in colors ]
         self.bar_colors = [ opts.ItemStyleOpts(color=i) for i in colors ]
         self.bar_label_text_colors = text_colors
+        self.currency_symbol = ''
         # [ opts.LabelOpts(is_show=True, color=i, vertical_align= 'middle', horizontal_align="center",) for i in text_colors ]
 
 
@@ -110,43 +111,50 @@ class Base():
             "#ff6666"
             ]
         # range_colors.reverse()
+        vmap_opts = opts.VisualMapOpts(
+            is_piecewise=True,
+            orient= 'horizontal',
+            min_=  0,
+            range_text = ['0'],
+            is_calculable = True,
+            range_color = range_colors,
+            item_width = 40,                 
+            item_height = 5,
+            pos_left= '10%'
+        )
+        sales_vmap_opts = opts.VisualMapOpts(
+            is_piecewise=True,
+            orient= 'horizontal',
+            min_=  0,
+            range_text = ['0'],
+            is_calculable = True,
+            range_color = range_colors,
+            item_width = 20,                 
+            item_height = 5,
+            pos_left= '10%'
+        )
         self.visual_map_options = {
-            "count" : opts.VisualMapOpts(
-                    is_piecewise=True,
-                    orient= 'horizontal',
-                    min_=  0,
-                    range_text = ['0'],
-                    is_calculable = True,
-                    range_color = range_colors,
-                    item_width = 40,                 
-                    item_height = 5,
-                    pos_left= '10%'
-                ),
-            "dwell" : opts.VisualMapOpts(
-                    is_piecewise=True,
-                    orient= 'horizontal',
-                    min_=  0,
-
-                    
-                    range_text = ['0'],
-                    is_calculable = True,
-                    range_color = range_colors,
-                    item_width = 20,                 
-                    item_height = 5,
-                    pos_left= '10%'
-                    # formatter= JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.round(hours) > 0){  hours = Math.round(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.round(minutes) > 0){ timeStamp.push(Math.round(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.round(timeDiff);seconds = timeDiff; if (Math.round(seconds) > 0 ) { timeStamp.push(Math.round(seconds) + 's'); } return timeStamp.join(''); } return timeLapse(low) + ' - ' + timeLapse(high) }")
-                )
+            "count" : vmap_opts,
+            "dwell" : vmap_opts,
+            "sales_info" : sales_vmap_opts,
+            "sales_person_info" : sales_vmap_opts
         }
-
+        
         self.visual_map_formatter = {
             "count":
             {
-                "formatter": JsCode("function(low,high){  return  Number(parseInt(high,10)).toLocaleString('US-en'); }")
+                "formatter": JsCode("function(low,high){  return Number(Math.floor(high)).toLocaleString('US-en'); }")
             },
             "dwell":
             {
                 "formatter": JsCode("function (low, high) { function timeLapse(timeDiff) { var timeStamp = []; var hours = timeDiff / 3660; if (Math.floor(hours) > 0){  hours = Math.floor(hours); timeStamp.push(hours+  'h');timeDiff = timeDiff % 3660;}var minutes = timeDiff / 60; if (Math.floor(minutes) > 0){ timeStamp.push(Math.floor(minutes) + 'm'); timeDiff = timeDiff % 60; } var seconds = Math.floor(timeDiff);seconds = timeDiff; if (Math.floor(seconds) > 1 ) { /*timeStamp.push(Math.floor(seconds) + 's');*/ } return timeStamp.join(''); } return  timeLapse(high) }")
-            }
+            },
+            # 'sales_info': {
+            #     "formatter": JsCode(sales_js_code)
+            # },
+            # 'sales_person_info': {
+            #     "formatter": JsCode(sales_js_code)
+            # }
         }
 
         self.yaxis_details = opts.AxisOpts(
@@ -158,7 +166,7 @@ class Base():
                                                       color="#dddddd"
                                                       )
                                     ),
-                    axislabel_opts= self.label_style["k_format_yaxis"]
+                    axislabel_opts= self.label_style["k_format_yaxis"],
                 )
 
         self.global_opts = {
@@ -172,6 +180,16 @@ class Base():
             }
         }
         self.chart = {}
+
+    def set_currency(self, currency):
+        self.sales_js_code = "function (low, high) { return '" + currency + "' + Number(Math.floor(high)).toLocaleString('US-en');}"
+        
+        self.visual_map_formatter['sales_info'] = {
+            "formatter": JsCode(self.sales_js_code)
+        }
+        self.visual_map_formatter['sales_person_info'] = {
+            "formatter": JsCode(self.sales_js_code)
+        }
 
 
     def set_add_global_options(self, options:dict ={}):
@@ -282,10 +300,8 @@ class CustomMap(Base):
         self.map_name = map_name
         self.is_label = label_show
         self.stats_type = map_stats_type
+        # self.currency_symbol = None
         label = "function(params){  return '\n' + params.name + '\n Visitors:' + (new Intl.NumberFormat('en-UK', { maximumFractionDigits: 0 }).format(params.value)) + '\n'}"
-
-        
-        
         self.js_code_label = MjsCode(label)
 
     def schema(self, data):
@@ -304,14 +320,16 @@ class CustomMap(Base):
         })
         
         self.set_globl_option()
+        # formatter= self.js_code_label, 
         label_opts = opts.LabelOpts(
-            formatter=self.js_code_label, 
+            # formatter= JsCode("function (data)"), 
+            formatter= self.js_code_label,
             is_show= self.is_label, 
-            position= "inside", 
-            color='#666666',
-            background_color="#eeeeeea2",
-            border_radius=2,
-            border_color="#666666",
+            # position= "inside", 
+            # color='#666666',
+            # background_color="#eeeeeea2",
+            # border_radius=2,
+            # border_color="#666666",
             font_size=10
         )
         label_opts.update(padding=1)

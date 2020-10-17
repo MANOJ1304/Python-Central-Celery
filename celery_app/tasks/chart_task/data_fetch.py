@@ -63,7 +63,7 @@ a list of Address Matches for other analysis and manual review.'''
         for legend, data in data_storage.items():
             if legend in ["new", "repeat"]: 
                 # print("Values", title, data_storage.get(title), total)
-                nr_data= [  {"value": n, "percent": n / t} for n, t in list(zip(data_storage.get(legend) , total))]
+                nr_data= [  {"value": n, "percent":  n / t if t != 0 else 0} for n, t in list(zip(data_storage.get(legend) , total))]
                 bar.ydata(legend.replace("_"," ").title(), nr_data , options=chart_options["series"])
 
         # chart_options["label_opts"] = self.label_style[chart_options["label_opts"]] 

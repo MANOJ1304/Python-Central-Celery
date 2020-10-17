@@ -33,18 +33,18 @@ redis:
 #     name: 'Tes Insights'
 
 mail_config:
-    server: "smtp.ionos.co.uk"
+    server: "smtp.gmail.com"
 
     port: 587
 
-    username: "no-reply@tesinsights.com"
+    username: "no-reply@iviutech.com"
 
-    password: "mG$R8N4W"
+    password: "iviu@123"
 
-    default_sender: "no-reply@tesinsights.com"
+    default_sender: "no-reply@iviutech.com"
 
     use_tls: False
 
     use_ssl: True
 
-    name: 'Tes Insights'
+    name: 'iViu Insights inc.'
