@@ -49,4 +49,4 @@ class AreaSales(BaseChartTask):
                 data['unit'] = value['unit']
                 result.append(data)
             result = sorted(result, key= lambda k: k['value'], reverse=True)
-        return result
+        return (result, d['analytic_data'][0]['social_media'])

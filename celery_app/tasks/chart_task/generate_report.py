@@ -41,7 +41,7 @@ class GenerateReport(BaseChartTask):
         self.template_path = kwargs['report']['template']
         report_path = self.__create_report(kwargs['report_data'], kwargs['report_name'], )
         print('Report created')
-        self.__send_report(kwargs['report_data'], report_path)
+        # self.__send_report(kwargs['report_data'], report_path)
         return True
     
     def __create_report(self, report_data, report_name):

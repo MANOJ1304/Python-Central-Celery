@@ -323,14 +323,14 @@ class CustomMap(Base):
         # formatter= self.js_code_label, 
         label_opts = opts.LabelOpts(
             # formatter= JsCode("function (data)"), 
-            formatter= self.js_code_label,
+            # formatter= self.js_code_label,
             is_show= self.is_label, 
             # position= "inside", 
             # color='#666666',
             # background_color="#eeeeeea2",
             # border_radius=2,
             # border_color="#666666",
-            font_size=10
+            font_size=6
         )
         label_opts.update(padding=1)
         self.chart.add("", data, maptype=self.map_name ,  

@@ -46,7 +46,7 @@ class AreaRankingTask(BaseChartTask):
         d = (w.venues()
         .analytics(venue_id=venue_id)
         .top_area_visits()
-        .set_filter(date_range, 'visitors', elasttic_filters, exclude_params)
+        .set_filter(date_range, 'visitors', elasttic_filters, exclude_params, timezone=cfg['zone_name'])
         .request())
         result = []
         # print(json.dumps(d, indent=4))

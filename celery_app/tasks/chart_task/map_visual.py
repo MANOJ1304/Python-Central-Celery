@@ -61,7 +61,7 @@ a list of Address Matches for other analysis and manual review.'''
     def __get_areas(self, username, password, cfg:dict, venue_id:str, elasttic_filters: dict, date_range:list, exclude_params:list, agg_type:str):
         log.debug("{} {}".format(username, password))
         w =  WildfireApi(username, password, cfg)
-        d = (w.venues() 
+        d = (w.venues()
             .get(venue_id) 
             .pois()
             .lists(search={"type": "area"}, pagination=True))
@@ -74,6 +74,8 @@ a list of Address Matches for other analysis and manual review.'''
         area_ids        = [item[1] for item in research(d["_items"], query=lambda p, k, v: k == 'area_id' )]
         names           = [item[1][0].get("text") for item in research(d["_items"], query=lambda p, k, v: k == 'name' ) if isinstance(item[1], list)]
         centroids       = [item[1] for item in research(d["_items"], query=lambda p, k, v: k == 'centroide' )]
+        short_names     = [item[1] for item in research(d["_items"], query=lambda p, k, v: k == 'short_name')]
+        # print(short_names)
 
         map_data_object = {
             "geometry": {
@@ -91,6 +93,7 @@ a list of Address Matches for other analysis and manual review.'''
 
         # print(self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object))
         analytics = self.__process_analytics(username, password, cfg, venue_id, elasttic_filters, date_range, agg_type, exclude_params)
+        print('analytics ', analytics)
         if self.report_details["stats_type"] in ['sales_person_info', 'sales_info']:
             if len(analytics.get("analytic_data")) > 0:
                 self.currency_symbol = list(analytics.get("analytic_data")[0].get("aggregation_data").values())[0]['sales_info']['unit']
@@ -102,7 +105,7 @@ a list of Address Matches for other analysis and manual review.'''
         else:
             adata = [[k, v.get(self.report_details["stats_type"]).get("value")]for k,v in analytics.get("analytic_data")[0].get("aggregation_data").items()]
         # print("Stats", json.dumps(adata))
-        return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids )), map_data_object, adata)
+        return self.__reproces(list(zip(area_polygons, building_ids, floor_ids, zone_ids, area_ids, names, centroids, short_names )), map_data_object, adata)
 
     def __reproces(self, data, obj, analytics_data):
         # area_polygon = []
@@ -114,10 +117,12 @@ a list of Address Matches for other analysis and manual review.'''
             #  print(item)
             area_id = item[4]
             a_name = item[5]
-            if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b':
-                a_name = self.get_area_codes(a_name, True)
-            if a_name is None:
-                a_name = ''
+            if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b' and self.report_details.get('time_type', 'weekly') != 'weekly':
+                # a_name = self.get_area_codes(a_name, True)
+                a_name = item[7]
+            # if a_name == '' and a_name is not None:
+            #     a_name = item[5]
+            # print('a_name short ', a_name)
             cent = {area_id: a_name}
         
             anames = {area_id: a_name}
@@ -131,18 +136,16 @@ a list of Address Matches for other analysis and manual review.'''
             dpath.util.set(obj, "properties/name", a_name)
             o = copy.deepcopy(obj)
             area_polygon.append(dict(o))
-            #  print()
+
             centroid_p.update(copy.deepcopy(cent))
             area_name.update(copy.deepcopy(anames))
         # print(json.dumps(area_name))
         ddd = []
         for i in analytics_data:
             if i[0] in list(area_name.keys()):
-                if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b':
-                    ar_name = self.get_area_codes(area_name[i[0]], True)
-                    if ar_name is not None:
-                        ddd.append([ar_name, i[1]])  
-                else:
+                # if self.venue_id == 'dd5962667e49440f90ed1356b03cfe0b':
+                #     ddd.append([item[7], i[1]])
+                # else:
                     ddd.append([area_name[i[0]], i[1]])
                 # ddd.append([self.get_area_codes(area_name[i[0]]), i[1]])
         # print("Areas",json.dumps(area_name))
@@ -152,7 +155,8 @@ a list of Address Matches for other analysis and manual review.'''
         # print(json.dumps(map_data, indent=4))
         
         map = CustomMap("makemymap", self.report_details["stats_type"], bounding=bounding)
-        map.is_label = True
+        if self.report_details.get('time_type', 'weekly') != 'weekly':
+            map.is_label = True
         
         if self.report_details["stats_type"] in ['sales_person_info', 'sales_info']:
             map.set_currency(self.currency_symbol)
@@ -194,7 +198,7 @@ a list of Address Matches for other analysis and manual review.'''
     def get_area_codes(self, name:str, display:bool = False):
         p = re.findall(r"^[WCE][0-9]+", name, flags=re.IGNORECASE)
         if len(p) > 0:
-            print(p[0], name)
+            # print(p[0], name)
             return p[0]
         else:
             if not display:
