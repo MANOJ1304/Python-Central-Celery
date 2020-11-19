@@ -144,5 +144,8 @@ class HistoricalView(ZZQLowTask):
         
         # send the raw data to extract needed info, create new object for notification and publish them on the retreived channel
         df_obj = DataFormator()
-        df_obj.format_notification(es_raw_data_list_ordered,publish_channel,config['redis_config'],config['category'])
+        if len(es_raw_data_list) != 0:
+            df_obj.format_notification(es_raw_data_list_ordered,publish_channel,config['redis_config'],config['category'])
+        else:
+            df_obj.send_error_message(publish_channel,config['redis_config'])
         logging.info("Processing completed.")

@@ -23,7 +23,8 @@ class DataFormator(object):
         for es_message in data_list:
             # print(es_message['@timestamp'])
             notification_obj['seq_number'] = seq_number
-            notification_obj['historical'] = False
+            notification_obj['historical'] = True
+            notification_obj['error'] = False
             seq_number = seq_number + 1
         
             ##notification/monitor obj
@@ -125,3 +126,12 @@ class DataFormator(object):
             time.sleep(1/10) # to decrease the speed of messages published so user can view data properly
             
         # exit()
+        
+    def send_error_message(self,publish_channel,config):
+        message = "No data present for selected date range."
+        error_obj = {}
+        error_obj['error'] = True
+        error_obj['message'] = message
+        # print(error_obj)
+        redis_obj = RedisOp(config)
+        redis_obj.redis_publish(error_obj,publish_channel)
