@@ -105,6 +105,11 @@ class WeatherData(ZZQLowTask):
 
             day_result = requests.get(forecast_url, params)
             day_response = day_result.json()
+            city = city.split(',')[-1] if ',' in city else city
+            if city != day_response['location']['name']:
+                temp = day_response['location']['name']
+                day_response['location']['name'] = city
+                day_response['location'].update({"weather_city":temp})
 
             params.update({'interval' : 1})
             hourly_result = requests.get(forecast_url, params)
@@ -218,7 +223,7 @@ class WeatherData(ZZQLowTask):
                 # self.slack_alert("Error, weather getting city names", msg)
                 break
 
-            city_name_list = {i.lower() for i in city_name_list}
+            # city_name_list = {i.lower() for i in city_name_list}
             #--------------------------------
             #NOTE FOR TEST SINGLE CITY
             # city_name_list = ['bangalore']
