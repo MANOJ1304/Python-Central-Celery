@@ -1,8 +1,8 @@
 from tasks.celery_queue_tasks import ZZQLowTask
 from celery.task.control import revoke
-import clicksend_client
-from clicksend_client import SmsMessage
-from clicksend_client.rest import ApiException
+# import clicksend_client
+# from clicksend_client import SmsMessage
+# from clicksend_client.rest import ApiException
 import json
 import datetime
 import time
